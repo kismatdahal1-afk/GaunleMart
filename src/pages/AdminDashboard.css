@@ -150,6 +150,7 @@
     font-size: 1.3rem;
   }
 }
+
 /* Recent Products Section */
 .recent-products-section {
   background: white;
@@ -165,7 +166,7 @@
   color: #2c1810;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom:none;
+  border-bottom: none;
 }
 
 .recent-products-table {
@@ -254,9 +255,6 @@
   margin-bottom: 15px;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
 /* ========== ADMIN LOGIN PAGE STYLES ========== */
 .admin-login-container {
   display: flex;
@@ -373,13 +371,7 @@
   box-shadow: 0 10px 20px rgba(255, 140, 66, 0.3);
 }
 
-.login-hint {
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.75rem;
-  color: #8B6914;
-  margin-top: 20px;
-  text-align: center;
-}
+/* .login-hint styles REMOVED */
 
 .login-loader {
   width: 40px;
@@ -391,9 +383,6 @@
   margin: 0 auto 15px;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
 /* ========== CHARTS SECTION ========== */
 .charts-section {
   display: grid;
@@ -508,6 +497,7 @@
     font-size: 1rem;
   }
 }
+
 /* ========== ENHANCED RECENT PRODUCTS SECTION ========== */
 .recent-products-header {
   display: flex;

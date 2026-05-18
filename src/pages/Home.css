@@ -1,4 +1,6 @@
 /* Home.css - Complete with fixed product visibility */
+/* UPDATED: Mobile now shows 3 products per row */
+
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 /* ========== GLOBAL BACKGROUND ========== */
@@ -257,7 +259,7 @@
   font-weight: 500;
 }
 
-/* Products Grid - FIXED */
+/* Products Grid - Desktop: 3-4 columns, Mobile: 3 columns */
 .products-grid {
   display: grid !important;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
@@ -474,10 +476,20 @@
     font-size: 1rem;
   }
   
+  /* FIXED: 3 products per row on tablet */
   .products-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
-    gap: 20px !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 15px !important;
     padding: 15px !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  /* FIXED: 3 products per row on mobile */
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+    padding: 10px !important;
   }
 }
 
@@ -514,8 +526,10 @@
     font-size: 1.5rem;
   }
   
+  /* FIXED: 3 products per row on small mobile */
   .products-grid {
-    grid-template-columns: 1fr !important;
-    gap: 20px !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 8px !important;
+    padding: 8px !important;
   }
 }

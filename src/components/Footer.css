@@ -1,4 +1,4 @@
-/* Footer.css - Compact footer with larger fonts */
+/* Footer.css - Compact footer with larger fonts - Responsive Optimized */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 .footer {
@@ -228,7 +228,8 @@
   .footer-container {
     grid-template-columns: repeat(2, 1fr);
     text-align: center;
-    gap: 30px;
+    gap: 25px;
+    padding: 30px 15px;
   }
   
   .footer-logo {
@@ -260,13 +261,31 @@
     flex-direction: column;
     text-align: center;
   }
+  
+  /* Reduce padding for compact footer */
+  .footer-container {
+    gap: 20px;
+  }
+  
+  .footer-title {
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+  
+  .footer-links li {
+    margin-bottom: 6px;
+  }
+  
+  .footer-contact li {
+    margin-bottom: 8px;
+  }
 }
 
 @media screen and (max-width: 480px) {
   .footer-container {
     grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 30px 15px;
+    gap: 25px;
+    padding: 25px 15px;
   }
   
   .footer-brand-name {

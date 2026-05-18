@@ -1,4 +1,4 @@
-/* NavigationDrawer.css - Vertical sliding drawer styles */
+/* NavigationDrawer.css - Vertical sliding drawer styles with reduced width */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 /* ========== OVERLAY ========== */
@@ -20,25 +20,25 @@
   visibility: visible;
 }
 
-/* ========== DRAWER ========== */
+/* ========== DRAWER - FIXED WIDTH (70%, max 320px) ========== */
 .navigation-drawer {
   position: fixed;
   top: 0;
-  right: -100%;
-  width: 85%;
-  max-width: 380px;
+  left: -100%;  /* Changed from right to left for better UX */
+  width: 70%;
+  max-width: 320px;
   height: 100vh;
   background: linear-gradient(180deg, #D35400, #E67E22, #F39C12);
   z-index: 1000;
-  transition: right 0.3s ease;
+  transition: left 0.3s ease;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
+  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
 }
 
 .navigation-drawer.open {
-  right: 0;
+  left: 0;
 }
 
 /* Scrollbar styling */
@@ -258,8 +258,8 @@
 /* ========== RESPONSIVE ========== */
 @media screen and (max-width: 480px) {
   .navigation-drawer {
-    width: 90%;
-    max-width: 320px;
+    width: 80%;
+    max-width: 280px;
   }
   
   .drawer-brand-name {

@@ -1,4 +1,4 @@
-// AdminRoute.js - Password protection with beautiful UI
+// AdminRoute.js - Password protection with beautiful UI (Hint removed)
 import React, { useState, useEffect } from 'react';
 
 const AdminRoute = ({ children }) => {
@@ -68,7 +68,7 @@ const AdminRoute = ({ children }) => {
             </button>
           </form>
           
-          <p className="login-hint">Hint: Use password "admin123"</p>
+          {/* Hint paragraph REMOVED */}
         </div>
       </div>
     );

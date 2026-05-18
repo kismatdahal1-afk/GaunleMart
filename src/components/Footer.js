@@ -33,7 +33,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Column 2: Quick Links */}
+        {/* Column 2: Quick Links - ADDED ADMIN LINK */}
         <div className="footer-col">
           <h3 className="footer-title">Quick Links</h3>
           <ul className="footer-links">
@@ -42,6 +42,7 @@ const Footer = () => {
             <li><Link to="/cart" onClick={handleLinkClick}>🛒 Cart</Link></li>
             <li><Link to="/blog" onClick={handleLinkClick}>📝 Blog</Link></li>
             <li><Link to="/about" onClick={handleLinkClick}>ℹ️ About</Link></li>
+            <li><Link to="/admin/dashboard" onClick={handleLinkClick}>👑 Admin</Link></li>
           </ul>
         </div>
 

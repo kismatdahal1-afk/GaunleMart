@@ -1,5 +1,5 @@
-// NavigationDrawer.js - Vertical sliding navigation drawer
-import React, { useEffect } from 'react';
+// NavigationDrawer.js - Vertical sliding navigation drawer with Admin link
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './NavigationDrawer.css';
 import logoImage from '../images/logo.jpg';
@@ -28,7 +28,7 @@ const NavigationDrawer = ({ isOpen, onClose }) => {
       {/* Overlay */}
       <div 
         className={`drawer-overlay ${isOpen ? 'open' : ''}`} 
-        onClick={onClose}
+        onClick={onClose} 
       />
       
       {/* Drawer */}
@@ -38,7 +38,7 @@ const NavigationDrawer = ({ isOpen, onClose }) => {
           ✕
         </button>
 
-        {/* Brand Section - Same as footer */}
+        {/* Brand Section */}
         <div className="drawer-brand">
           <div className="drawer-logo">
             <div className="drawer-logo-circle">
@@ -58,7 +58,7 @@ const NavigationDrawer = ({ isOpen, onClose }) => {
         {/* Divider */}
         <div className="drawer-divider"></div>
 
-        {/* Quick Links Section */}
+        {/* Quick Links Section - ADDED ADMIN LINK */}
         <div className="drawer-section">
           <h3 className="drawer-section-title">Quick Links</h3>
           <ul className="drawer-links">
@@ -67,6 +67,7 @@ const NavigationDrawer = ({ isOpen, onClose }) => {
             <li><Link to="/cart" onClick={handleLinkClick}>🛒 Cart</Link></li>
             <li><Link to="/blog" onClick={handleLinkClick}>📝 Blog</Link></li>
             <li><Link to="/about" onClick={handleLinkClick}>ℹ️ About</Link></li>
+            <li><Link to="/admin/dashboard" onClick={handleLinkClick}>👑 Admin</Link></li>
           </ul>
         </div>
 
