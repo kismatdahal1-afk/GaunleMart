@@ -25,3 +25,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+# Deployment
+.env.production
+.env.local
+.env.*.local
