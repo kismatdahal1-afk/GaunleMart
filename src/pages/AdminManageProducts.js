@@ -1,4 +1,4 @@
-// AdminManageProducts.js - Complete working version with all fixes
+// AdminManageProducts.js - Complete working version with Render API
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageReplaceModal from '../components/ImageReplaceModal';
@@ -19,10 +19,10 @@ const AdminManageProducts = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState('');
 
-  // Fetch products from backend
+  // Fetch products from backend - UPDATED with environment variable
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`);
       const data = await response.json();
       setProducts(data);
       setOriginalProducts(JSON.parse(JSON.stringify(data)));
@@ -132,10 +132,10 @@ const AdminManageProducts = () => {
     ));
   };
 
-  // Handle image replacement - sends PUT request to update database
+  // Handle image replacement - UPDATED with environment variable
   const handleImageReplace = async (productId, newImageUrl) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${productId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -174,11 +174,11 @@ const AdminManageProducts = () => {
     setIsModalOpen(true);
   };
 
-  // Delete product
+  // Delete product - UPDATED with environment variable
   const handleDelete = async (id, name) => {
     if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
       try {
-        const response = await fetch(`http://localhost:5000/api/products/${id}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${id}`, {
           method: 'DELETE'
         });
 
@@ -195,7 +195,7 @@ const AdminManageProducts = () => {
     }
   };
 
-  // Submit all pending changes
+  // Submit all pending changes - UPDATED with environment variable
   const handleSubmitChanges = async () => {
     if (Object.keys(pendingChanges).length === 0) {
       showNotificationMessage('error', 'No changes to save.');
@@ -221,7 +221,7 @@ const AdminManageProducts = () => {
           price: productWithoutId.price === '' || productWithoutId.price === null ? 0 : Number(productWithoutId.price)
         };
         
-        const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${productId}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -415,7 +415,7 @@ const AdminManageProducts = () => {
                           className="edit-input name-input"
                           placeholder="Product name"
                         />
-                      </td>
+                       </td>
                       
                       {/* Price */}
                       <td className="col-price">
@@ -431,7 +431,7 @@ const AdminManageProducts = () => {
                           className="edit-input price-input"
                           placeholder="Price in Rs"
                         />
-                      </td>
+                       </td>
                       
                       {/* Category */}
                       <td className="col-category">
@@ -442,7 +442,7 @@ const AdminManageProducts = () => {
                           className="edit-input category-input"
                           placeholder="Category"
                         />
-                      </td>
+                       </td>
                       
                       {/* Description */}
                       <td className="col-description">
@@ -488,7 +488,7 @@ const AdminManageProducts = () => {
                             <div className="edit-hint">✏️ Click to edit</div>
                           </div>
                         )}
-                      </td>
+                       </td>
                       
                       {/* Status */}
                       <td className="col-status">
@@ -512,7 +512,7 @@ const AdminManageProducts = () => {
                             <span className="status-text out-of-stock-text">Out of Stock</span>
                           </label>
                         </div>
-                      </td>
+                       </td>
                       
                       {/* Actions */}
                       <td className="col-actions">
@@ -522,7 +522,7 @@ const AdminManageProducts = () => {
                         >
                           🗑️ Delete
                         </button>
-                      </td>
+                       </td>
                     </tr>
                   );
                 })

@@ -13,7 +13,8 @@ const Home = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      // UPDATED: Using environment variable for Render URL
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`);
       const data = await response.json();
       setAllProducts(data);
       setLoading(false);
@@ -111,7 +112,7 @@ const Home = () => {
             <div className="products-grid">
               {featuredProducts.map((product, index) => (
                 <div 
-                  key={product.id} 
+                  key={product._id} 
                   className="product-card-wrapper"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >

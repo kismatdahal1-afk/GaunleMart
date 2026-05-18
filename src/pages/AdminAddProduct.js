@@ -1,4 +1,4 @@
-// AdminAddProduct.js - Form with Cloudinary image upload and MongoDB integration
+// AdminAddProduct.js - Form with Cloudinary image upload and Render API
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminAddProduct.css';
@@ -18,7 +18,7 @@ const AdminAddProduct = () => {
     price: '',
     description: '',
     category: '',
-    imageUrl: ''  // Will store Cloudinary URL
+    imageUrl: ''
   });
 
   // Smooth scroll to top function
@@ -60,7 +60,7 @@ const AdminAddProduct = () => {
     });
   };
 
-  // Handle image upload to Cloudinary
+  // Handle image upload to Cloudinary via Render API
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     
@@ -83,14 +83,14 @@ const AdminAddProduct = () => {
     };
     reader.readAsDataURL(file);
     
-    // Upload to Cloudinary
+    // Upload to Cloudinary via Render
     setUploadingImage(true);
     
     const uploadData = new FormData();
     uploadData.append('image', file);
     
     try {
-      const response = await fetch('http://localhost:5000/api/upload', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/upload`, {
         method: 'POST',
         body: uploadData
       });
@@ -125,7 +125,7 @@ const AdminAddProduct = () => {
     });
   };
 
-  // Handle form submission
+  // Handle form submission - UPDATED with Render API
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -153,7 +153,7 @@ const AdminAddProduct = () => {
         inStock: true
       };
 
-      const response = await fetch('http://localhost:5000/api/products', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -176,13 +176,13 @@ const AdminAddProduct = () => {
       }
     } catch (error) {
       console.error('Error adding product:', error);
-      showNotificationMessage('Network error. Make sure the server is running on port 5000', 'error');
+      showNotificationMessage('Network error. Make sure the server is running.', 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  // Handle cancel button click - Stay on page, only reset form
+  // Handle cancel button click
   const handleCancel = () => {
     resetForm();
     showNotificationMessage('Product creation cancelled', 'info');
@@ -257,7 +257,7 @@ const AdminAddProduct = () => {
             </div>
           </div>
 
-          {/* Image Upload Field - Uploads to Cloudinary */}
+          {/* Image Upload Field */}
           <div className="form-group">
             <label>Product Image *</label>
             <div className="image-upload-area">

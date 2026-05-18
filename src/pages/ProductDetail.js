@@ -30,12 +30,13 @@ const ProductDetail = () => {
     }, 3000);
   };
 
+  // UPDATED: Using environment variable for API URL
   const fetchProduct = useCallback(async () => {
     setLoading(true);
     setError(null);
     
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${id}`);
       
       if (!response.ok) {
         if (response.status === 404) {

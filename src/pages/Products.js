@@ -12,10 +12,10 @@ const Products = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Fetch products from backend
+  // Fetch products from backend - UPDATED with environment variable
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`);
       const data = await response.json();
       setAllProducts(data);
       setLoading(false);
@@ -154,7 +154,7 @@ const Products = () => {
       ) : (
         <div className="products-grid">
           {filteredProducts.map(product => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product._id} product={product} />
           ))}
         </div>
       )}

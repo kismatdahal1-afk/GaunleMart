@@ -1,4 +1,4 @@
-// ImageReplaceModal.js - Uploads image to Cloudinary first
+// ImageReplaceModal.js - Uploads image to Cloudinary using Render API
 import React, { useState } from 'react';
 import './ImageReplaceModal.css';
 
@@ -41,7 +41,7 @@ const ImageReplaceModal = ({ product, onClose, onReplace }) => {
     reader.readAsDataURL(file);
   };
 
-  // Handle replace button click - Upload to Cloudinary first
+  // Handle replace button click - Upload to Cloudinary first using Render API
   const handleReplace = async () => {
     if (!selectedFile) {
       setError('Please select an image first');
@@ -56,8 +56,8 @@ const ImageReplaceModal = ({ product, onClose, onReplace }) => {
     formData.append('image', selectedFile);
 
     try {
-      // First upload image to Cloudinary
-      const uploadResponse = await fetch('http://localhost:5000/api/upload', {
+      // UPDATED: Using environment variable for Render API URL
+      const uploadResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/upload`, {
         method: 'POST',
         body: formData
       });
