@@ -1,0 +1,51 @@
+/* HamburgerIcon.css - Three-line menu icon */
+.hamburger-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.hamburger-icon:hover {
+  background: rgba(255, 140, 66, 0.2);
+}
+
+.hamburger-line {
+  width: 25px;
+  height: 3px;
+  background: #FF5900;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+/* Animated when active */
+.hamburger-icon.active .hamburger-line:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger-icon.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-icon.active .hamburger-line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .hamburger-line {
+    width: 22px;
+    height: 2.5px;
+  }
+  
+  .hamburger-icon {
+    padding: 8px;
+  }
+}

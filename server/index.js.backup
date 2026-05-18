@@ -1,0 +1,147 @@
+// ========== LOAD ENVIRONMENT VARIABLES FIRST ==========
+require('dotenv').config();
+
+// ========== IMPORT DEPENDENCIES ==========
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/mongodb');  // Import MongoDB connection
+
+// ========== CONNECT TO MONGODB ==========
+// 🟢 THIS IS THE FIX - Calling the function
+connectDB();  // ← This line actually establishes the database connection
+
+// ========== INITIALIZE EXPRESS APP ==========
+const app = express();
+
+// ========== MIDDLEWARE ==========
+app.use(cors());                              // Allow React to talk to backend
+app.use(express.json({ limit: '10mb' }));    // Parse JSON with larger limit for images
+
+// ========== IN-MEMORY DATABASE (TEMPORARY - WILL BE REPLACED) ==========
+// This is your existing data - will be migrated to MongoDB in Phase 4
+let products = [
+  {
+    id: 1,
+    name: "Organic Chaki Atta",
+    price: 899,
+    description: "100% organic stone-ground wheat flour, perfect for healthy rotis",
+    imageUrl: "https://picsum.photos/id/30/300/200",
+    rating: 4.8,
+    category: "Groceries",
+    inStock: true
+  },
+  {
+    id: 2,
+    name: "Cuminflower Oil",
+    price: 349,
+    description: "Pure cold-pressed cumin seed oil for cooking and health",
+    imageUrl: "https://picsum.photos/id/29/300/200",
+    rating: 4.7,
+    category: "Oil",
+    inStock: true
+  },
+  {
+    id: 3,
+    name: "Tata Himalayan Salt",
+    price: 199,
+    description: "Natural pink salt from the Himalayas, rich in minerals",
+    imageUrl: "https://picsum.photos/id/20/300/200",
+    rating: 4.9,
+    category: "Spices",
+    inStock: true
+  },
+  {
+    id: 4,
+    name: "Fresh Vegetables",
+    price: 299,
+    description: "Daily fresh organic vegetables directly from local farms",
+    imageUrl: "https://picsum.photos/id/96/300/200",
+    rating: 4.6,
+    category: "Vegetables",
+    inStock: true
+  }
+];
+
+let nextId = 5;
+
+// ========== API ENDPOINTS ==========
+
+// GET /api/products - Returns all products
+app.get('/api/products', (req, res) => {
+  console.log('GET /api/products - Returning', products.length, 'products');
+  res.json(products);
+});
+
+// GET /api/products/:id - Returns a single product by ID
+app.get('/api/products/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const product = products.find(p => p.id === id);
+  
+  if (product) {
+    res.json(product);
+  } else {
+    res.status(404).json({ message: 'Product not found' });
+  }
+});
+
+// POST /api/products - Adds a new product (supports base64 images)
+app.post('/api/products', (req, res) => {
+  console.log('POST /api/products - Request received');
+  
+  const { name, price, description, imageUrl, imageBase64, category } = req.body;
+  
+  // Validate required fields
+  if (!name || !price || !description) {
+    return res.status(400).json({ 
+      message: 'Missing required fields: name, price, and description are required' 
+    });
+  }
+  
+  // Use imageBase64 if provided, otherwise use imageUrl
+  let finalImageUrl = imageUrl;
+  if (imageBase64 && imageBase64.startsWith('data:image')) {
+    finalImageUrl = imageBase64;
+    console.log('Using base64 image (length:', imageBase64.length, 'characters)');
+  } else if (!finalImageUrl) {
+    finalImageUrl = 'https://picsum.photos/id/1/300/200';
+    console.log('Using default image');
+  }
+  
+  const newProduct = {
+    id: nextId++,
+    name: name,
+    price: parseFloat(price),
+    description: description,
+    imageUrl: finalImageUrl,
+    rating: 4.0,
+    category: category || 'General',
+    inStock: true
+  };
+  
+  products.push(newProduct);
+  console.log(`✅ Product added: ${newProduct.name} (ID: ${newProduct.id})`);
+  res.status(201).json(newProduct);
+});
+
+// DELETE /api/products/:id - Deletes a product by ID
+app.delete('/api/products/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const productIndex = products.findIndex(p => p.id === id);
+  
+  if (productIndex === -1) {
+    return res.status(404).json({ message: 'Product not found' });
+  }
+  
+  const deletedProduct = products[productIndex];
+  products.splice(productIndex, 1);
+  console.log(`❌ Product deleted: ${deletedProduct.name} (ID: ${id})`);
+  res.json({ message: 'Product deleted successfully', product: deletedProduct });
+});
+
+// ========== START THE SERVER ==========
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+  console.log(`📦 Products API available at http://localhost:${PORT}/api/products`);
+  console.log(`📊 Total products in database: ${products.length}`);
+});

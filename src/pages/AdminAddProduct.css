@@ -1,0 +1,323 @@
+/* Back to Admin Button - Top Left */
+.add-product-header-top {
+  max-width: 800px;
+  margin: 0 auto 20px;
+}
+
+.back-to-admin-btn {
+  background: transparent;
+  border: 2px solid #FF8C42;
+  color: #FF8C42;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-to-admin-btn:hover {
+  background: #FF8C42;
+  color: white;
+  transform: translateX(-3px);
+}
+/* AdminAddProduct.css - Styling for add product form */
+.admin-add-product {
+  padding: 40px 20px;
+  background-color: #FFF9F0;
+  min-height: calc(100vh - 75px);
+}
+
+.add-product-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.add-product-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.add-product-header h1 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2rem;
+  color: #2c1810;
+  margin-bottom: 10px;
+}
+
+.add-product-header p {
+  font-family: 'Poppins', sans-serif;
+  color: #8B6914;
+}
+
+/* Messages */
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-left: 4px solid #28a745;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-family: 'Poppins', sans-serif;
+  border-left: 4px solid #dc3545;
+}
+
+/* Form */
+.add-product-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: #2c1810;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 12px 15px;
+  border: 2px solid #f0e6d3;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #FF8C42;
+  box-shadow: 0 0 0 3px rgba(255, 140, 66, 0.1);
+}
+
+.form-group small {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+  color: #8B6914;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 2px solid #FF8C42;
+  color: #FF8C42;
+  padding: 12px 25px;
+  border-radius: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background: #FF8C42;
+  color: white;
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #FF8C42, #E67E22);
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 140, 66, 0.4);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  .add-product-container {
+    padding: 25px;
+    margin: 0 15px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .cancel-btn, .submit-btn {
+    width: 100%;
+  }
+}
+/* ========== IMAGE UPLOAD STYLES ========== */
+.image-upload-area {
+  border: 2px dashed #FF8C42;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  background: #FFF9F0;
+  transition: all 0.3s ease;
+}
+
+.image-upload-area:hover {
+  border-color: #E67E22;
+  background: #FFF5E6;
+}
+
+.upload-placeholder {
+  position: relative;
+}
+
+.file-input {
+  display: none;
+}
+
+.upload-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #FF8C42, #E67E22);
+  color: white;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.upload-label:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 140, 66, 0.3);
+}
+
+.upload-hint {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.75rem;
+  color: #8B6914;
+  margin-top: 12px;
+}
+
+.image-preview-container {
+  text-align: center;
+}
+
+.image-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+}
+
+.remove-image-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 25px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.remove-image-btn:hover {
+  background: #c0392b;
+  transform: translateY(-2px);
+}
+/* ========== FIXED NOTIFICATION STYLES ========== */
+.fixed-notification-admin {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2000;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  animation: slideDownFade 0.3s ease-out;
+  max-width: 90%;
+  min-width: 250px;
+}
+
+.fixed-notification-admin.success {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+.fixed-notification-admin.error {
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.fixed-notification-admin.info {
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  color: #0c5460;
+  border-left: 4px solid #17a2b8;
+}
+
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

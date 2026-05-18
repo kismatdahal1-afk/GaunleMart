@@ -1,0 +1,220 @@
+/* ImageReplaceModal.css - Modal styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f0e6d3;
+}
+
+.modal-header h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  color: #2c1810;
+  margin: 0;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  color: #8B6914;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  color: #e74c3c;
+  transform: rotate(90deg);
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.current-image {
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.current-image label {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: #2c1810;
+  margin-bottom: 10px;
+}
+
+.current-image img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #FF8C42;
+}
+
+.new-image {
+  text-align: center;
+}
+
+.new-image label {
+  display: block;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: #2c1810;
+  margin-bottom: 10px;
+}
+
+/* Custom file input wrapper */
+.custom-file-input {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Hidden actual file input */
+.custom-file-input input[type="file"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Styled button like modal-replace-btn */
+.file-input-button {
+  background: linear-gradient(135deg, #FF8C42, #E67E22);
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.file-input-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 140, 66, 0.3);
+}
+
+/* Text showing no file chosen - same font as button */
+.file-name-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-left: 10px;
+}
+
+/* For preview and error messages (kept same) */
+.image-preview-modal {
+  margin-top: 15px;
+}
+
+.image-preview-modal p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  color: #8B6914;
+  margin-bottom: 8px;
+}
+
+.image-preview-modal img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #27ae60;
+}
+
+.modal-error {
+  color: #e74c3c;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.8rem;
+  margin-top: 10px;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid #f0e6d3;
+}
+
+.modal-cancel-btn {
+  background: transparent;
+  border: 2px solid #95a5a6;
+  color: #7f8c8d;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-cancel-btn:hover {
+  background: #95a5a6;
+  color: white;
+}
+
+.modal-replace-btn {
+  background: linear-gradient(135deg, #FF8C42, #E67E22);
+  color: white;
+  border: none;
+  padding: 8px 25px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-replace-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 140, 66, 0.3);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,232 @@
+/* Navbar.css - Bold, visible navigation bar */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.navbar {
+  background: linear-gradient(135deg, #f5f7f4, #f6f7f5);
+  height: 75px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  padding: 0 5%;
+  box-shadow: 0 4px 20px rgba(217, 248, 196, 0.15);
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.nav-logo a {
+  color: #ff5900;
+  font-size: 1.8rem;
+  font-weight: 800;
+  text-decoration: none;
+  font-family: 'Oswald', 'Montserrat', sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.nav-logo a:hover {
+  color: #ee813d;
+  text-shadow: 0 0 8px rgba(247, 38, 6, 0.5);
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 35px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.nav-item {
+  list-style: none;
+}
+
+.nav-link {
+  color: hsl(16, 98%, 51%);
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 8px 16px;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.nav-link:hover {
+  color: #ff1b0f;
+  background-color: rgba(198, 239, 15, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Cart count badge */
+.cart-count {
+  background-color: #ee0c04;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 8px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  min-width: 20px;
+  text-align: center;
+  display: inline-block;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Active link styling */
+.nav-link.active {
+  color: #FFD700;
+  border-bottom: 2px solid #FF8C42;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .navbar {
+    padding: 0 15px;
+    height: 65px;
+  }
+  
+  .nav-logo a {
+    font-size: 1.3rem;
+  }
+  
+  .nav-menu {
+    gap: 15px;
+  }
+  
+  .nav-link {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+    letter-spacing: 0.5px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .navbar {
+    padding: 0 10px;
+    height: 60px;
+  }
+  
+  .nav-logo a {
+    font-size: 1rem;
+  }
+  
+  .nav-menu {
+    gap: 8px;
+  }
+  
+  .nav-link {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+  
+  .cart-count {
+    font-size: 0.6rem;
+    padding: 1px 5px;
+    min-width: 16px;
+  }
+}
+/* Admin link special styling */
+.admin-link {
+  background: linear-gradient(135deg, #FF8C42, #E67E22);
+  color: white !important;
+  border-radius: 25px;
+  padding: 8px 18px !important;
+  margin-left: 5px;
+}
+
+.admin-link:hover {
+  background: linear-gradient(135deg, #E67E22, #FF8C42);
+  color: white !important;
+  transform: translateY(-2px);
+}
+/* Navbar Logo with Image */
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.nav-logo-circle {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(239, 237, 237, 0.898);
+}
+
+.nav-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nav-logo-text {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #FF5900;
+  font-family: 'Oswald', 'Montserrat', sans-serif;
+  letter-spacing: 1px;
+}
+
+.logo-highlight {
+  color: #E67E22;
+}
+
+@media screen and (max-width: 768px) {
+  .nav-logo-circle {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .nav-logo-text {
+    font-size: 1.2rem;
+  }
+}
+/* Hamburger menu item */
+.hamburger-item {
+  display: flex;
+  align-items: center;
+  margin-left: 5px;
+}
+
+/* Hide regular nav links on mobile if needed */
+@media screen and (max-width: 768px) {
+  .nav-item:not(.hamburger-item) {
+    display: none;
+  }
+  
+  .hamburger-item {
+    display: flex;
+  }
+  
+  .nav-menu {
+    gap: 10px;
+  }
+}

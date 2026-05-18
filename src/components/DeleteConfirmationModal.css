@@ -1,0 +1,196 @@
+/* DeleteConfirmationModal.css - Custom modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.delete-modal-container {
+  background: white;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: scaleIn 0.25s ease-out;
+  overflow: hidden;
+}
+
+.delete-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 24px 16px 24px;
+  border-bottom: 1px solid #f0e6d3;
+}
+
+.delete-modal-icon {
+  font-size: 2rem;
+}
+
+.delete-modal-header h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c1810;
+  margin: 0;
+}
+
+.delete-modal-body {
+  padding: 20px 24px;
+}
+
+.delete-modal-body p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.95rem;
+  color: #555;
+  margin: 0 0 12px 0;
+  line-height: 1.5;
+}
+
+.product-name-warning {
+  background: #fff3cd;
+  padding: 10px 15px;
+  border-radius: 10px;
+  margin: 12px 0;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: #856404;
+  border-left: 3px solid #ffc107;
+}
+
+.product-name-warning strong {
+  font-weight: 700;
+  color: #2c1810;
+}
+
+.warning-text {
+  color: #e74c3c !important;
+  font-size: 0.8rem !important;
+  margin-top: 8px !important;
+  margin-bottom: 0 !important;
+}
+
+.delete-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 16px 24px 24px 24px;
+  border-top: 1px solid #f0e6d3;
+  background: #faf8f5;
+}
+
+.modal-cancel-btn {
+  background: transparent;
+  border: 2px solid #95a5a6;
+  color: #7f8c8d;
+  padding: 8px 20px;
+  border-radius: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-cancel-btn:hover:not(:disabled) {
+  background: #95a5a6;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.modal-cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-delete-btn {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  padding: 8px 24px;
+  border-radius: 10px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modal-delete-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+}
+
+.modal-delete-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 480px) {
+  .delete-modal-container {
+    width: 95%;
+    max-width: 95%;
+  }
+  
+  .delete-modal-header {
+    padding: 18px 20px 12px 20px;
+  }
+  
+  .delete-modal-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .delete-modal-icon {
+    font-size: 1.6rem;
+  }
+  
+  .delete-modal-body {
+    padding: 16px 20px;
+  }
+  
+  .delete-modal-body p {
+    font-size: 0.85rem;
+  }
+  
+  .delete-modal-footer {
+    padding: 12px 20px 20px 20px;
+  }
+  
+  .modal-cancel-btn,
+  .modal-delete-btn {
+    padding: 6px 16px;
+    font-size: 0.75rem;
+  }
+}

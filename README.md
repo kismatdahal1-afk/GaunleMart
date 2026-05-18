@@ -1,70 +1,134 @@
-# Getting Started with Create React App
+# 🛒 GaunleMart - E-Commerce Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> Developed by **KISMAT DAHAL**
 
-## Available Scripts
+[![React](https://img.shields.io/badge/React-18-blue)](https://reactjs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18-green)](https://nodejs.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen)](https://mongodb.com/)
+[![Cloudinary](https://img.shields.io/badge/Cloudinary-Image%20Storage-orange)](https://cloudinary.com/)
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📖 About GaunleMart
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+GaunleMart is a **complete full-stack e-commerce web application** built for learning purposes. It allows users to browse products, filter by category, add items to cart, and read blog posts. Administrators can manage products, update stock status, replace images, and view dashboard analytics.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 🎯 Purpose
+This project demonstrates modern web development practices including:
+- React functional components with hooks
+- RESTful API design with Express.js
+- Cloud database integration (MongoDB Atlas)
+- Cloud image storage (Cloudinary)
+- Responsive UI design
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## ✨ Features
 
-### `npm run build`
+### 👤 User Side
+| Feature | Description |
+|---------|-------------|
+| **Home Page** | Hero section with featured products (only in-stock items) |
+| **Products Page** | Search by name + dynamic category filtering |
+| **Product Detail** | Full product view with quantity selector |
+| **Shopping Cart** | Add/remove items, update quantity, calculate total |
+| **Blog System** | Category-filtered blog posts with detail pages |
+| **Responsive Design** | Mobile, tablet, and desktop support |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 👑 Admin Side 
+| Feature | Description |
+|---------|-------------|
+| **Dashboard** | Stats cards, pie chart, bar chart, recent products |
+| **Add Product** | Upload image to Cloudinary, form validation |
+| **Manage Products** | Inline editing, image replace, stock toggle, delete |
+| **Search Products** | Real-time filtering in manage table |
+| **Bulk Submit** | Save all changes at once with submit button |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠️ Tech Stack
 
-### `npm run eject`
+### Frontend
+| Technology | Purpose |
+|------------|---------|
+| React 18 | UI framework |
+| React Router DOM | Navigation |
+| Chart.js | Dashboard charts |
+| CSS3 | Styling (no frameworks) |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Backend
+| Technology | Purpose |
+|------------|---------|
+| Node.js | Runtime environment |
+| Express.js | API server |
+| MongoDB Atlas | Cloud database |
+| Cloudinary | Image storage |
+| Mongoose | ODM for MongoDB |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 📁 Project Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+GaunleMart/
+├── server/ # Backend
+│ ├── config/
+│ │ ├── mongodb.js # MongoDB connection
+│ │ └── cloudinary.js # Cloudinary config
+│ ├── models/
+│ │ └── Product.js # Product schema
+│ ├── routes/
+│ │ ├── products.js # CRUD APIs
+│ │ └── upload.js # Image upload API
+│ └── index.js # Server entry point
+├── src/ # Frontend
+│ ├── components/ # Reusable components
+│ ├── pages/ # All pages
+│ ├── context/ # Cart context
+│ ├── images/ # Local images
+│ ├── App.js # Main app
+│ └── index.js # Entry point
+├── public/ # Static files
+├── .gitignore # Git ignore rules
+├── package.json # Frontend dependencies
+└── README.md # Documentation
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🚀 Installation & Setup
 
-### Code Splitting
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
+- MongoDB Atlas account (free)
+- Cloudinary account (free)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🚀 Installation & Setup
 
-### Analyzing the Bundle Size
+### 📋 Prerequisites
+- 🟢 Node.js (v16 or higher)
+- 📦 npm or yarn
+- ☁️ MongoDB Atlas account (free)
+- 🖼️ Cloudinary account (free)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## 📝 License
+This project is created for learning purposes only. Not intended for commercial use.
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 👨‍💻 Developer
+**KISMAT DAHAL**
 
-### Deployment
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🙏 Acknowledgments
+- ☁️ MongoDB Atlas for free cloud database
+- 🖼️ Cloudinary for free image storage
+- ⚛️ React and Node.js communities
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+📅 Last Updated: May 2026
