@@ -1,10 +1,10 @@
 // NavigationDrawer.js - Vertical sliding navigation drawer with Admin link
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './NavigationDrawer.css';
 import logoImage from '../images/logo.jpg';
 
-const NavigationDrawer = ({ isOpen, onClose }) => {
+function NavigationDrawer({ isOpen, onClose }) {
   // Prevent body scroll when drawer is open
   useEffect(() => {
     if (isOpen) {
@@ -26,11 +26,10 @@ const NavigationDrawer = ({ isOpen, onClose }) => {
   return (
     <>
       {/* Overlay */}
-      <div 
-        className={`drawer-overlay ${isOpen ? 'open' : ''}`} 
-        onClick={onClose} 
-      />
-      
+      <div
+        className={`drawer-overlay ${isOpen ? 'open' : ''}`}
+        onClick={onClose} />
+
       {/* Drawer */}
       <div className={`navigation-drawer ${isOpen ? 'open' : ''}`}>
         {/* Close button */}
@@ -86,18 +85,18 @@ const NavigationDrawer = ({ isOpen, onClose }) => {
         <div className="drawer-section">
           <h3 className="drawer-section-title">Follow Us</h3>
           <div className="drawer-social">
-            <a 
-              href="https://www.facebook.com/kismat.dahal.642239" 
-              target="_blank" 
+            <a
+              href="https://www.facebook.com/kismat.dahal.642239"
+              target="_blank"
               rel="noopener noreferrer"
               className="drawer-social-link"
               onClick={handleLinkClick}
             >
               📘 Facebook
             </a>
-            <a 
-              href="https://www.instagram.com/" 
-              target="_blank" 
+            <a
+              href="https://www.instagram.com/"
+              target="_blank"
               rel="noopener noreferrer"
               className="drawer-social-link"
               onClick={handleLinkClick}
@@ -119,6 +118,6 @@ const NavigationDrawer = ({ isOpen, onClose }) => {
       </div>
     </>
   );
-};
+}
 
 export default NavigationDrawer;
