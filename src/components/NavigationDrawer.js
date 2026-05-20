@@ -1,4 +1,4 @@
-// NavigationDrawer.js - Vertical sliding navigation drawer with Admin link
+// NavigationDrawer.js - Right side sliding navigation drawer
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './NavigationDrawer.css';
@@ -28,9 +28,10 @@ function NavigationDrawer({ isOpen, onClose }) {
       {/* Overlay */}
       <div
         className={`drawer-overlay ${isOpen ? 'open' : ''}`}
-        onClick={onClose} />
+        onClick={onClose}
+      />
 
-      {/* Drawer */}
+      {/* Drawer - Now opens from RIGHT side */}
       <div className={`navigation-drawer ${isOpen ? 'open' : ''}`}>
         {/* Close button */}
         <button className="drawer-close" onClick={onClose}>
@@ -57,7 +58,7 @@ function NavigationDrawer({ isOpen, onClose }) {
         {/* Divider */}
         <div className="drawer-divider"></div>
 
-        {/* Quick Links Section - ADDED ADMIN LINK */}
+        {/* Quick Links Section */}
         <div className="drawer-section">
           <h3 className="drawer-section-title">Quick Links</h3>
           <ul className="drawer-links">

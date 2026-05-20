@@ -1,4 +1,4 @@
-// AdminDashboard.js - Enhanced with Show More Products feature
+// AdminDashboard.js - Fixed version with real product data from deployed backend
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
@@ -23,15 +23,18 @@ const AdminDashboard = () => {
   const [categoryData, setCategoryData] = useState({});
   const [loading, setLoading] = useState(true);
 
+  // Get API URL from environment variable (works on localhost + Vercel)
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   // Fetch products from backend
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch(`${API_URL}/api/products`);
       const data = await response.json();
       setAllProducts(data);
       
-      // Calculate total revenue (dummy calculation based on products)
-      const totalRevenue = data.reduce((sum, product) => sum + (product.price * 15), 0);
+      // Calculate total revenue: sum of all product prices (temporary)
+      const totalRevenue = data.reduce((sum, product) => sum + (product.price || 0), 0);
       
       // Calculate category distribution
       const categories = {};
@@ -40,17 +43,22 @@ const AdminDashboard = () => {
         categories[cat] = (categories[cat] || 0) + 1;
       });
       
+      // Calculate low stock (products with stock < 5, default to 10 if no stock field)
+      const lowStockCount = data.filter(p => (p.stock !== undefined ? p.stock : 10) < 5).length;
+      
       setStats({
         totalProducts: data.length,
-        totalOrders: 156,
+        totalOrders: 0, // TEMPORARY: Order system not built yet
         totalRevenue: totalRevenue,
-        lowStock: data.filter(p => (p.stock || 10) < 5).length
+        lowStock: lowStockCount
       });
       
       setCategoryData(categories);
       
-      // Get recent products (last 5 added - by ID descending)
-      const recent = [...data].reverse().slice(0, 5);
+      // Get recent products (last 5 added - by createdAt descending)
+      const recent = [...data].sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }).slice(0, 5);
       setRecentProducts(recent);
       
       setLoading(false);
@@ -80,13 +88,13 @@ const AdminDashboard = () => {
     datasets: [
       {
         data: Object.values(categoryData),
-        backgroundColor: ['#FF8C42', '#E67E22', '#F39C12', '#F1C40F', '#E74C3C', '#2ECC71'],
+        backgroundColor: ['#FF8C42', '#E67E22', '#F39C12', '#F1C40F', '#E74C3C', '#2ECC71', '#3498DB', '#9B59B6'],
         borderWidth: 0,
       },
     ],
   };
 
-  // Bar chart data for monthly sales (dummy data)
+  // Bar chart data for monthly sales (dummy data - keep as is)
   const barChartData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
@@ -107,7 +115,7 @@ const AdminDashboard = () => {
       },
       title: {
         display: true,
-        text: 'Monthly Sales Trend',
+        text: 'Monthly Sales Trend (Dummy Data)',
       },
     },
   };
@@ -143,7 +151,7 @@ const AdminDashboard = () => {
           <div className="stat-info">
             <h3>{stats.totalProducts}</h3>
             <p>Total Products</p>
-            <span className="stat-trend up">+12% this month</span>
+            <span className="stat-trend up">From database</span>
           </div>
         </div>
 
@@ -152,16 +160,16 @@ const AdminDashboard = () => {
           <div className="stat-info">
             <h3>{stats.totalOrders}</h3>
             <p>Total Orders</p>
-            <span className="stat-trend up">+8% this month</span>
+            <span className="stat-trend">Coming soon</span>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon">💰</div>
           <div className="stat-info">
-            <h3>Rs. {(stats.totalRevenue / 1000).toFixed(1)}K</h3>
+            <h3>Rs. {stats.totalRevenue.toLocaleString()}</h3>
             <p>Total Revenue</p>
-            <span className="stat-trend up">+15% this month</span>
+            <span className="stat-trend">Product value sum</span>
           </div>
         </div>
 
@@ -170,7 +178,7 @@ const AdminDashboard = () => {
           <div className="stat-info">
             <h3>{stats.lowStock}</h3>
             <p>Low Stock Items</p>
-            <span className="stat-trend down">Need attention</span>
+            <span className="stat-trend down">Needs attention</span>
           </div>
         </div>
       </div>
@@ -221,16 +229,19 @@ const AdminDashboard = () => {
                 </tr>
               ) : (
                 displayProducts.map(product => (
-                  <tr key={product.id}>
+                  <tr key={product._id || product.id}>
                     <td className="product-image-cell">
                       <img 
                         src={product.imageUrl} 
                         alt={product.name} 
                         className="recent-product-img"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/50';
+                        }}
                       />
                     </td>
                     <td className="product-name-cell">{product.name}</td>
-                    <td className="product-price-cell">Rs. {product.price.toLocaleString()}</td>
+                    <td className="product-price-cell">Rs. {product.price?.toLocaleString() || 0}</td>
                     <td>
                       <span className="category-badge">{product.category || 'General'}</span>
                     </td>

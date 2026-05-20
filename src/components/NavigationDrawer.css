@@ -1,4 +1,4 @@
-/* NavigationDrawer.css - Vertical sliding drawer styles with reduced width */
+/* NavigationDrawer.css - Right side sliding drawer styles */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 /* ========== OVERLAY ========== */
@@ -20,25 +20,25 @@
   visibility: visible;
 }
 
-/* ========== DRAWER - FIXED WIDTH (70%, max 320px) ========== */
+/* ========== DRAWER - RIGHT SIDE SLIDE ========== */
 .navigation-drawer {
   position: fixed;
   top: 0;
-  left: -100%;  /* Changed from right to left for better UX */
-  width: 70%;
-  max-width: 320px;
+  right: -100%;  /* Hidden off-screen to the RIGHT */
+  width: 320px;  /* Fixed width on desktop */
+  max-width: 85%;
   height: 100vh;
   background: linear-gradient(180deg, #D35400, #E67E22, #F39C12);
   z-index: 1000;
-  transition: left 0.3s ease;
+  transition: right 0.3s ease;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.2);
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
 }
 
 .navigation-drawer.open {
-  left: 0;
+  right: 0;  /* Slide in from RIGHT */
 }
 
 /* Scrollbar styling */
@@ -60,7 +60,7 @@
 .drawer-close {
   position: absolute;
   top: 15px;
-  right: 15px;
+  left: 15px;  /* Changed from right to left for right-side drawer */
   background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
@@ -256,9 +256,16 @@
 }
 
 /* ========== RESPONSIVE ========== */
+@media screen and (max-width: 768px) {
+  .navigation-drawer {
+    width: 70%;
+    max-width: 300px;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .navigation-drawer {
-    width: 80%;
+    width: 75%;
     max-width: 280px;
   }
   
