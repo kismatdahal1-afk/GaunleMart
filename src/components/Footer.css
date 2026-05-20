@@ -320,7 +320,7 @@
 .credit-line {
   font-family: 'Poppins', sans-serif;
   font-size: 0.65rem;
-  color: #FFD700;
+  color: #f6f6f2;
   opacity: 0.8;
   letter-spacing: 0.5px;
   margin-bottom: 4px;
@@ -328,9 +328,9 @@
 
 .credit-name {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.7rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #FFD700;
+  color: #f6f5ef;
   letter-spacing: 0.5px;
 }
 
@@ -346,6 +346,6 @@
   }
   
   .credit-name {
-    font-size: 0.65rem;
+    font-size: 0.9rem;
   }
 }

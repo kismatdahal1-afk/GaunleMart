@@ -302,7 +302,7 @@
 .drawer-credit-line {
   font-family: 'Poppins', sans-serif;
   font-size: 0.7rem;
-  color: #FFD700;
+  color: #f8f7f5;
   opacity: 0.85;
   letter-spacing: 0.5px;
   margin-bottom: 5px;
@@ -310,9 +310,9 @@
 
 .drawer-credit-name {
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  color: #FFD700;
+  color: #e8e7e4;
   letter-spacing: 0.5px;
 }
 
@@ -328,6 +328,6 @@
   }
   
   .drawer-credit-name {
-    font-size: 0.7rem;
+    font-size: 0.95rem;
   }
 }
