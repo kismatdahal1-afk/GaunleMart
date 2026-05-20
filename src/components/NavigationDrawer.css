@@ -289,3 +289,45 @@
     padding: 6px 10px;
   }
 }
+/* ========== DEVELOPER CREDIT IN HAMBURGER MENU ========== */
+.drawer-developer-credit {
+  margin: 20px 20px 30px;
+  padding: 15px 10px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+}
+
+.drawer-credit-line {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.7rem;
+  color: #FFD700;
+  opacity: 0.85;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.drawer-credit-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #FFD700;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive adjustments for mobile menu credit */
+@media screen and (max-width: 480px) {
+  .drawer-developer-credit {
+    margin: 15px 15px 25px;
+    padding: 12px 8px;
+  }
+  
+  .drawer-credit-line {
+    font-size: 0.65rem;
+  }
+  
+  .drawer-credit-name {
+    font-size: 0.7rem;
+  }
+}

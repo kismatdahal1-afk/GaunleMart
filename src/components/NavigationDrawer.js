@@ -1,4 +1,4 @@
-// NavigationDrawer.js - Right side sliding navigation drawer
+// NavigationDrawer.js - Right side sliding navigation drawer with developer credit
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './NavigationDrawer.css';
@@ -31,7 +31,7 @@ function NavigationDrawer({ isOpen, onClose }) {
         onClick={onClose}
       />
 
-      {/* Drawer - Now opens from RIGHT side */}
+      {/* Drawer - Opens from RIGHT side */}
       <div className={`navigation-drawer ${isOpen ? 'open' : ''}`}>
         {/* Close button */}
         <button className="drawer-close" onClick={onClose}>
@@ -115,6 +115,12 @@ function NavigationDrawer({ isOpen, onClose }) {
             <li>✉️ <a href="mailto:higuyskxa@gmail.com">higuyskxa@gmail.com</a></li>
             <li>📍 Kapan, Kathmandu</li>
           </ul>
+        </div>
+
+        {/* Developer Credit - Added at bottom of hamburger menu */}
+        <div className="drawer-developer-credit">
+          <div className="drawer-credit-line">🌐 Website Developed By</div>
+          <div className="drawer-credit-name">👨‍💻 KISMAT DAHAL</div>
         </div>
       </div>
     </>

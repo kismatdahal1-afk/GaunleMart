@@ -16,7 +16,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-container">
         
-        {/* Column 1: Brand Section */}
+        {/* Column 1: Brand Section - ADDED DEVELOPER CREDIT */}
         <div className="footer-col">
           <div className="footer-logo">
             <div className="logo-circle">
@@ -31,9 +31,15 @@ const Footer = () => {
             <span>✓ 100% Organic</span>
             <span>✓ Direct from Farmers</span>
           </div>
+          
+          {/* Developer Credit - Added in Brand Column */}
+          <div className="developer-credit-footer">
+            <div className="credit-line">🌐 Website Developed By</div>
+            <div className="credit-name">👨‍💻 KISMAT DAHAL</div>
+          </div>
         </div>
 
-        {/* Column 2: Quick Links - ADDED ADMIN LINK */}
+        {/* Column 2: Quick Links */}
         <div className="footer-col">
           <h3 className="footer-title">Quick Links</h3>
           <ul className="footer-links">

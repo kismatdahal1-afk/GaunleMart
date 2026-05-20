@@ -309,3 +309,43 @@
     font-size: 0.8rem;
   }
 }
+/* ========== DEVELOPER CREDIT IN FOOTER ========== */
+.developer-credit-footer {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 248, 231, 0.2);
+  text-align: center;
+}
+
+.credit-line {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.65rem;
+  color: #FFD700;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.credit-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #FFD700;
+  letter-spacing: 0.5px;
+}
+
+/* Responsive adjustments for footer credit */
+@media screen and (max-width: 768px) {
+  .developer-credit-footer {
+    margin-top: 12px;
+    padding-top: 10px;
+  }
+  
+  .credit-line {
+    font-size: 0.6rem;
+  }
+  
+  .credit-name {
+    font-size: 0.65rem;
+  }
+}
