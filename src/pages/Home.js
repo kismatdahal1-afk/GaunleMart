@@ -1,9 +1,12 @@
 // Home.js - Shows only In Stock products (max 6)
+// UPDATED: Shop Now button now redirects to Products page instead of scrolling
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';  // ADDED for navigation
 import ProductCard from '../components/ProductCard';
 import './Home.css';
 
 const Home = () => {
+  const navigate = useNavigate();  // ADDED for programmatic navigation
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +16,6 @@ const Home = () => {
 
   const fetchProducts = async () => {
     try {
-      // UPDATED: Using environment variable for Render URL
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`);
       const data = await response.json();
       setAllProducts(data);
@@ -27,6 +29,11 @@ const Home = () => {
   // Filter ONLY "In Stock" products and limit to 6
   const inStockProducts = allProducts.filter(product => product.inStock === true);
   const featuredProducts = inStockProducts.slice(0, 6);
+
+  // Handle Shop Now button click - redirect to Products page
+  const handleShopNow = () => {
+    navigate('/products');
+  };
 
   if (loading) {
     return (
@@ -52,9 +59,9 @@ const Home = () => {
           <div className="hero-features">
             <span className="feature-badge">ORGANIC</span>
             <span className="feature-divider">•</span>
-            <span className="feature-badge">HYGIENIC</span>
-            <span className="feature-divider">•</span>
             <span className="feature-badge">AUTHENTIC</span>
+            <span className="feature-divider">•</span>
+            <span className="feature-badge">HYGIENIC</span>
             <span className="feature-divider">•</span>
             <span className="feature-badge">QUALITY</span>
           </div>
@@ -83,9 +90,10 @@ const Home = () => {
             </div>
           </div>
           
+          {/* Shop Now Button - UPDATED: Now redirects to Products page */}
           <button 
             className="hero-cta-btn"
-            onClick={() => document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' })}
+            onClick={handleShopNow}
           >
             SHOP NOW
           </button>
