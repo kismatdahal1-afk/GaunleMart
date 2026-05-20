@@ -30,7 +30,6 @@ const ProductDetail = () => {
     }, 3000);
   };
 
-  // UPDATED: Using environment variable for API URL
   const fetchProduct = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -98,6 +97,11 @@ const ProductDetail = () => {
       productsUrl = `/products?category=${encodeURIComponent(returnCategory)}`;
     }
     navigate(productsUrl);
+  };
+
+  // Handle continue shopping - FIXED: Now redirects to Products page
+  const handleContinueShopping = () => {
+    navigate('/products');
   };
 
   if (loading) {
@@ -191,7 +195,8 @@ const ProductDetail = () => {
               {isInStock ? 'Add to Cart' : 'Out of Stock'}
             </button>
             
-            <button onClick={() => navigate('/')} className="continue-shopping-btn">
+            {/* FIXED: Continue Shopping button now redirects to Products page */}
+            <button onClick={handleContinueShopping} className="continue-shopping-btn">
               Continue Shopping
             </button>
           </div>
