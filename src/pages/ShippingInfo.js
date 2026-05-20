@@ -1,4 +1,4 @@
-// ShippingInfo.js
+// ShippingInfo.js - With watermark logo
 import React from 'react';
 import './PolicyPages.css';
 

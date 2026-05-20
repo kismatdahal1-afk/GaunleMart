@@ -1,4 +1,4 @@
-// PrivacyPolicy.js
+// PrivacyPolicy.js - With watermark logo
 import React from 'react';
 import './PolicyPages.css';
 
@@ -8,8 +8,8 @@ const PrivacyPolicy = () => {
       <div className="policy-container">
         <h1 style={{ textAlign: "center" }}>Privacy Policy</h1>
         <p style={{ textAlign: "right" }}>
-  Last updated: {new Date().toLocaleDateString()}
-</p>
+          Last updated: {new Date().toLocaleDateString()}
+        </p>
         
         <h2>Information We Collect</h2>
         <p>At GaunleMart, we collect information you provide directly to us, such as when you create an account, make a purchase, or contact us.</p>

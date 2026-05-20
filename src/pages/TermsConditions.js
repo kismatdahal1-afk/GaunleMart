@@ -1,4 +1,4 @@
-// TermsConditions.js
+// TermsConditions.js - With watermark logo
 import React from 'react';
 import './PolicyPages.css';
 
@@ -6,7 +6,7 @@ const TermsConditions = () => {
   return (
     <div className="policy-page">
       <div className="policy-container">
-       <h1 style={{ textAlign: "center" }}>Terms & Conditions</h1>
+        <h1 style={{ textAlign: "center" }}>Terms & Conditions</h1>
         <p style={{ textAlign: "right" }}>
           Last updated: {new Date().toLocaleDateString()}
         </p>

@@ -1,8 +1,9 @@
-/* PolicyPages.css - Shared styling for all policy pages */
+/* PolicyPages.css - Shared styling for all policy pages with watermark logo */
 .policy-page {
   padding: 60px 20px;
   background-color: #FFF9F0;
   min-height: calc(100vh - 75px);
+  position: relative;
 }
 
 .policy-container {
@@ -12,6 +13,27 @@
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+/* Watermark Logo inside white container */
+.policy-container::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background-image: url('../images/logo.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.4;  /* 40% visibility - balanced watermark */
+  pointer-events: none;
+  z-index: 0;
 }
 
 .policy-container h1 {
@@ -19,6 +41,8 @@
   color: #2c1810;
   font-size: 2rem;
   margin-bottom: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .policy-container h2 {
@@ -26,6 +50,8 @@
   color: #FF8C42;
   font-size: 1.3rem;
   margin: 30px 0 15px;
+  position: relative;
+  z-index: 1;
 }
 
 .policy-container p {
@@ -33,11 +59,20 @@
   color: #555;
   line-height: 1.6;
   margin-bottom: 15px;
+  position: relative;
+  z-index: 1;
 }
 
+/* Watermark opacity adjustment for better visibility */
 @media screen and (max-width: 768px) {
   .policy-container {
     padding: 25px;
+  }
+  
+  .policy-container::before {
+    width: 200px;
+    height: 200px;
+    opacity: 0.35;
   }
   
   .policy-container h1 {
@@ -46,5 +81,13 @@
   
   .policy-container h2 {
     font-size: 1.1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .policy-container::before {
+    width: 150px;
+    height: 150px;
+    opacity: 0.3;
   }
 }
