@@ -1,4 +1,4 @@
-/* AdminManageProducts.css - Complete styles with responsive table (no horizontal scroll) */
+/* AdminManageProducts.css - Complete styles with mobile horizontal scroll */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 .admin-manage-products {
@@ -98,19 +98,41 @@
   50% { opacity: 0.85; }
 }
 
-/* ========== TABLE STYLES ========== */
+/* ========== TABLE STYLES - WITH HORIZONTAL SCROLL FOR MOBILE ========== */
 .products-table-container {
   background: white;
   border-radius: 15px;
   overflow-x: auto;
+  overflow-y: visible;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
   margin-bottom: 25px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Custom scrollbar for table container */
+.products-table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.products-table-container::-webkit-scrollbar-track {
+  background: #f0e6d3;
+  border-radius: 10px;
+}
+
+.products-table-container::-webkit-scrollbar-thumb {
+  background: #FF8C42;
+  border-radius: 10px;
+}
+
+.products-table-container::-webkit-scrollbar-thumb:hover {
+  background: #E67E22;
 }
 
 .products-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: auto;
+  min-width: 1000px;
 }
 
 .products-table thead {
@@ -132,7 +154,7 @@
   vertical-align: middle;
 }
 
-/* Column Widths */
+/* Fixed Column Widths - Desktop */
 .col-image { width: 80px; }
 .col-name { width: 180px; }
 .col-price { width: 100px; }
@@ -655,7 +677,8 @@
   cursor: not-allowed;
 }
 
-/* ========== RESPONSIVE DESIGN - NO HORIZONTAL SCROLL ========== */
+/* ========== RESPONSIVE DESIGN - HORIZONTAL SCROLL ONLY ========== */
+/* Maintain desktop layout on mobile - just add horizontal scroll */
 @media screen and (max-width: 1200px) {
   .col-image { width: 70px; }
   .col-name { width: 160px; }
@@ -718,16 +741,17 @@
     font-size: 1.6rem;
   }
   
-  .col-image { width: 55px; }
-  .col-name { width: 120px; }
-  .col-price { width: 80px; }
-  .col-category { width: 85px; }
-  .col-description { width: 130px; }
-  .col-status { width: 100px; }
-  .col-actions { width: 65px; }
+  /* Maintain column widths - no squishing */
+  .col-image { width: 60px; }
+  .col-name { width: 130px; }
+  .col-price { width: 85px; }
+  .col-category { width: 90px; }
+  .col-description { width: 150px; }
+  .col-status { width: 110px; }
+  .col-actions { width: 75px; }
   
   .products-table th, .products-table td {
-    padding: 6px 4px;
+    padding: 8px 5px;
   }
   
   .products-table th {
@@ -795,13 +819,18 @@
     padding: 12px 45px 12px 18px;
     font-size: 0.9rem;
   }
+  
+  /* Ensure table has proper min-width for horizontal scroll */
+  .products-table {
+    min-width: 900px;
+  }
 }
 
 @media screen and (max-width: 650px) {
-  .col-name { width: 100px; }
-  .col-description { width: 100px; }
-  .col-category { width: 75px; }
-  .col-price { width: 70px; }
+  .col-name { width: 120px; }
+  .col-description { width: 130px; }
+  .col-category { width: 85px; }
+  .col-price { width: 80px; }
   
   .description-scroll {
     max-height: 60px;
@@ -812,17 +841,21 @@
     min-height: 60px;
     font-size: 0.7rem;
   }
+  
+  .products-table {
+    min-width: 850px;
+  }
 }
 
 @media screen and (max-width: 550px) {
-  .col-name { width: 90px; }
-  .col-description { width: 85px; }
-  .col-category { width: 70px; }
-  .col-price { width: 65px; }
-  .col-status { width: 85px; }
+  .col-name { width: 110px; }
+  .col-description { width: 110px; }
+  .col-category { width: 80px; }
+  .col-price { width: 75px; }
+  .col-status { width: 95px; }
   
   .products-table th, .products-table td {
-    padding: 4px 3px;
+    padding: 6px 4px;
   }
   
   .products-table th {
@@ -837,6 +870,10 @@
   .fixed-image-box {
     width: 40px;
     height: 40px;
+  }
+  
+  .products-table {
+    min-width: 800px;
   }
 }
 
@@ -854,9 +891,9 @@
     min-width: 120px;
   }
   
-  .col-name { width: 80px; }
-  .col-description { width: 75px; }
-  .col-category { width: 65px; }
+  .col-name { width: 100px; }
+  .col-description { width: 100px; }
+  .col-category { width: 75px; }
   
   .products-table th {
     font-size: 0.6rem;
@@ -870,5 +907,9 @@
   .delete-btn {
     padding: 3px 6px;
     font-size: 0.55rem;
+  }
+  
+  .products-table {
+    min-width: 750px;
   }
 }

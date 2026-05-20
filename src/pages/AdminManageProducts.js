@@ -1,4 +1,4 @@
-// AdminManageProducts.js - Fixed: Product row never disappears when editing name
+// AdminManageProducts.js - FIXED: Product rows NEVER disappear when editing name
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageReplaceModal from '../components/ImageReplaceModal';
@@ -72,7 +72,7 @@ const AdminManageProducts = () => {
     return { ...product, ...changes };
   };
 
-  // Handle field change - FIXED: Allows empty string for name without filtering out product
+  // Handle field change - Allows empty string for name
   const handleFieldChange = (productId, field, value) => {
     setPendingChanges(prev => ({
       ...prev,
@@ -218,9 +218,7 @@ const AdminManageProducts = () => {
         const { _id, __v, ...productWithoutId } = updatedProduct;
         const productToSave = {
           ...productWithoutId,
-          // Handle empty price - default to 0
           price: productWithoutId.price === '' || productWithoutId.price === null ? 0 : Number(productWithoutId.price),
-          // Handle empty name - keep as empty string (won't disappear)
           name: productWithoutId.name === '' ? '' : productWithoutId.name
         };
         
@@ -294,11 +292,17 @@ const AdminManageProducts = () => {
     return price;
   };
 
-  // FIXED: Filter products based on search term - product rows NEVER disappear when editing name
-  // The filter only looks at searchTerm, NOT whether name is empty
-  const filteredProducts = products.filter(product =>
-    product && product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // FIXED: Filter uses safe check - product rows NEVER disappear when name is empty
+  // The filter now checks if name exists and includes search term
+  // Empty string "" is allowed and will be shown in search results if it matches
+  const filteredProducts = products.filter(product => {
+    if (!product) return false;
+    // If search term is empty, show all products (including those with empty names)
+    if (!searchTerm) return true;
+    // If search term exists, only show products whose name contains the search term
+    // Products with empty names will NOT match search term (correct behavior)
+    return product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   if (loading && products.length === 0) {
     return (
@@ -410,7 +414,7 @@ const AdminManageProducts = () => {
                         </div>
                       </td>
                       
-                      {/* Product Name - FIXED: Now shows placeholder when empty and NEVER disappears */}
+                      {/* Product Name - FIXED: Shows placeholder when empty, NEVER disappears */}
                       <td className="col-name">
                         <input
                           type="text"
