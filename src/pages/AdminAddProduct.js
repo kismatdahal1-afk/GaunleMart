@@ -125,7 +125,7 @@ const AdminAddProduct = () => {
     });
   };
 
-  // Handle form submission - UPDATED with Render API
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

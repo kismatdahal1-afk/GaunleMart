@@ -1,3 +1,5 @@
+/* AdminAddProduct.css - Complete responsive styles */
+
 /* Back to Admin Button - Top Left */
 .add-product-header-top {
   max-width: 800px;
@@ -25,7 +27,8 @@
   color: white;
   transform: translateX(-3px);
 }
-/* AdminAddProduct.css - Styling for add product form */
+
+/* Main Container */
 .admin-add-product {
   padding: 40px 20px;
   background-color: #FFF9F0;
@@ -174,27 +177,7 @@
   cursor: not-allowed;
 }
 
-/* Responsive */
-@media screen and (max-width: 768px) {
-  .add-product-container {
-    padding: 25px;
-    margin: 0 15px;
-  }
-  
-  .form-row {
-    grid-template-columns: 1fr;
-    gap: 15px;
-  }
-  
-  .form-actions {
-    flex-direction: column;
-  }
-  
-  .cancel-btn, .submit-btn {
-    width: 100%;
-  }
-}
-/* ========== IMAGE UPLOAD STYLES ========== */
+/* Image Upload Styles */
 .image-upload-area {
   border: 2px dashed #FF8C42;
   border-radius: 16px;
@@ -274,7 +257,8 @@
   background: #c0392b;
   transform: translateY(-2px);
 }
-/* ========== FIXED NOTIFICATION STYLES ========== */
+
+/* Fixed Notification Styles */
 .fixed-notification-admin {
   position: fixed;
   top: 80px;
@@ -319,5 +303,115 @@
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media screen and (max-width: 768px) {
+  .admin-add-product {
+    padding: 20px 15px;
+  }
+  
+  .add-product-container {
+    padding: 25px;
+    margin: 0 15px;
+  }
+  
+  .add-product-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .add-product-header p {
+    font-size: 0.9rem;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .cancel-btn, .submit-btn {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .form-group label {
+    font-size: 0.85rem;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+  
+  .upload-label {
+    padding: 10px 25px;
+    font-size: 0.85rem;
+  }
+  
+  .image-preview {
+    max-width: 150px;
+    max-height: 150px;
+  }
+  
+  .fixed-notification-admin {
+    top: 70px;
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .add-product-container {
+    padding: 20px;
+    margin: 0 10px;
+  }
+  
+  .add-product-header h1 {
+    font-size: 1.4rem;
+  }
+  
+  .back-to-admin-btn {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .form-group label {
+    font-size: 0.8rem;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .upload-label {
+    padding: 8px 20px;
+    font-size: 0.8rem;
+  }
+  
+  .upload-hint {
+    font-size: 0.7rem;
+  }
+  
+  .image-preview {
+    max-width: 120px;
+    max-height: 120px;
+  }
+  
+  .remove-image-btn {
+    padding: 6px 15px;
+    font-size: 0.7rem;
+  }
+  
+  .cancel-btn, .submit-btn {
+    padding: 10px 20px;
+    font-size: 0.85rem;
   }
 }

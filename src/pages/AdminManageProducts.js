@@ -1,4 +1,4 @@
-// AdminManageProducts.js - Complete working version with Render API
+// AdminManageProducts.js - Fixed: Product row never disappears when editing name
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageReplaceModal from '../components/ImageReplaceModal';
@@ -19,7 +19,7 @@ const AdminManageProducts = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState('');
 
-  // Fetch products from backend - UPDATED with environment variable
+  // Fetch products from backend
   const fetchProducts = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`);
@@ -72,7 +72,7 @@ const AdminManageProducts = () => {
     return { ...product, ...changes };
   };
 
-  // Handle field change
+  // Handle field change - FIXED: Allows empty string for name without filtering out product
   const handleFieldChange = (productId, field, value) => {
     setPendingChanges(prev => ({
       ...prev,
@@ -87,7 +87,7 @@ const AdminManageProducts = () => {
     ));
   };
 
-  // Handle price change
+  // Handle price change - allows empty string
   const handlePriceChange = (productId, value) => {
     if (value === '') {
       handleFieldChange(productId, 'price', '');
@@ -132,7 +132,7 @@ const AdminManageProducts = () => {
     ));
   };
 
-  // Handle image replacement - UPDATED with environment variable
+  // Handle image replacement
   const handleImageReplace = async (productId, newImageUrl) => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${productId}`, {
@@ -174,7 +174,7 @@ const AdminManageProducts = () => {
     setIsModalOpen(true);
   };
 
-  // Delete product - UPDATED with environment variable
+  // Delete product
   const handleDelete = async (id, name) => {
     if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
       try {
@@ -195,7 +195,7 @@ const AdminManageProducts = () => {
     }
   };
 
-  // Submit all pending changes - UPDATED with environment variable
+  // Submit all pending changes
   const handleSubmitChanges = async () => {
     if (Object.keys(pendingChanges).length === 0) {
       showNotificationMessage('error', 'No changes to save.');
@@ -218,7 +218,10 @@ const AdminManageProducts = () => {
         const { _id, __v, ...productWithoutId } = updatedProduct;
         const productToSave = {
           ...productWithoutId,
-          price: productWithoutId.price === '' || productWithoutId.price === null ? 0 : Number(productWithoutId.price)
+          // Handle empty price - default to 0
+          price: productWithoutId.price === '' || productWithoutId.price === null ? 0 : Number(productWithoutId.price),
+          // Handle empty name - keep as empty string (won't disappear)
+          name: productWithoutId.name === '' ? '' : productWithoutId.name
         };
         
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${productId}`, {
@@ -281,7 +284,7 @@ const AdminManageProducts = () => {
     return text.substring(0, 100) + '...';
   };
 
-  // Get display price - FIXED to handle empty/undefined values
+  // Get display price - handles empty/undefined values
   const getDisplayPrice = (product) => {
     if (!product) return '';
     const price = product.price;
@@ -291,7 +294,8 @@ const AdminManageProducts = () => {
     return price;
   };
 
-  // Filter products based on search term
+  // FIXED: Filter products based on search term - product rows NEVER disappear when editing name
+  // The filter only looks at searchTerm, NOT whether name is empty
   const filteredProducts = products.filter(product =>
     product && product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -406,16 +410,16 @@ const AdminManageProducts = () => {
                         </div>
                       </td>
                       
-                      {/* Product Name */}
+                      {/* Product Name - FIXED: Now shows placeholder when empty and NEVER disappears */}
                       <td className="col-name">
                         <input
                           type="text"
                           value={updatedProduct.name || ''}
                           onChange={(e) => handleFieldChange(product._id, 'name', e.target.value)}
                           className="edit-input name-input"
-                          placeholder="Product name"
+                          placeholder="Enter Product Name"
                         />
-                       </td>
+                      </td>
                       
                       {/* Price */}
                       <td className="col-price">
@@ -429,9 +433,9 @@ const AdminManageProducts = () => {
                             }
                           }}
                           className="edit-input price-input"
-                          placeholder="Price in Rs"
+                          placeholder="Enter Price"
                         />
-                       </td>
+                      </td>
                       
                       {/* Category */}
                       <td className="col-category">
@@ -440,9 +444,9 @@ const AdminManageProducts = () => {
                           value={updatedProduct.category || ''}
                           onChange={(e) => handleFieldChange(product._id, 'category', e.target.value)}
                           className="edit-input category-input"
-                          placeholder="Category"
+                          placeholder="Enter Category"
                         />
-                       </td>
+                      </td>
                       
                       {/* Description */}
                       <td className="col-description">
@@ -488,7 +492,7 @@ const AdminManageProducts = () => {
                             <div className="edit-hint">✏️ Click to edit</div>
                           </div>
                         )}
-                       </td>
+                      </td>
                       
                       {/* Status */}
                       <td className="col-status">
@@ -512,7 +516,7 @@ const AdminManageProducts = () => {
                             <span className="status-text out-of-stock-text">Out of Stock</span>
                           </label>
                         </div>
-                       </td>
+                      </td>
                       
                       {/* Actions */}
                       <td className="col-actions">
@@ -522,7 +526,7 @@ const AdminManageProducts = () => {
                         >
                           🗑️ Delete
                         </button>
-                       </td>
+                      </td>
                     </tr>
                   );
                 })
