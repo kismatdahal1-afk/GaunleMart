@@ -1,4 +1,4 @@
-// About.js - Simple about page
+// About.js - About page with watermark logo and developer credit
 import React from 'react';
 import './About.css';
 
@@ -22,6 +22,12 @@ const About = () => {
           <li>✓ Best Prices Guaranteed</li>
           <li>✓ Fast Delivery</li>
         </ul>
+        
+        {/* Developer Credit Section - Added */}
+<div className="developer-credit">
+  <p className="credit-text">🌐 Website Developed By</p>
+  <p className="credit-name">👨‍💻 KISMAT DAHAL</p>
+</div>
       </div>
     </div>
   );

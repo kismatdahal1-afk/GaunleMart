@@ -1,7 +1,27 @@
+/* About.css - About page styling with watermark logo and developer credit */
 .about-page {
   padding: 60px 20px;
   background-color: #FFF9F0;
   min-height: calc(100vh - 75px);
+  position: relative;
+}
+
+/* Watermark Logo - Background effect */
+.about-page::before {
+  content: '';
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 400px;
+  height: 400px;
+  background-image: url('../images/logo.jpg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .about-container {
@@ -11,33 +31,146 @@
   padding: 40px;
   border-radius: 20px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 1;
 }
 
 .about-container h1 {
   font-family: 'Oswald', sans-serif;
   color: #2c1810;
   margin-bottom: 20px;
+  font-size: 2.5rem;
 }
 
 .about-container h2 {
   font-family: 'Montserrat', sans-serif;
   color: #FF8C42;
   margin: 30px 0 15px;
+  font-size: 1.5rem;
 }
 
 .about-container p {
   font-family: 'Poppins', sans-serif;
   color: #555;
   line-height: 1.6;
+  font-size: 1rem;
 }
 
 .about-container ul {
   list-style: none;
   padding: 0;
+  margin: 20px 0 30px;
 }
 
 .about-container li {
   font-family: 'Poppins', sans-serif;
   padding: 8px 0;
   color: #27ae60;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Developer Credit Section */
+.developer-credit {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #f0e6d3;
+  text-align: center;
+}
+
+.credit-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  color: #8B6914;
+  letter-spacing: 0.5px;
+  margin: 0;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.credit-text:hover {
+  opacity: 1;
+}
+
+/* ========== RESPONSIVE DESIGN ========== */
+@media screen and (max-width: 768px) {
+  .about-page {
+    padding: 40px 15px;
+  }
+  
+  .about-page::before {
+    width: 250px;
+    height: 250px;
+    opacity: 0.03;
+  }
+  
+  .about-container {
+    padding: 25px;
+  }
+  
+  .about-container h1 {
+    font-size: 1.8rem;
+  }
+  
+  .about-container h2 {
+    font-size: 1.3rem;
+    margin: 20px 0 10px;
+  }
+  
+  .about-container p {
+    font-size: 0.9rem;
+  }
+  
+  .about-container li {
+    font-size: 0.9rem;
+    padding: 6px 0;
+  }
+  
+  .developer-credit {
+    margin-top: 30px;
+    padding-top: 15px;
+  }
+  
+  .credit-text {
+    font-size: 0.75rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .about-page {
+    padding: 30px 12px;
+  }
+  
+  .about-page::before {
+    width: 180px;
+    height: 180px;
+    opacity: 0.02;
+  }
+  
+  .about-container {
+    padding: 20px;
+  }
+  
+  .about-container h1 {
+    font-size: 1.5rem;
+  }
+  
+  .about-container h2 {
+    font-size: 1.2rem;
+  }
+  
+  .about-container p {
+    font-size: 0.85rem;
+  }
+  
+  .about-container li {
+    font-size: 0.85rem;
+    padding: 5px 0;
+  }
+  
+  .credit-text {
+    font-size: 0.7rem;
+  }
 }
