@@ -1,10 +1,11 @@
-// Cart.js - Displays all items in shopping cart with fixed navigation
+// Cart.js - Displays all items in shopping cart with checkout navigation
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import './Cart.css';
 
 const Cart = () => {
+  const navigate = useNavigate(); // Added for checkout navigation
   const { 
     cartItems, 
     removeFromCart, 
@@ -28,6 +29,11 @@ const Cart = () => {
     if (newQuantity >= 1 && newQuantity <= 99) {
       updateQuantity(productId, newQuantity);
     }
+  };
+
+  // Handle checkout button click - navigate to checkout page
+  const handleCheckout = () => {
+    navigate('/checkout');
   };
 
   return (
@@ -101,7 +107,7 @@ const Cart = () => {
           <button onClick={clearCart} className="clear-cart-btn">
             Clear Cart
           </button>
-          <button className="checkout-btn">
+          <button onClick={handleCheckout} className="checkout-btn">
             Proceed to Checkout
           </button>
           <Link to="/products" className="continue-shopping-link">

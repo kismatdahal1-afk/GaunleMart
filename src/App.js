@@ -15,6 +15,8 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import ReturnPolicy from './pages/ReturnPolicy';
 import TermsConditions from './pages/TermsConditions';
 import ShippingInfo from './pages/ShippingInfo';
+import Checkout from './pages/Checkout';
+import OrderConfirmation from './pages/OrderConfirmation';
 import AdminRoute from './components/AdminRoute';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminAddProduct from './pages/AdminAddProduct';
@@ -43,6 +45,10 @@ function App() {
             <Route path="/return" element={<ReturnPolicy />} />
             <Route path="/terms" element={<TermsConditions />} />
             <Route path="/shipping" element={<ShippingInfo />} />
+            
+            {/* Checkout Routes */}
+            <Route path="/checkout" element={<Checkout />} />
+            <Route path="/order-confirmation" element={<OrderConfirmation />} />
             
             {/* Admin Routes */}
             <Route path="/admin/dashboard" element={
