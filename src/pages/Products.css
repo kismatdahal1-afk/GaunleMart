@@ -1,5 +1,5 @@
 /* Products.css - Complete with dynamic multi-row category bar */
-/* UPDATED: Mobile now shows 3 products per row */
+/* UPDATED: Mobile grid spacing optimized for shorter cards */
 
 .products-page {
   padding: 40px 20px;
@@ -64,7 +64,6 @@
   padding: 8px 4px 12px 4px;
 }
 
-/* Category Buttons - Dynamic count */
 .category-btn {
   flex-shrink: 0;
   padding: 8px 18px;
@@ -93,7 +92,6 @@
   box-shadow: 0 2px 8px rgba(255, 140, 66, 0.3);
 }
 
-/* Results Count */
 .products-count {
   text-align: center;
   color: #8B6914;
@@ -117,7 +115,6 @@
   font-weight: 600;
 }
 
-/* No Products Message */
 .no-products {
   text-align: center;
   padding: 60px 20px;
@@ -151,7 +148,6 @@
   transform: translateY(-2px);
 }
 
-/* Products Grid - Desktop: 3-4 columns, Mobile: 3 columns */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -217,15 +213,14 @@
     font-size: 0.75rem;
   }
   
-  /* FIXED: 3 products per row on tablet */
+  /* Grid spacing reduced for shorter cards */
   .products-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
+    gap: 12px;
   }
 }
 
 @media screen and (max-width: 640px) {
-  /* FIXED: 3 products per row on mobile (smaller cards) */
   .products-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
@@ -251,35 +246,8 @@
     font-size: 1.5rem;
   }
   
-  /* FIXED: 3 products per row on small mobile */
   .products-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-  }
-  
-  /* Smaller card content for mobile */
-  .product-card .product-name {
-    font-size: 0.7rem;
-  }
-  
-  .product-card .product-price {
-    font-size: 0.75rem;
-  }
-  
-  .product-card .product-rating {
-    font-size: 0.65rem;
-  }
-  
-  .product-card .view-details-btn {
-    padding: 4px 8px;
-    font-size: 0.6rem;
-  }
-}
-
-/* Extra small devices */
-@media screen and (max-width: 360px) {
-  .products-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
   }
 }

@@ -1,5 +1,5 @@
 /* Home.css - Complete with fixed product visibility */
-/* UPDATED: Mobile now shows 3 products per row */
+/* UPDATED: Mobile grid spacing optimized for shorter cards */
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
@@ -29,7 +29,6 @@
   overflow: hidden;
 }
 
-/* Professional Overlay */
 .hero-overlay {
   position: absolute;
   top: 0;
@@ -39,7 +38,6 @@
   background: linear-gradient(135deg, rgba(50, 42, 42, 0.55) 0%, rgba(50, 42, 42, 0.55) 50%, rgba(50, 42, 42, 0.55) 100%);
 }
 
-/* Hero Content Container */
 .hero-content {
   position: relative;
   z-index: 2;
@@ -49,7 +47,6 @@
   animation: fadeInUp 0.8s ease-out;
 }
 
-/* Welcome Banner */
 .welcome-banner {
   display: inline-block;
   background: linear-gradient(135deg, #FF8C42, #E67E22);
@@ -69,7 +66,6 @@
   text-transform: uppercase;
 }
 
-/* Main Title - GAUNLE MART */
 .hero-title {
   font-family: 'Oswald', 'Montserrat', sans-serif;
   font-size: 5.5rem;
@@ -87,7 +83,6 @@
   text-shadow: 2px 2px 6px rgba(0,0,0,0.4);
 }
 
-/* Hero Features Row */
 .hero-features {
   display: flex;
   justify-content: center;
@@ -121,7 +116,6 @@
   font-weight: bold;
 }
 
-/* Tagline */
 .hero-tagline {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.6rem;
@@ -134,7 +128,6 @@
   animation: fadeInUp 0.6s ease-out 0.3s both;
 }
 
-/* Description */
 .hero-description {
   font-family: 'Poppins', sans-serif;
   font-size: 1.05rem;
@@ -149,7 +142,6 @@
   animation: fadeInUp 0.6s ease-out 0.4s both;
 }
 
-/* Benefits Row */
 .hero-benefits {
   display: flex;
   justify-content: center;
@@ -193,7 +185,6 @@
   text-transform: uppercase;
 }
 
-/* CTA Button - Bold & Visible */
 .hero-cta-btn {
   background: linear-gradient(135deg, #FF8C42, #E67E22);
   color: #FFFFFF;
@@ -217,7 +208,7 @@
   background: linear-gradient(135deg, #E67E22, #FF8C42);
 }
 
-/* ========== PRODUCTS SECTION - FIXED VISIBILITY ========== */
+/* ========== PRODUCTS SECTION ========== */
 .products-section {
   padding: 40px 20px 80px;
   background-color: #FFF9F0;
@@ -259,7 +250,6 @@
   font-weight: 500;
 }
 
-/* Products Grid - Desktop: 3-4 columns, Mobile: 3 columns */
 .products-grid {
   display: grid !important;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)) !important;
@@ -278,7 +268,6 @@
   transition: all 0.5s ease-out;
 }
 
-/* No products message */
 .no-products-message {
   text-align: center;
   padding: 60px;
@@ -312,7 +301,6 @@
   box-shadow: 0 5px 15px rgba(255, 140, 66, 0.4);
 }
 
-/* View all button */
 .view-all-container {
   text-align: center;
   margin-top: 40px;
@@ -476,16 +464,15 @@
     font-size: 1rem;
   }
   
-  /* FIXED: 3 products per row on tablet */
+  /* Grid spacing reduced for shorter cards */
   .products-grid {
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 15px !important;
-    padding: 15px !important;
+    gap: 12px !important;
+    padding: 12px !important;
   }
 }
 
 @media screen and (max-width: 640px) {
-  /* FIXED: 3 products per row on mobile */
   .products-grid {
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 10px !important;
@@ -526,7 +513,6 @@
     font-size: 1.5rem;
   }
   
-  /* FIXED: 3 products per row on small mobile */
   .products-grid {
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 8px !important;
