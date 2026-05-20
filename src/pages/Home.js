@@ -50,13 +50,13 @@ const Home = () => {
           <h1 className="hero-title">GAUNLE <span className="title-highlight">MART</span></h1>
           
           <div className="hero-features">
-            <span className="feature-badge">Organic</span>
+            <span className="feature-badge">ORGANIC</span>
             <span className="feature-divider">•</span>
-            <span className="feature-badge">CHAKI ATTA</span>
+            <span className="feature-badge">HYGIENIC</span>
             <span className="feature-divider">•</span>
-            <span className="feature-badge">Cuminflower Oil</span>
+            <span className="feature-badge">AUTHENTIC</span>
             <span className="feature-divider">•</span>
-            <span className="feature-badge">TATA HIMALAYAN SALT</span>
+            <span className="feature-badge">QUALITY</span>
           </div>
           
           <p className="hero-tagline">YOUR TRUSTED MART FOR EVERY NEED</p>

@@ -1,5 +1,5 @@
 /* Home.css - Complete with fixed product visibility */
-/* UPDATED: Mobile grid spacing optimized for shorter cards */
+/* UPDATED: Mobile Hero Section optimized - compact height, row layout for features */
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
@@ -352,7 +352,6 @@
   to { transform: rotate(360deg); }
 }
 
-/* Home page loading state */
 .home-loading {
   display: flex;
   flex-direction: column;
@@ -377,7 +376,7 @@
   color: #8B6914;
 }
 
-/* ========== RESPONSIVE DESIGN ========== */
+/* ========== RESPONSIVE DESIGN - MOBILE FIRST ========== */
 @media screen and (max-width: 1024px) {
   .hero-title {
     font-size: 4rem;
@@ -397,82 +396,120 @@
   }
 }
 
+/* MOBILE HERO SECTION OPTIMIZATION - CRITICAL FIXES */
 @media screen and (max-width: 768px) {
+  /* ========== HERO SECTION HEIGHT FIX ========== */
   .hero-section {
     height: auto;
-    min-height: 600px;
-    padding: 80px 0;
-    background-attachment: scroll;
+    min-height: 450px;  /* Reduced from 600px */
+    max-height: none;
+    padding: 40px 0;
+    background-attachment: scroll;  /* Fixes zoom issue on mobile */
+    margin-bottom: 30px;
   }
   
-  .hero-title {
-    font-size: 2.8rem;
-    letter-spacing: 2px;
+  /* ========== HERO CONTENT COMPACT ========== */
+  .hero-content {
+    padding: 20px;
+    width: 95%;
   }
   
+  /* ========== WELCOME BANNER ========== */
   .welcome-banner {
-    padding: 6px 20px;
+    padding: 4px 16px;
+    margin-bottom: 12px;
   }
   
   .welcome-text {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     letter-spacing: 2px;
   }
   
-  .hero-tagline {
-    font-size: 1rem;
+  /* ========== TITLE FONT SIZE ========== */
+  .hero-title {
+    font-size: 2rem;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
   }
   
-  .hero-description {
-    font-size: 0.9rem;
-    padding: 0 15px;
-  }
-  
+  /* ========== FEATURE BADGES - ROW LAYOUT (NOT STACKED) ========== */
   .hero-features {
+    gap: 8px;
+    padding: 8px 15px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
-    gap: 12px;
-    border-radius: 40px;
   }
   
   .feature-badge {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.5px;
   }
   
+  .feature-divider {
+    font-size: 0.8rem;
+  }
+  
+  /* ========== TAGLINE ========== */
+  .hero-tagline {
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+  }
+  
+  /* ========== DESCRIPTION ========== */
+  .hero-description {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    margin-bottom: 15px;
+    padding: 0 10px;
+  }
+  
+  /* ========== BENEFIT CARDS - ROW LAYOUT (2x2 OR 4 IN ROW) ========== */
   .hero-benefits {
-    gap: 12px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
   }
   
   .benefit-card {
-    padding: 6px 14px;
+    padding: 5px 12px;
+    gap: 4px;
+  }
+  
+  .benefit-icon {
+    font-size: 0.7rem;
   }
   
   .benefit-text {
-    font-size: 0.75rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.3px;
   }
   
+  /* ========== CTA BUTTON ========== */
   .hero-cta-btn {
-    padding: 12px 35px;
-    font-size: 1rem;
-    letter-spacing: 2px;
+    padding: 8px 25px;
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+  }
+  
+  /* ========== PRODUCTS SECTION SPACING ========== */
+  .products-section {
+    padding: 20px 15px 40px;
   }
   
   .section-title {
-    font-size: 2rem;
+    font-size: 1.6rem;
   }
   
   .section-subtitle {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    margin-bottom: 25px;
   }
   
   /* Grid spacing reduced for shorter cards */
-  .products-grid {
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 12px !important;
-    padding: 12px !important;
-  }
-}
-
-@media screen and (max-width: 640px) {
   .products-grid {
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 10px !important;
@@ -480,42 +517,109 @@
   }
 }
 
+/* SMALL MOBILE (480px and below) - Further Optimization */
 @media screen and (max-width: 480px) {
+  .hero-section {
+    min-height: 400px;
+    padding: 30px 0;
+  }
+  
+  .hero-content {
+    padding: 15px;
+  }
+  
   .hero-title {
-    font-size: 2rem;
-    letter-spacing: 1px;
+    font-size: 1.6rem;
+    margin-bottom: 8px;
   }
   
   .welcome-text {
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-  }
-  
-  .hero-tagline {
-    font-size: 0.85rem;
-  }
-  
-  .hero-description {
-    font-size: 0.8rem;
-  }
-  
-  .feature-badge {
     font-size: 0.6rem;
   }
   
-  .hero-cta-btn {
-    padding: 10px 28px;
-    font-size: 0.85rem;
-    letter-spacing: 2px;
+  .welcome-banner {
+    padding: 3px 12px;
+    margin-bottom: 8px;
   }
   
-  .section-title {
-    font-size: 1.5rem;
+  .hero-tagline {
+    font-size: 0.75rem;
+    margin-bottom: 8px;
+  }
+  
+  .hero-description {
+    font-size: 0.7rem;
+    line-height: 1.3;
+    margin-bottom: 12px;
+  }
+  
+  .hero-features {
+    gap: 6px;
+    padding: 6px 12px;
+    margin-bottom: 15px;
+  }
+  
+  .feature-badge {
+    font-size: 0.55rem;
+  }
+  
+  .hero-benefits {
+    gap: 6px;
+    margin-bottom: 15px;
+  }
+  
+  .benefit-card {
+    padding: 4px 10px;
+  }
+  
+  .benefit-icon {
+    font-size: 0.65rem;
+  }
+  
+  .benefit-text {
+    font-size: 0.55rem;
+  }
+  
+  .hero-cta-btn {
+    padding: 6px 20px;
+    font-size: 0.7rem;
   }
   
   .products-grid {
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 8px !important;
     padding: 8px !important;
+  }
+}
+
+/* EXTRA SMALL DEVICES (360px and below) */
+@media screen and (max-width: 360px) {
+  .hero-section {
+    min-height: 380px;
+  }
+  
+  .hero-title {
+    font-size: 1.4rem;
+  }
+  
+  .hero-tagline {
+    font-size: 0.7rem;
+  }
+  
+  .hero-description {
+    font-size: 0.65rem;
+  }
+  
+  .feature-badge {
+    font-size: 0.5rem;
+  }
+  
+  .benefit-text {
+    font-size: 0.5rem;
+  }
+  
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 6px !important;
   }
 }
