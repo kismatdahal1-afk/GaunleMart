@@ -1,5 +1,5 @@
 /* Home.css - Complete with fixed product visibility */
-/* UPDATED: Mobile Hero Section optimized - compact height, row layout for features */
+/* UPDATED: Added hero logo styles - transparent background */
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
@@ -27,6 +27,24 @@
   text-align: center;
   margin-bottom: 60px;
   overflow: hidden;
+}
+
+/* ========== HERO LOGO STYLES ========== */
+/* ADDED: Logo positioned at top-left, transparent background */
+.hero-logo {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+  width: 90px;
+  height: auto;
+  z-index: 15;
+  object-fit: contain;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+  transition: transform 0.3s ease;
+}
+
+.hero-logo:hover {
+  transform: scale(1.02);
 }
 
 .hero-overlay {
@@ -376,8 +394,14 @@
   color: #8B6914;
 }
 
-/* ========== RESPONSIVE DESIGN - MOBILE FIRST ========== */
+/* ========== RESPONSIVE DESIGN ========== */
 @media screen and (max-width: 1024px) {
+  .hero-logo {
+    width: 75px;
+    top: 20px;
+    left: 20px;
+  }
+  
   .hero-title {
     font-size: 4rem;
   }
@@ -396,25 +420,29 @@
   }
 }
 
-/* MOBILE HERO SECTION OPTIMIZATION - CRITICAL FIXES */
+/* MOBILE HERO SECTION OPTIMIZATION */
 @media screen and (max-width: 768px) {
-  /* ========== HERO SECTION HEIGHT FIX ========== */
+  /* Logo responsive */
+  .hero-logo {
+    width: 55px;
+    top: 12px;
+    left: 12px;
+  }
+  
   .hero-section {
     height: auto;
-    min-height: 450px;  /* Reduced from 600px */
+    min-height: 450px;
     max-height: none;
     padding: 40px 0;
-    background-attachment: scroll;  /* Fixes zoom issue on mobile */
+    background-attachment: scroll;
     margin-bottom: 30px;
   }
   
-  /* ========== HERO CONTENT COMPACT ========== */
   .hero-content {
     padding: 20px;
     width: 95%;
   }
   
-  /* ========== WELCOME BANNER ========== */
   .welcome-banner {
     padding: 4px 16px;
     margin-bottom: 12px;
@@ -425,14 +453,12 @@
     letter-spacing: 2px;
   }
   
-  /* ========== TITLE FONT SIZE ========== */
   .hero-title {
     font-size: 2rem;
     letter-spacing: 1px;
     margin-bottom: 12px;
   }
   
-  /* ========== FEATURE BADGES - ROW LAYOUT (NOT STACKED) ========== */
   .hero-features {
     gap: 8px;
     padding: 8px 15px;
@@ -449,14 +475,12 @@
     font-size: 0.8rem;
   }
   
-  /* ========== TAGLINE ========== */
   .hero-tagline {
     font-size: 0.85rem;
     margin-bottom: 10px;
     letter-spacing: 1px;
   }
   
-  /* ========== DESCRIPTION ========== */
   .hero-description {
     font-size: 0.75rem;
     line-height: 1.4;
@@ -464,7 +488,6 @@
     padding: 0 10px;
   }
   
-  /* ========== BENEFIT CARDS - ROW LAYOUT (2x2 OR 4 IN ROW) ========== */
   .hero-benefits {
     display: flex;
     flex-direction: row;
@@ -488,14 +511,12 @@
     letter-spacing: 0.3px;
   }
   
-  /* ========== CTA BUTTON ========== */
   .hero-cta-btn {
     padding: 8px 25px;
     font-size: 0.8rem;
     letter-spacing: 1.5px;
   }
   
-  /* ========== PRODUCTS SECTION SPACING ========== */
   .products-section {
     padding: 20px 15px 40px;
   }
@@ -509,7 +530,6 @@
     margin-bottom: 25px;
   }
   
-  /* Grid spacing reduced for shorter cards */
   .products-grid {
     grid-template-columns: repeat(3, 1fr) !important;
     gap: 10px !important;
@@ -517,8 +537,14 @@
   }
 }
 
-/* SMALL MOBILE (480px and below) - Further Optimization */
+/* SMALL MOBILE (480px and below) */
 @media screen and (max-width: 480px) {
+  .hero-logo {
+    width: 45px;
+    top: 10px;
+    left: 10px;
+  }
+  
   .hero-section {
     min-height: 400px;
     padding: 30px 0;
@@ -592,8 +618,14 @@
   }
 }
 
-/* EXTRA SMALL DEVICES (360px and below) */
+/* EXTRA SMALL DEVICES */
 @media screen and (max-width: 360px) {
+  .hero-logo {
+    width: 40px;
+    top: 8px;
+    left: 8px;
+  }
+  
   .hero-section {
     min-height: 380px;
   }

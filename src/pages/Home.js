@@ -1,12 +1,13 @@
 // Home.js - Shows only In Stock products (max 6)
-// UPDATED: Shop Now button now redirects to Products page instead of scrolling
+// UPDATED: Added logo image in hero section (transparent background)
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';  // ADDED for navigation
+import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import './Home.css';
+import logoB from '../images/logoB.jpg';  // ADDED: Import logo image
 
 const Home = () => {
-  const navigate = useNavigate();  // ADDED for programmatic navigation
+  const navigate = useNavigate();
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -48,6 +49,13 @@ const Home = () => {
     <div className="home">
       {/* Hero Section */}
       <div className="hero-section">
+        {/* ADDED: Logo Image - positioned at top-left, transparent background */}
+        <img 
+          src={logoB} 
+          alt="GaunleMart Logo" 
+          className="hero-logo"
+        />
+        
         <div className="hero-overlay"></div>
         <div className="hero-content">
           <div className="welcome-banner">
@@ -90,7 +98,6 @@ const Home = () => {
             </div>
           </div>
           
-          {/* Shop Now Button - UPDATED: Now redirects to Products page */}
           <button 
             className="hero-cta-btn"
             onClick={handleShopNow}
