@@ -1,5 +1,5 @@
 // AdminDashboard.js - Fixed version with real product data from deployed backend
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
 import { Pie, Bar } from 'react-chartjs-2';
@@ -27,7 +27,7 @@ const AdminDashboard = () => {
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   // Fetch products from backend
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/api/products`);
       const data = await response.json();
@@ -66,11 +66,11 @@ const AdminDashboard = () => {
       console.error('Error fetching products:', error);
       setLoading(false);
     }
-  };
+  }, [API_URL]);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [fetchProducts]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('adminAuthenticated');
