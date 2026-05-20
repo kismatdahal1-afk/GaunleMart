@@ -1,4 +1,4 @@
-/* AdminManageProducts.css - Complete styles for manage products page */
+/* AdminManageProducts.css - Complete styles with responsive table (no horizontal scroll) */
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
 
 .admin-manage-products {
@@ -218,20 +218,12 @@
   appearance: textfield;
 }
 
-/* ========== PRICE INPUT PLACEHOLDER STYLES (NEW) ========== */
 .price-input::placeholder {
   color: #adb5bd;
   font-style: italic;
   font-weight: normal;
 }
 
-/* Remove spinner buttons from number input when type=text */
-.price-input {
-  appearance: textfield;
-  -moz-appearance: textfield;
-}
-
-/* Ensure empty state is clearly visible */
 .price-input:empty {
   background-color: #fff;
 }
@@ -407,64 +399,6 @@
   transform: translateY(-2px);
 }
 
-/* ========== SUBMIT/CANCEL BUTTONS - RIGHT ALIGNED ========== */
-.action-buttons-container-right {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-top: 20px;
-  padding: 20px 0;
-}
-
-.cancel-changes-btn-right {
-  background: transparent;
-  border: 2px solid #95a5a6;
-  color: #7f8c8d;
-  padding: 10px 24px;
-  border-radius: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.cancel-changes-btn-right:hover:not(:disabled) {
-  background: #95a5a6;
-  color: white;
-  transform: translateY(-2px);
-}
-
-.cancel-changes-btn-right:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.submit-changes-btn-right {
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
-  color: white;
-  border: none;
-  padding: 10px 28px;
-  border-radius: 8px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.submit-changes-btn-right:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-}
-
-.submit-changes-btn-right:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
 /* ========== NO DATA ========== */
 .no-data {
   text-align: center;
@@ -496,29 +430,7 @@
   to { transform: rotate(360deg); }
 }
 
-/* ========== RESPONSIVE ========== */
-@media screen and (max-width: 1200px) {
-  .products-table {
-    min-width: 1100px;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .admin-manage-products {
-    padding: 20px 15px;
-  }
-  
-  .action-buttons-container-right {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .cancel-changes-btn-right,
-  .submit-changes-btn-right {
-    text-align: center;
-  }
-}
-/* ========== FIXED NOTIFICATION BAR - TOP ========== */
+/* ========== FIXED NOTIFICATION BAR ========== */
 .fixed-notification {
   position: fixed;
   top: 80px;
@@ -560,7 +472,7 @@
   }
 }
 
-/* ========== SEARCH BAR - FULL WIDTH ========== */
+/* ========== SEARCH BAR ========== */
 .admin-search-container {
   max-width: 100%;
   margin: 20px 0 30px;
@@ -685,7 +597,118 @@
   cursor: not-allowed;
 }
 
-/* ========== RESPONSIVE FOR FIXED BUTTONS ========== */
+/* ========== ACTION BUTTONS CONTAINER (for bottom of table) ========== */
+.action-buttons-container-right {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 20px 0;
+}
+
+.cancel-changes-btn-right {
+  background: transparent;
+  border: 2px solid #95a5a6;
+  color: #7f8c8d;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-changes-btn-right:hover:not(:disabled) {
+  background: #95a5a6;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.cancel-changes-btn-right:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.submit-changes-btn-right {
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  color: white;
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.submit-changes-btn-right:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+}
+
+.submit-changes-btn-right:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========== RESPONSIVE DESIGN - NO HORIZONTAL SCROLL ========== */
+@media screen and (max-width: 1200px) {
+  .col-image { width: 70px; }
+  .col-name { width: 160px; }
+  .col-price { width: 90px; }
+  .col-category { width: 110px; }
+  .col-description { width: 220px; }
+  .col-status { width: 120px; }
+  .col-actions { width: 70px; }
+  
+  .products-table th, .products-table td {
+    padding: 10px 8px;
+  }
+  
+  .edit-input {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .col-name { width: 140px; }
+  .col-description { width: 180px; }
+  .col-category { width: 100px; }
+  
+  .products-table th, .products-table td {
+    padding: 8px 6px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .col-image { width: 60px; }
+  .col-name { width: 130px; }
+  .col-price { width: 85px; }
+  .col-category { width: 90px; }
+  .col-description { width: 150px; }
+  .col-status { width: 110px; }
+  
+  .edit-input {
+    font-size: 0.75rem;
+    padding: 5px 6px;
+  }
+  
+  .products-table th {
+    font-size: 0.75rem;
+    padding: 8px 6px;
+  }
+  
+  .fixed-image-box {
+    width: 50px;
+    height: 50px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .admin-manage-products {
     padding: 20px 15px;
