@@ -1,5 +1,5 @@
 /* Home.css - Complete with fixed product visibility */
-/* UPDATED: Added hero logo styles - transparent background */
+/* UPDATED: Logo size increased by 80% */
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Oswald:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
@@ -29,13 +29,12 @@
   overflow: hidden;
 }
 
-/* ========== HERO LOGO STYLES ========== */
-/* ADDED: Logo positioned at top-left, transparent background */
+/* ========== HERO LOGO STYLES - UPDATED SIZE (80% INCREASE) ========== */
 .hero-logo {
   position: absolute;
   top: 25px;
   left: 25px;
-  width: 90px;
+  width: 162px;        /* Increased from 90px (+80%) */
   height: auto;
   z-index: 15;
   object-fit: contain;
@@ -397,7 +396,7 @@
 /* ========== RESPONSIVE DESIGN ========== */
 @media screen and (max-width: 1024px) {
   .hero-logo {
-    width: 75px;
+    width: 135px;       /* Increased from 75px (+80%) */
     top: 20px;
     left: 20px;
   }
@@ -422,9 +421,9 @@
 
 /* MOBILE HERO SECTION OPTIMIZATION */
 @media screen and (max-width: 768px) {
-  /* Logo responsive */
+  /* Logo responsive - increased size */
   .hero-logo {
-    width: 55px;
+    width: 99px;        /* Increased from 55px (+80%) */
     top: 12px;
     left: 12px;
   }
@@ -540,7 +539,7 @@
 /* SMALL MOBILE (480px and below) */
 @media screen and (max-width: 480px) {
   .hero-logo {
-    width: 45px;
+    width: 81px;        /* Increased from 45px (+80%) */
     top: 10px;
     left: 10px;
   }
@@ -621,7 +620,7 @@
 /* EXTRA SMALL DEVICES */
 @media screen and (max-width: 360px) {
   .hero-logo {
-    width: 40px;
+    width: 72px;        /* Increased from 40px (+80%) */
     top: 8px;
     left: 8px;
   }

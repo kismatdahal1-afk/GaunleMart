@@ -1,10 +1,10 @@
 // Home.js - Shows only In Stock products (max 6)
-// UPDATED: Added logo image in hero section (transparent background)
+// UPDATED: Replaced logo with lg.jpg and increased size
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import './Home.css';
-import logoB from '../images/logoB.jpg';  // ADDED: Import logo image
+import logoImage from '../images/lg.jpg';  // UPDATED: New logo file (lg.jpg)
 
 const Home = () => {
   const navigate = useNavigate();
@@ -49,9 +49,9 @@ const Home = () => {
     <div className="home">
       {/* Hero Section */}
       <div className="hero-section">
-        {/* ADDED: Logo Image - positioned at top-left, transparent background */}
+        {/* UPDATED: Logo with new image lg.jpg and increased size */}
         <img 
-          src={logoB} 
+          src={logoImage} 
           alt="GaunleMart Logo" 
           className="hero-logo"
         />
@@ -69,7 +69,7 @@ const Home = () => {
             <span className="feature-divider">•</span>
             <span className="feature-badge">AUTHENTIC</span>
             <span className="feature-divider">•</span>
-            <span className="feature-badge">HYGIENIC</span>
+            <span className="feature-badge">AUTHENTIC</span>
             <span className="feature-divider">•</span>
             <span className="feature-badge">QUALITY</span>
           </div>
