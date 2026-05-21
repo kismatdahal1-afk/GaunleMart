@@ -26,6 +26,11 @@ const AdminDashboard = () => {
   // Get API URL from environment variable (works on localhost + Vercel)
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
+  // Handle Google Analytics button click - opens GA dashboard in new tab
+  const handleOpenAnalytics = () => {
+    window.open('https://analytics.google.com/analytics/web/', '_blank');
+  };
+
   // Fetch products from backend
   const fetchProducts = useCallback(async () => {
     try {
@@ -268,7 +273,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - ADDED ANALYTICS BUTTON */}
       <div className="dashboard-actions">
         <h2>Quick Actions</h2>
         <div className="actions-grid">
@@ -281,6 +286,12 @@ const AdminDashboard = () => {
             <span className="action-icon">✏️</span>
             <h3>Manage Products</h3>
             <p>Edit or delete existing products</p>
+          </div>
+          {/* NEW: Analytics Dashboard Button */}
+          <div onClick={handleOpenAnalytics} className="action-card">
+            <span className="action-icon">📊</span>
+            <h3>Analytics Dashboard</h3>
+            <p>View Google Analytics insights</p>
           </div>
         </div>
       </div>
