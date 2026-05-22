@@ -11,10 +11,10 @@ const OrderConfirmation = () => {
   useEffect(() => {
     // Fetch order data from localStorage
     const storedOrder = localStorage.getItem('orderData');
+    console.log('Stored Order:', storedOrder); // Debug log
+    
     if (storedOrder) {
       setOrderData(JSON.parse(storedOrder));
-      // Clear localStorage after reading (optional - keeps data for refresh)
-      // localStorage.removeItem('orderData');
     }
     setLoading(false);
   }, []);
