@@ -1,7 +1,6 @@
-// models/Order.js - Order Schema for MongoDB
+// models/Order.js - Complete Order Schema
 const mongoose = require('mongoose');
 
-// Define what each order looks like in database
 const orderSchema = new mongoose.Schema(
   {
     orderId: {
@@ -37,27 +36,19 @@ const orderSchema = new mongoose.Schema(
       trim: true
     },
     items: {
-      type: [
-        {
-          id: { type: String, required: true },
-          name: { type: String, required: true },
-          price: { type: Number, required: true },
-          quantity: { type: Number, required: true, min: 1 },
-          imageUrl: { type: String, required: true },
-          total: { type: Number, required: true }
-        }
-      ],
-      required: true
+      type: Array,
+      required: true,
+      default: []
     },
     totalItems: {
       type: Number,
       required: true,
-      min: 1
+      default: 0
     },
     subtotal: {
       type: Number,
       required: true,
-      min: 0
+      default: 0
     },
     deliveryFee: {
       type: Number,
@@ -66,24 +57,22 @@ const orderSchema = new mongoose.Schema(
     grandTotal: {
       type: Number,
       required: true,
-      min: 0
+      default: 0
+    },
+    notes: {
+      type: String,
+      default: ''
     },
     status: {
       type: String,
       enum: ['Processing', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
       default: 'Processing'
-    },
-    notes: {
-      type: String,
-      trim: true,
-      default: ''
     }
   },
   {
-    timestamps: true // Automatically adds createdAt and updatedAt
+    timestamps: true
   }
 );
 
-// Create and export the Order model
 const Order = mongoose.model('Order', orderSchema);
 module.exports = Order;

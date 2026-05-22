@@ -1,4 +1,4 @@
-// Checkout.js - Updated to send orders to backend API
+// Checkout.js - Fixed version with correct order data
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -23,37 +23,29 @@ const Checkout = () => {
   
   const [errors, setErrors] = useState({});
 
-  // Get API URL from environment variable
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  // Redirect if cart is empty
   useEffect(() => {
     if (cartItems.length === 0) {
       navigate('/cart');
     }
   }, [cartItems, navigate]);
 
-  // Show notification
   const showNotificationMessage = (message, type = 'success') => {
     setNotificationMessage(message);
     setNotificationType(type);
     setShowNotification(true);
-    setTimeout(() => {
-      setShowNotification(false);
-    }, 3000);
+    setTimeout(() => setShowNotification(false), 3000);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
     if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
@@ -72,7 +64,6 @@ const Checkout = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Generate unique order ID
   const generateOrderId = () => {
     const prefix = 'GAUNLE';
     const timestamp = Date.now().toString().slice(-8);
@@ -80,11 +71,8 @@ const Checkout = () => {
     return `${prefix}-${timestamp}-${random}`;
   };
 
-  // UPDATED: Send order to backend API
   const handlePlaceOrder = async () => {
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
     
     setIsSubmitting(true);
     
@@ -92,7 +80,6 @@ const Checkout = () => {
     const subtotal = getTotalPrice();
     const grandTotal = subtotal + deliveryFee;
     
-    // Prepare order items
     const orderItems = cartItems.map(item => ({
       id: item.id || item._id,
       name: item.name,
@@ -102,7 +89,6 @@ const Checkout = () => {
       total: item.price * item.quantity
     }));
     
-    // Prepare order data for API
     const orderData = {
       orderId: generateOrderId(),
       customerName: formData.fullName,
@@ -115,68 +101,56 @@ const Checkout = () => {
       subtotal: subtotal,
       deliveryFee: deliveryFee,
       grandTotal: grandTotal,
-      notes: formData.notes
+      notes: formData.notes || ''
     };
+    
+    console.log('Sending order:', orderData);
     
     try {
       const response = await fetch(`${API_URL}/api/orders`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(orderData)
       });
       
       const result = await response.json();
+      console.log('Response:', result);
       
       if (response.ok) {
-        // Store order in localStorage for confirmation page
         localStorage.setItem('orderData', JSON.stringify({
           ...orderData,
-          orderDateFormatted: new Date().toLocaleDateString('en-NP', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          }),
+          orderDateFormatted: new Date().toLocaleDateString(),
           status: 'Processing',
-          statusSteps: ['Processing', 'Confirmed', 'Shipped', 'Delivered'],
-          _id: result._id
+          deliveryDetails: {
+            fullName: formData.fullName,
+            phone: formData.phone,
+            email: formData.email,
+            address: formData.address,
+            city: formData.city,
+            notes: formData.notes
+          }
         }));
         
-        // Clear cart
         clearCart();
-        
-        // Show success notification
         showNotificationMessage('✅ Order placed successfully! Redirecting...');
-        
-        // Navigate to confirmation page after short delay
-        setTimeout(() => {
-          navigate('/order-confirmation');
-        }, 1500);
+        setTimeout(() => navigate('/order-confirmation'), 1500);
       } else {
-        showNotificationMessage(result.message || 'Failed to place order. Please try again.', 'error');
+        showNotificationMessage(result.message || 'Failed to place order', 'error');
         setIsSubmitting(false);
       }
     } catch (error) {
-      console.error('Error placing order:', error);
+      console.error('Error:', error);
       showNotificationMessage('Network error. Please try again.', 'error');
       setIsSubmitting(false);
     }
   };
 
-  const goBackToCart = () => {
-    navigate('/cart');
-  };
+  const goBackToCart = () => navigate('/cart');
 
-  if (cartItems.length === 0) {
-    return null;
-  }
+  if (cartItems.length === 0) return null;
 
   return (
     <div className="checkout-page">
-      {/* Success/Error Notification */}
       {showNotification && (
         <div className={`checkout-notification ${notificationType}`}>
           <span>{notificationMessage}</span>
@@ -184,9 +158,7 @@ const Checkout = () => {
       )}
 
       <div className="checkout-back-btn-container">
-        <button onClick={goBackToCart} className="checkout-back-btn">
-          ← Back to Cart
-        </button>
+        <button onClick={goBackToCart} className="checkout-back-btn">← Back to Cart</button>
       </div>
 
       <div className="checkout-container">
@@ -198,82 +170,41 @@ const Checkout = () => {
             <form className="delivery-form">
               <div className="form-group">
                 <label>Full Name *</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                  placeholder="Enter your full name"
-                  className={errors.fullName ? 'error' : ''}
-                />
+                <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter your full name" className={errors.fullName ? 'error' : ''} />
                 {errors.fullName && <span className="error-text">{errors.fullName}</span>}
               </div>
               
               <div className="form-row">
                 <div className="form-group">
                   <label>Phone Number *</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="Enter your phone number"
-                    className={errors.phone ? 'error' : ''}
-                  />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter your phone number" className={errors.phone ? 'error' : ''} />
                   {errors.phone && <span className="error-text">{errors.phone}</span>}
                 </div>
                 
                 <div className="form-group">
                   <label>Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="Enter your email"
-                    className={errors.email ? 'error' : ''}
-                  />
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" className={errors.email ? 'error' : ''} />
                   {errors.email && <span className="error-text">{errors.email}</span>}
                 </div>
               </div>
               
               <div className="form-group">
                 <label>Delivery Address *</label>
-                <input
-                  type="text"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="Street address"
-                  className={errors.address ? 'error' : ''}
-                />
+                <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Street address" className={errors.address ? 'error' : ''} />
                 {errors.address && <span className="error-text">{errors.address}</span>}
               </div>
               
               <div className="form-row">
                 <div className="form-group">
                   <label>City *</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleChange}
-                    placeholder="City"
-                    className={errors.city ? 'error' : ''}
-                  />
+                  <input type="text" name="city" value={formData.city} onChange={handleChange} placeholder="City" className={errors.city ? 'error' : ''} />
                   {errors.city && <span className="error-text">{errors.city}</span>}
                 </div>
               </div>
               
               <div className="form-group">
                 <label>Order Notes (Optional)</label>
-                <textarea
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleChange}
-                  placeholder="Special instructions for delivery..."
-                  rows="3"
-                />
+                <textarea name="notes" value={formData.notes} onChange={handleChange} placeholder="Special instructions..." rows="3" />
               </div>
             </form>
           </div>
@@ -286,43 +217,24 @@ const Checkout = () => {
                   <img src={item.imageUrl} alt={item.name} className="checkout-item-img" />
                   <div className="checkout-item-details">
                     <div className="checkout-item-name">{item.name}</div>
-                    <div className="checkout-item-price">
-                      Rs. {item.price.toLocaleString()} x {item.quantity}
-                    </div>
+                    <div className="checkout-item-price">Rs. {item.price.toLocaleString()} x {item.quantity}</div>
                   </div>
-                  <div className="checkout-item-total">
-                    Rs. {(item.price * item.quantity).toLocaleString()}
-                  </div>
+                  <div className="checkout-item-total">Rs. {(item.price * item.quantity).toLocaleString()}</div>
                 </div>
               ))}
             </div>
             
             <div className="checkout-totals">
-              <div className="total-row">
-                <span>Subtotal:</span>
-                <span>Rs. {getTotalPrice().toLocaleString()}</span>
-              </div>
-              <div className="total-row">
-                <span>Delivery Fee:</span>
-                <span>Rs. {getTotalPrice() > 1500 ? 0 : 100}</span>
-              </div>
-              <div className="total-row grand-total">
-                <span>Grand Total:</span>
-                <span>Rs. {(getTotalPrice() + (getTotalPrice() > 1500 ? 0 : 100)).toLocaleString()}</span>
-              </div>
+              <div className="total-row"><span>Subtotal:</span><span>Rs. {getTotalPrice().toLocaleString()}</span></div>
+              <div className="total-row"><span>Delivery Fee:</span><span>Rs. {getTotalPrice() > 1500 ? 0 : 100}</span></div>
+              <div className="total-row grand-total"><span>Grand Total:</span><span>Rs. {(getTotalPrice() + (getTotalPrice() > 1500 ? 0 : 100)).toLocaleString()}</span></div>
             </div>
             
-            <button 
-              onClick={handlePlaceOrder}
-              className="place-order-btn"
-              disabled={isSubmitting}
-            >
+            <button onClick={handlePlaceOrder} className="place-order-btn" disabled={isSubmitting}>
               {isSubmitting ? 'Placing Order...' : 'Place Order'}
             </button>
             
-            <Link to="/cart" className="checkout-cart-link">
-              ← Return to Cart
-            </Link>
+            <Link to="/cart" className="checkout-cart-link">← Return to Cart</Link>
           </div>
         </div>
       </div>
