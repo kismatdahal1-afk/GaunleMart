@@ -1,4 +1,4 @@
-// routes/orderRoutes.js - Order management API routes with better error handling
+// routes/orderRoutes.js - Order management API routes
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
@@ -31,7 +31,7 @@ router.get('/:id', async (req, res) => {
 // POST /api/orders - Create new order
 router.post('/', async (req, res) => {
   try {
-    console.log('📦 Received order data:', JSON.stringify(req.body, null, 2));
+    console.log('📦 Received order request');
     
     const {
       orderId,
@@ -48,30 +48,17 @@ router.post('/', async (req, res) => {
       notes
     } = req.body;
 
-    // Validate required fields
-    if (!orderId) {
-      return res.status(400).json({ message: 'orderId is required' });
-    }
-    if (!customerName) {
-      return res.status(400).json({ message: 'customerName is required' });
-    }
-    if (!phone) {
-      return res.status(400).json({ message: 'phone is required' });
-    }
-    if (!email) {
-      return res.status(400).json({ message: 'email is required' });
-    }
-    if (!address) {
-      return res.status(400).json({ message: 'address is required' });
-    }
-    if (!city) {
-      return res.status(400).json({ message: 'city is required' });
-    }
+    // Validation
+    if (!orderId) return res.status(400).json({ message: 'orderId is required' });
+    if (!customerName) return res.status(400).json({ message: 'customerName is required' });
+    if (!phone) return res.status(400).json({ message: 'phone is required' });
+    if (!email) return res.status(400).json({ message: 'email is required' });
+    if (!address) return res.status(400).json({ message: 'address is required' });
+    if (!city) return res.status(400).json({ message: 'city is required' });
     if (!items || items.length === 0) {
       return res.status(400).json({ message: 'Order must have at least one item' });
     }
 
-    // Create new order
     const newOrder = new Order({
       orderId,
       customerName,
@@ -79,7 +66,7 @@ router.post('/', async (req, res) => {
       email,
       address,
       city,
-      items: items,
+      items,
       totalItems: totalItems || items.length,
       subtotal: subtotal || 0,
       deliveryFee: deliveryFee || 0,
@@ -89,7 +76,7 @@ router.post('/', async (req, res) => {
     });
 
     const savedOrder = await newOrder.save();
-    console.log(`✅ Order created successfully: ${savedOrder.orderId}`);
+    console.log(`✅ Order created: ${savedOrder.orderId}`);
     res.status(201).json(savedOrder);
   } catch (error) {
     console.error('❌ Error creating order:', error);
@@ -122,7 +109,7 @@ router.put('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
-    console.log(`✏️ Order ${updatedOrder.orderId} status updated to: ${status}`);
+    console.log(`✏️ Order ${updatedOrder.orderId} status: ${status}`);
     res.json(updatedOrder);
   } catch (error) {
     console.error('Error updating order:', error);
@@ -138,7 +125,7 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: 'Order not found' });
     }
     console.log(`❌ Order deleted: ${deletedOrder.orderId}`);
-    res.json({ message: 'Order deleted successfully', order: deletedOrder });
+    res.json({ message: 'Order deleted successfully' });
   } catch (error) {
     console.error('Error deleting order:', error);
     res.status(500).json({ message: 'Server error', error: error.message });

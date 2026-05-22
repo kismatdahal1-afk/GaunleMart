@@ -1,4 +1,4 @@
-// models/Order.js - Complete Order Schema
+// models/Order.js - Order Schema for MongoDB
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema(

@@ -1,4 +1,4 @@
-// Checkout.js - Fixed version with correct order data
+// Checkout.js - Complete working checkout page
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -23,7 +23,7 @@ const Checkout = () => {
   
   const [errors, setErrors] = useState({});
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+  const API_URL = process.env.REACT_APP_API_URL || 'https://gaunlemart-api.onrender.com';
 
   useEffect(() => {
     if (cartItems.length === 0) {
@@ -104,8 +104,6 @@ const Checkout = () => {
       notes: formData.notes || ''
     };
     
-    console.log('Sending order:', orderData);
-    
     try {
       const response = await fetch(`${API_URL}/api/orders`, {
         method: 'POST',
@@ -114,7 +112,6 @@ const Checkout = () => {
       });
       
       const result = await response.json();
-      console.log('Response:', result);
       
       if (response.ok) {
         localStorage.setItem('orderData', JSON.stringify({
@@ -132,7 +129,7 @@ const Checkout = () => {
         }));
         
         clearCart();
-        showNotificationMessage('✅ Order placed successfully! Redirecting...');
+        showNotificationMessage('✅ Order placed successfully!');
         setTimeout(() => navigate('/order-confirmation'), 1500);
       } else {
         showNotificationMessage(result.message || 'Failed to place order', 'error');
@@ -170,34 +167,34 @@ const Checkout = () => {
             <form className="delivery-form">
               <div className="form-group">
                 <label>Full Name *</label>
-                <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter your full name" className={errors.fullName ? 'error' : ''} />
+                <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter your full name" />
                 {errors.fullName && <span className="error-text">{errors.fullName}</span>}
               </div>
               
               <div className="form-row">
                 <div className="form-group">
                   <label>Phone Number *</label>
-                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter your phone number" className={errors.phone ? 'error' : ''} />
+                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter your phone number" />
                   {errors.phone && <span className="error-text">{errors.phone}</span>}
                 </div>
                 
                 <div className="form-group">
                   <label>Email Address *</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" className={errors.email ? 'error' : ''} />
+                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" />
                   {errors.email && <span className="error-text">{errors.email}</span>}
                 </div>
               </div>
               
               <div className="form-group">
                 <label>Delivery Address *</label>
-                <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Street address" className={errors.address ? 'error' : ''} />
+                <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Street address" />
                 {errors.address && <span className="error-text">{errors.address}</span>}
               </div>
               
               <div className="form-row">
                 <div className="form-group">
                   <label>City *</label>
-                  <input type="text" name="city" value={formData.city} onChange={handleChange} placeholder="City" className={errors.city ? 'error' : ''} />
+                  <input type="text" name="city" value={formData.city} onChange={handleChange} placeholder="City" />
                   {errors.city && <span className="error-text">{errors.city}</span>}
                 </div>
               </div>
