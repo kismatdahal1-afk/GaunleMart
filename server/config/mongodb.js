@@ -1,4 +1,4 @@
-// config/mongodb.js - MongoDB Atlas Connection
+// config/mongodb.js - MongoDB Atlas Connection (Fixed for newer Mongoose)
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
@@ -12,10 +12,8 @@ const connectDB = async () => {
     
     console.log('🔄 Connecting to MongoDB Atlas...');
     
-    const conn = await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    // REMOVED deprecated options - useNewUrlParser and useUnifiedTopology
+    const conn = await mongoose.connect(uri);
     
     console.log(`✅ MongoDB Connected Successfully!`);
     console.log(`📦 Database Name: ${conn.connection.name}`);
