@@ -1,4 +1,4 @@
-// Checkout.js - Collect delivery details and place order
+// Checkout.js - Fixed version with proper navigation
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -7,9 +7,8 @@ import './Checkout.css';
 const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
-  const [isAnimating, setIsAnimating] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Form state
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -20,7 +19,6 @@ const Checkout = () => {
   });
   
   const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -29,7 +27,6 @@ const Checkout = () => {
     }
   }, [cartItems, navigate]);
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -38,13 +35,10 @@ const Checkout = () => {
     }
   };
 
-  // Validate form
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required';
-    }
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
     } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, ''))) {
@@ -55,18 +49,13 @@ const Checkout = () => {
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
-    if (!formData.address.trim()) {
-      newErrors.address = 'Delivery address is required';
-    }
-    if (!formData.city.trim()) {
-      newErrors.city = 'City is required';
-    }
+    if (!formData.address.trim()) newErrors.address = 'Delivery address is required';
+    if (!formData.city.trim()) newErrors.city = 'City is required';
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Generate random order ID
   const generateOrderId = () => {
     const prefix = 'GAUNLE';
     const timestamp = Date.now().toString().slice(-8);
@@ -74,13 +63,15 @@ const Checkout = () => {
     return `${prefix}-${timestamp}-${random}`;
   };
 
-  // Handle place order
   const handlePlaceOrder = () => {
     if (!validateForm()) {
       return;
     }
     
     setIsSubmitting(true);
+    
+    const deliveryFee = getTotalPrice() > 1500 ? 0 : 100;
+    const grandTotal = getTotalPrice() + deliveryFee;
     
     // Prepare order data
     const orderData = {
@@ -96,6 +87,8 @@ const Checkout = () => {
       })),
       totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0),
       totalPrice: getTotalPrice(),
+      deliveryFee: deliveryFee,
+      grandTotal: grandTotal,
       deliveryDetails: {
         fullName: formData.fullName,
         phone: formData.phone,
@@ -118,15 +111,13 @@ const Checkout = () => {
     // Store in localStorage
     localStorage.setItem('orderData', JSON.stringify(orderData));
     
-    // Trigger animation then navigate
-    setIsAnimating(true);
-    setTimeout(() => {
-      clearCart(); // Clear the cart
-      navigate('/order-confirmation');
-    }, 300);
+    // Clear cart
+    clearCart();
+    
+    // Navigate to confirmation page
+    navigate('/order-confirmation');
   };
 
-  // Back to cart button handler
   const goBackToCart = () => {
     navigate('/cart');
   };
@@ -136,8 +127,7 @@ const Checkout = () => {
   }
 
   return (
-    <div className={`checkout-page ${isAnimating ? 'slide-out' : ''}`}>
-      {/* Back Button */}
+    <div className="checkout-page">
       <div className="checkout-back-btn-container">
         <button onClick={goBackToCart} className="checkout-back-btn">
           ← Back to Cart
@@ -148,7 +138,6 @@ const Checkout = () => {
         <h1 className="checkout-title">Checkout</h1>
         
         <div className="checkout-grid">
-          {/* Left Column - Delivery Form */}
           <div className="checkout-form-section">
             <h2>Delivery Information</h2>
             <form className="delivery-form">
@@ -234,7 +223,6 @@ const Checkout = () => {
             </form>
           </div>
           
-          {/* Right Column - Order Summary */}
           <div className="checkout-summary-section">
             <h2>Order Summary</h2>
             <div className="checkout-items">
