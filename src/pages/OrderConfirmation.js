@@ -1,148 +1,182 @@
-// OrderConfirmation.js - Order confirmation page
+// OrderConfirmation.js - Receipt style order confirmation page
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './OrderConfirmation.css';
 
 const OrderConfirmation = () => {
   const navigate = useNavigate();
-  const [order, setOrder] = useState(null);
+  const [orderData, setOrderData] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
-    // Get order from sessionStorage
-    const storedOrder = sessionStorage.getItem('lastOrder');
+    // Fetch order data from localStorage
+    const storedOrder = localStorage.getItem('orderData');
     if (storedOrder) {
-      setOrder(JSON.parse(storedOrder));
-      setLoading(false);
-    } else {
-      // No order found, redirect to home
-      navigate('/');
+      setOrderData(JSON.parse(storedOrder));
+      // Clear localStorage after reading (optional - keeps data for refresh)
+      // localStorage.removeItem('orderData');
     }
-  }, [navigate]);
-  
-  const getStatusStep = (status) => {
-    const steps = ['Processing', 'Shipped', 'Delivered'];
-    const currentIndex = steps.indexOf(status);
-    return currentIndex >= 0 ? currentIndex : 0;
+    setLoading(false);
+  }, []);
+
+  // Back to checkout button handler
+  const goBackToCheckout = () => {
+    navigate('/checkout');
   };
-  
+
   if (loading) {
     return (
-      <div className="confirmation-loading">
+      <div className="order-loading">
         <div className="loader"></div>
         <p>Loading order details...</p>
       </div>
     );
   }
-  
-  if (!order) {
-    return null;
-  }
-  
-  const currentStep = getStatusStep(order.status);
-  
-  return (
-    <div className="confirmation-page">
-      <div className="confirmation-container">
-        {/* Header Section */}
-        <div className="confirmation-header">
-          <div className="success-icon">🎉</div>
-          <h1>Thank You for Your Order!</h1>
-          <p>Your order has been placed successfully.</p>
-          <div className="order-id-badge">Order ID: {order.orderId}</div>
+
+  if (!orderData) {
+    return (
+      <div className="order-not-found">
+        <div className="order-not-found-content">
+          <span className="not-found-icon">⚠️</span>
+          <h2>No Order Found</h2>
+          <p>We couldn't find any order information. Please place an order first.</p>
+          <Link to="/products" className="shop-now-btn">Continue Shopping</Link>
         </div>
-        
-        <div className="confirmation-grid">
-          {/* Order Summary */}
-          <div className="order-summary">
-            <h2>Order Summary</h2>
-            <div className="order-items">
-              {order.items.map((item, index) => (
-                <div key={index} className="order-item">
-                  <img src={item.imageUrl} alt={item.name} className="order-item-image" />
-                  <div className="order-item-details">
-                    <h4>{item.name}</h4>
-                    <p>Qty: {item.quantity}</p>
-                    <p className="order-item-price">Rs. {item.price.toLocaleString()}</p>
-                  </div>
-                  <div className="order-item-total">
-                    Rs. {(item.price * item.quantity).toLocaleString()}
+      </div>
+    );
+  }
+
+  const { orderId, orderDateFormatted, items, totalItems, totalPrice, deliveryDetails, status, statusSteps } = orderData;
+  const deliveryFee = totalPrice > 1500 ? 0 : 100;
+  const grandTotal = totalPrice + deliveryFee;
+
+  return (
+    <div className="order-confirmation-page">
+      {/* Back Button */}
+      <div className="confirmation-back-btn-container">
+        <button onClick={goBackToCheckout} className="confirmation-back-btn">
+          ← Back to Checkout
+        </button>
+      </div>
+
+      <div className="confirmation-container">
+        {/* Success Header */}
+        <div className="success-header">
+          <div className="success-icon">✓</div>
+          <h1 className="success-title">Order Placed Successfully!</h1>
+          <p className="success-message">Thank you for shopping with GaunleMart</p>
+        </div>
+
+        {/* Order Info Card */}
+        <div className="info-card">
+          <div className="info-row">
+            <span className="info-label">Order ID:</span>
+            <span className="info-value order-id">{orderId}</span>
+          </div>
+          <div className="info-row">
+            <span className="info-label">Date & Time:</span>
+            <span className="info-value">{orderDateFormatted}</span>
+          </div>
+        </div>
+
+        {/* Order Summary Card */}
+        <div className="summary-card">
+          <h3 className="card-title">Order Summary</h3>
+          <div className="summary-items">
+            {items.map((item, index) => (
+              <div key={index} className="summary-item">
+                <img src={item.imageUrl} alt={item.name} className="summary-item-img" />
+                <div className="summary-item-details">
+                  <div className="summary-item-name">{item.name}</div>
+                  <div className="summary-item-meta">
+                    Rs. {item.price.toLocaleString()} x {item.quantity}
                   </div>
                 </div>
-              ))}
-            </div>
-            <div className="order-totals">
-              <div className="order-total-row">
-                <span>Total Amount:</span>
-                <span className="total-amount">Rs. {order.totalAmount.toLocaleString()}</span>
+                <div className="summary-item-total">
+                  Rs. {item.total.toLocaleString()}
+                </div>
               </div>
-              <div className="order-total-row">
-                <span>Payment Method:</span>
-                <span>{order.paymentMethod}</span>
-              </div>
-            </div>
+            ))}
           </div>
           
-          {/* Delivery Status */}
-          <div className="delivery-status">
-            <h2>Delivery Status</h2>
-            <div className="status-steps">
-              <div className={`status-step ${currentStep >= 0 ? 'active' : ''} ${currentStep > 0 ? 'completed' : ''}`}>
-                <div className="step-icon">📦</div>
-                <div className="step-label">Processing</div>
-              </div>
-              <div className={`status-line ${currentStep >= 1 ? 'active' : ''}`}></div>
-              <div className={`status-step ${currentStep >= 1 ? 'active' : ''} ${currentStep > 1 ? 'completed' : ''}`}>
-                <div className="step-icon">🚚</div>
-                <div className="step-label">Shipped</div>
-              </div>
-              <div className={`status-line ${currentStep >= 2 ? 'active' : ''}`}></div>
-              <div className={`status-step ${currentStep >= 2 ? 'active' : ''}`}>
-                <div className="step-icon">✅</div>
-                <div className="step-label">Delivered</div>
-              </div>
+          <div className="summary-totals">
+            <div className="total-line">
+              <span>Subtotal ({totalItems} items):</span>
+              <span>Rs. {totalPrice.toLocaleString()}</span>
             </div>
-            <p className="estimated-delivery">
-              Estimated Delivery: <strong>{order.estimatedDelivery}</strong>
-            </p>
-          </div>
-          
-          {/* Delivery Details */}
-          <div className="delivery-details">
-            <h2>Delivery Details</h2>
-            <div className="details-card">
-              <div className="detail-row">
-                <span className="detail-label">Name:</span>
-                <span>{order.customer.fullName}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Phone:</span>
-                <span>{order.customer.phone}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Address:</span>
-                <span>{order.customer.address}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Email:</span>
-                <span>{order.customer.email}</span>
-              </div>
-              <div className="detail-row">
-                <span className="detail-label">Order Date:</span>
-                <span>{new Date(order.orderDate).toLocaleDateString()}</span>
-              </div>
+            <div className="total-line">
+              <span>Delivery Fee:</span>
+              <span>Rs. {deliveryFee}</span>
+            </div>
+            <div className="total-line grand">
+              <span>Grand Total:</span>
+              <span>Rs. {grandTotal.toLocaleString()}</span>
             </div>
           </div>
         </div>
-        
+
+        {/* Delivery Details Card */}
+        <div className="delivery-card">
+          <h3 className="card-title">Delivery Details</h3>
+          <div className="delivery-info">
+            <div className="delivery-field">
+              <span className="field-label">Name:</span>
+              <span className="field-value">{deliveryDetails.fullName}</span>
+            </div>
+            <div className="delivery-field">
+              <span className="field-label">Phone:</span>
+              <span className="field-value">{deliveryDetails.phone}</span>
+            </div>
+            <div className="delivery-field">
+              <span className="field-label">Email:</span>
+              <span className="field-value">{deliveryDetails.email}</span>
+            </div>
+            <div className="delivery-field">
+              <span className="field-label">Address:</span>
+              <span className="field-value">{deliveryDetails.address}, {deliveryDetails.city}</span>
+            </div>
+            {deliveryDetails.notes && (
+              <div className="delivery-field">
+                <span className="field-label">Notes:</span>
+                <span className="field-value">{deliveryDetails.notes}</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Order Status Card */}
+        <div className="status-card">
+          <h3 className="card-title">Order Status</h3>
+          <div className="status-steps">
+            {statusSteps.map((step, index) => {
+              const currentStepIndex = statusSteps.indexOf(status);
+              const isCompleted = index <= currentStepIndex;
+              const isCurrent = index === currentStepIndex;
+              
+              return (
+                <div key={index} className={`status-step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}>
+                  <div className="step-dot">
+                    {isCompleted ? '✓' : index + 1}
+                  </div>
+                  <div className="step-label">{step}</div>
+                  {index < statusSteps.length - 1 && <div className="step-line"></div>}
+                </div>
+              );
+            })}
+          </div>
+          <div className="status-message">
+            Your order is currently being processed. You will receive an email confirmation shortly.
+          </div>
+        </div>
+
         {/* Action Buttons */}
         <div className="action-buttons">
-          <button onClick={() => navigate('/products')} className="continue-shopping-btn-confirm">
+          <Link to="/products" className="action-btn continue-shopping">
             Continue Shopping
-          </button>
-          <button onClick={() => alert('Order tracking will be available soon!')} className="track-order-btn">
-            Track Order
-          </button>
+          </Link>
+          <Link to="/" className="action-btn go-home">
+            Go to Home
+          </Link>
         </div>
       </div>
     </div>
