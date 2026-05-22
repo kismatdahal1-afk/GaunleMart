@@ -1,4 +1,4 @@
-// Checkout.js - Fixed version with proper navigation
+// Checkout.js - Updated to send orders to backend API
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -8,6 +8,9 @@ const Checkout = () => {
   const navigate = useNavigate();
   const { cartItems, getTotalPrice, clearCart } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
+  const [notificationType, setNotificationType] = useState('success');
   
   const [formData, setFormData] = useState({
     fullName: '',
@@ -20,12 +23,25 @@ const Checkout = () => {
   
   const [errors, setErrors] = useState({});
 
+  // Get API URL from environment variable
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
   // Redirect if cart is empty
   useEffect(() => {
     if (cartItems.length === 0) {
       navigate('/cart');
     }
   }, [cartItems, navigate]);
+
+  // Show notification
+  const showNotificationMessage = (message, type = 'success') => {
+    setNotificationMessage(message);
+    setNotificationType(type);
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 3000);
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -56,6 +72,7 @@ const Checkout = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Generate unique order ID
   const generateOrderId = () => {
     const prefix = 'GAUNLE';
     const timestamp = Date.now().toString().slice(-8);
@@ -63,7 +80,8 @@ const Checkout = () => {
     return `${prefix}-${timestamp}-${random}`;
   };
 
-  const handlePlaceOrder = () => {
+  // UPDATED: Send order to backend API
+  const handlePlaceOrder = async () => {
     if (!validateForm()) {
       return;
     }
@@ -71,51 +89,81 @@ const Checkout = () => {
     setIsSubmitting(true);
     
     const deliveryFee = getTotalPrice() > 1500 ? 0 : 100;
-    const grandTotal = getTotalPrice() + deliveryFee;
+    const subtotal = getTotalPrice();
+    const grandTotal = subtotal + deliveryFee;
     
-    // Prepare order data
+    // Prepare order items
+    const orderItems = cartItems.map(item => ({
+      id: item.id || item._id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      imageUrl: item.imageUrl,
+      total: item.price * item.quantity
+    }));
+    
+    // Prepare order data for API
     const orderData = {
       orderId: generateOrderId(),
-      orderDate: new Date().toISOString(),
-      items: cartItems.map(item => ({
-        id: item.id || item._id,
-        name: item.name,
-        price: item.price,
-        quantity: item.quantity,
-        imageUrl: item.imageUrl,
-        total: item.price * item.quantity
-      })),
+      customerName: formData.fullName,
+      phone: formData.phone,
+      email: formData.email,
+      address: formData.address,
+      city: formData.city,
+      items: orderItems,
       totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0),
-      totalPrice: getTotalPrice(),
+      subtotal: subtotal,
       deliveryFee: deliveryFee,
       grandTotal: grandTotal,
-      deliveryDetails: {
-        fullName: formData.fullName,
-        phone: formData.phone,
-        email: formData.email,
-        address: formData.address,
-        city: formData.city,
-        notes: formData.notes
-      },
-      status: 'Processing',
-      statusSteps: ['Processing', 'Confirmed', 'Shipped', 'Delivered'],
-      orderDateFormatted: new Date().toLocaleDateString('en-NP', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      })
+      notes: formData.notes
     };
     
-    // Store in localStorage
-    localStorage.setItem('orderData', JSON.stringify(orderData));
-    
-    // Clear cart
-    clearCart();
-    
-    // Navigate to confirmation page
-    navigate('/order-confirmation');
+    try {
+      const response = await fetch(`${API_URL}/api/orders`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(orderData)
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        // Store order in localStorage for confirmation page
+        localStorage.setItem('orderData', JSON.stringify({
+          ...orderData,
+          orderDateFormatted: new Date().toLocaleDateString('en-NP', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          }),
+          status: 'Processing',
+          statusSteps: ['Processing', 'Confirmed', 'Shipped', 'Delivered'],
+          _id: result._id
+        }));
+        
+        // Clear cart
+        clearCart();
+        
+        // Show success notification
+        showNotificationMessage('✅ Order placed successfully! Redirecting...');
+        
+        // Navigate to confirmation page after short delay
+        setTimeout(() => {
+          navigate('/order-confirmation');
+        }, 1500);
+      } else {
+        showNotificationMessage(result.message || 'Failed to place order. Please try again.', 'error');
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error('Error placing order:', error);
+      showNotificationMessage('Network error. Please try again.', 'error');
+      setIsSubmitting(false);
+    }
   };
 
   const goBackToCart = () => {
@@ -128,6 +176,13 @@ const Checkout = () => {
 
   return (
     <div className="checkout-page">
+      {/* Success/Error Notification */}
+      {showNotification && (
+        <div className={`checkout-notification ${notificationType}`}>
+          <span>{notificationMessage}</span>
+        </div>
+      )}
+
       <div className="checkout-back-btn-container">
         <button onClick={goBackToCart} className="checkout-back-btn">
           ← Back to Cart
