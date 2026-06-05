@@ -1,4 +1,4 @@
-/* Cart.css - Styling for shopping cart page */
+/* Cart.css - Styling for shopping cart page with linear mobile layout */
 .cart-page {
   padding: 40px 20px;
   min-height: calc(100vh - 70px);
@@ -57,7 +57,7 @@
   gap: 30px;
 }
 
-/* Cart Header */
+/* Cart Header - Desktop only */
 .cart-items {
   background: white;
   border-radius: 10px;
@@ -75,7 +75,7 @@
   gap: 10px;
 }
 
-/* Cart Item */
+/* Cart Item - Desktop grid layout */
 .cart-item {
   display: grid;
   grid-template-columns: 3fr 1fr 1.5fr 1.5fr 1fr;
@@ -89,6 +89,7 @@
   border-bottom: none;
 }
 
+/* Product section */
 .cart-item-product {
   display: flex;
   align-items: center;
@@ -107,12 +108,20 @@
   color: #2c3e50;
 }
 
+/* Price section */
 .cart-item-price {
   color: #e74c3c;
   font-weight: bold;
 }
 
+/* Quantity section */
 .cart-item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.quantity-controls-wrapper {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -127,6 +136,7 @@
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
+  transition: background-color 0.3s ease;
 }
 
 .qty-control-btn:hover {
@@ -142,12 +152,14 @@
   font-size: 0.9rem;
 }
 
+/* Total section */
 .cart-item-total {
   color: #27ae60;
   font-weight: bold;
   font-size: 1.1rem;
 }
 
+/* Remove button */
 .remove-btn {
   background-color: #e74c3c;
   color: white;
@@ -155,10 +167,16 @@
   padding: 6px 12px;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .remove-btn:hover {
   background-color: #c0392b;
+}
+
+/* Mobile labels - hidden by default */
+.mobile-label {
+  display: none;
 }
 
 /* Cart Summary */
@@ -204,6 +222,7 @@
   cursor: pointer;
   font-size: 1rem;
   margin-top: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .clear-cart-btn:hover {
@@ -220,6 +239,7 @@
   cursor: pointer;
   font-size: 1rem;
   margin-top: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .checkout-btn:hover {
@@ -233,6 +253,7 @@
   text-decoration: none;
   margin-top: 15px;
   padding: 10px;
+  transition: color 0.3s ease;
 }
 
 .continue-shopping-link:hover {
@@ -240,7 +261,9 @@
   text-decoration: underline;
 }
 
-/* Responsive */
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Tablet View */
 @media screen and (max-width: 968px) {
   .cart-container {
     grid-template-columns: 1fr;
@@ -251,33 +274,217 @@
   }
 }
 
+/* Mobile View - Linear/Horizontal Layout */
 @media screen and (max-width: 768px) {
+  /* Hide desktop header */
   .cart-header {
     display: none;
   }
   
+  /* Make each cart item a card */
   .cart-item {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    padding: 20px;
-    border: 1px solid #eee;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px;
     margin-bottom: 15px;
-    border-radius: 10px;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    background: white;
+  }
+  
+  /* Product section - takes full width on top */
+  .cart-item-product {
+    flex: 1 1 100%;
+    gap: 15px;
+    margin-bottom: 10px;
+  }
+  
+  .cart-item-image {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .cart-item-name {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  
+  /* Price - linear with label */
+  .cart-item-price {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+  
+  /* Quantity - linear with label */
+  .cart-item-quantity {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .quantity-controls-wrapper {
+    gap: 6px;
+  }
+  
+  /* Total - linear with label */
+  .cart-item-total {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+  }
+  
+  /* Remove button */
+  .cart-item-action {
+    flex: 0 0 auto;
+  }
+  
+  /* Show mobile labels */
+  .mobile-label {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    font-weight: normal;
+  }
+  
+  /* Adjust quantity controls size */
+  .qty-control-btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+  
+  .cart-qty-input {
+    width: 45px;
+    height: 28px;
+    font-size: 0.85rem;
+  }
+  
+  /* Remove button styling on mobile */
+  .remove-btn {
+    padding: 5px 12px;
+    font-size: 0.85rem;
+  }
+  
+  /* Cart title smaller on mobile */
+  .cart-title {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+}
+
+/* Small Mobile (480px and below) */
+@media screen and (max-width: 480px) {
+  .cart-page {
+    padding: 20px 15px;
+  }
+  
+  .cart-title {
+    font-size: 1.4rem;
+  }
+  
+  .cart-item {
+    padding: 12px;
+    gap: 10px;
   }
   
   .cart-item-product {
-    flex-direction: column;
-    text-align: center;
+    gap: 12px;
+  }
+  
+  .cart-item-image {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .cart-item-name {
+    font-size: 0.85rem;
   }
   
   .cart-item-price,
-  .cart-item-total,
-  .cart-item-quantity,
-  .cart-item-action {
-    text-align: center;
+  .cart-item-total {
+    font-size: 0.85rem;
   }
   
-  .cart-item-quantity {
-    justify-content: center;
+  .mobile-label {
+    font-size: 0.7rem;
+  }
+  
+  .qty-control-btn {
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+  }
+  
+  .cart-qty-input {
+    width: 40px;
+    height: 25px;
+    font-size: 0.8rem;
+  }
+  
+  .remove-btn {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+  
+  .cart-summary {
+    padding: 18px;
+  }
+  
+  .cart-summary h3 {
+    font-size: 1.1rem;
+  }
+  
+  .summary-row {
+    font-size: 0.85rem;
+  }
+  
+  .summary-total {
+    font-size: 1.1rem;
+  }
+  
+  .clear-cart-btn,
+  .checkout-btn {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Extra Small Devices (360px and below) */
+@media screen and (max-width: 360px) {
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .cart-item-product {
+    flex: 1 1 100%;
+  }
+  
+  .cart-item-price,
+  .cart-item-quantity,
+  .cart-item-total {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .cart-item-action {
+    width: 100%;
+    text-align: center;
+    margin-top: 5px;
+  }
+  
+  .remove-btn {
+    width: 100%;
+    text-align: center;
   }
 }

@@ -1,11 +1,11 @@
-// Cart.js - Displays all items in shopping cart with checkout navigation
+// Cart.js - Displays all items in shopping cart with linear mobile layout
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import './Cart.css';
 
 const Cart = () => {
-  const navigate = useNavigate(); // Added for checkout navigation
+  const navigate = useNavigate();
   const { 
     cartItems, 
     removeFromCart, 
@@ -19,7 +19,6 @@ const Cart = () => {
       <div className="cart-empty">
         <h2>Your Cart is Empty</h2>
         <p>Looks like you haven't added any items to your cart yet.</p>
-        {/* FIXED: Redirects to Products page instead of Home */}
         <Link to="/products" className="shop-now-btn">Shop Now</Link>
       </div>
     );
@@ -31,7 +30,6 @@ const Cart = () => {
     }
   };
 
-  // Handle checkout button click - navigate to checkout page
   const handleCheckout = () => {
     navigate('/checkout');
   };
@@ -42,6 +40,7 @@ const Cart = () => {
       
       <div className="cart-container">
         <div className="cart-items">
+          {/* Desktop Header - Hidden on mobile */}
           <div className="cart-header">
             <div>Product</div>
             <div>Price</div>
@@ -52,36 +51,52 @@ const Cart = () => {
           
           {cartItems.map(item => (
             <div key={item.id} className="cart-item">
+              {/* Product Image and Name */}
               <div className="cart-item-product">
                 <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
                 <div className="cart-item-name">{item.name}</div>
               </div>
-              <div className="cart-item-price">Rs. {item.price.toLocaleString()}</div>
-              <div className="cart-item-quantity">
-                <button 
-                  onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
-                  className="qty-control-btn"
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={item.quantity}
-                  onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
-                  min="1"
-                  max="99"
-                  className="cart-qty-input"
-                />
-                <button 
-                  onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
-                  className="qty-control-btn"
-                >
-                  +
-                </button>
+              
+              {/* Price */}
+              <div className="cart-item-price">
+                <span className="mobile-label">Price:</span>
+                Rs. {item.price.toLocaleString()}
               </div>
+              
+              {/* Quantity Controls */}
+              <div className="cart-item-quantity">
+                <span className="mobile-label">Qty:</span>
+                <div className="quantity-controls-wrapper">
+                  <button 
+                    onClick={() => handleQuantityChange(item.id, item.quantity - 1)}
+                    className="qty-control-btn"
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    value={item.quantity}
+                    onChange={(e) => handleQuantityChange(item.id, parseInt(e.target.value))}
+                    min="1"
+                    max="99"
+                    className="cart-qty-input"
+                  />
+                  <button 
+                    onClick={() => handleQuantityChange(item.id, item.quantity + 1)}
+                    className="qty-control-btn"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              
+              {/* Total */}
               <div className="cart-item-total">
+                <span className="mobile-label">Total:</span>
                 Rs. {(item.price * item.quantity).toLocaleString()}
               </div>
+              
+              {/* Remove Button */}
               <div className="cart-item-action">
                 <button 
                   onClick={() => removeFromCart(item.id)}
@@ -94,6 +109,7 @@ const Cart = () => {
           ))}
         </div>
         
+        {/* Order Summary */}
         <div className="cart-summary">
           <h3>Order Summary</h3>
           <div className="summary-row">
