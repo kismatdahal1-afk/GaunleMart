@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management page with Order Notes column
+// AdminOrders.js - Order management page with 6 status cards and instant status update
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminOrders.css';
@@ -44,7 +44,7 @@ const AdminOrders = () => {
     }, 3000);
   };
 
-  // Update order status
+  // Update order status - WITHOUT confirmation popup
   const updateOrderStatus = (orderId, currentStatus) => {
     const statuses = ['Processing', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
     const currentIndex = statuses.indexOf(currentStatus);
@@ -54,20 +54,21 @@ const AdminOrders = () => {
       nextStatus = 'Cancelled';
     } else if (currentStatus === 'Cancelled') {
       nextStatus = 'Processing';
-    } else {
+    } else if (currentIndex >= 0 && currentIndex < statuses.length - 1) {
       nextStatus = statuses[currentIndex + 1];
+    } else {
+      nextStatus = currentStatus;
     }
     
-    if (window.confirm(`Change order status from "${currentStatus}" to "${nextStatus}"?`)) {
-      const updatedOrders = orders.map(order => 
-        order.orderId === orderId ? { ...order, status: nextStatus } : order
-      );
-      saveOrders(updatedOrders);
-      showNotificationMessage('success', `Order status updated to ${nextStatus}`);
-    }
+    // Direct update without confirmation
+    const updatedOrders = orders.map(order => 
+      order.orderId === orderId ? { ...order, status: nextStatus } : order
+    );
+    saveOrders(updatedOrders);
+    showNotificationMessage('success', `Order status updated to ${nextStatus}`);
   };
 
-  // Delete order
+  // Delete order (keep confirmation for safety)
   const deleteOrder = (orderId) => {
     if (window.confirm(`Are you sure you want to delete order ${orderId}?`)) {
       const updatedOrders = orders.filter(order => order.orderId !== orderId);
@@ -83,6 +84,8 @@ const AdminOrders = () => {
   // Calculate statistics
   const totalOrders = orders.length;
   const pendingOrders = orders.filter(o => o.status === 'Processing').length;
+  const confirmedOrders = orders.filter(o => o.status === 'Confirmed').length;
+  const shippedOrders = orders.filter(o => o.status === 'Shipped').length;
   const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
   const totalRevenue = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
 
@@ -138,7 +141,7 @@ const AdminOrders = () => {
           <p>View and manage all customer orders</p>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - 6 Cards in One Row */}
         <div className="order-stats-grid">
           <div className="order-stat-card">
             <div className="order-stat-icon">📦</div>
@@ -157,6 +160,20 @@ const AdminOrders = () => {
           <div className="order-stat-card">
             <div className="order-stat-icon">✅</div>
             <div className="order-stat-info">
+              <h3>{confirmedOrders}</h3>
+              <p>Confirmed Orders</p>
+            </div>
+          </div>
+          <div className="order-stat-card">
+            <div className="order-stat-icon">🚚</div>
+            <div className="order-stat-info">
+              <h3>{shippedOrders}</h3>
+              <p>Shipped Orders</p>
+            </div>
+          </div>
+          <div className="order-stat-card">
+            <div className="order-stat-icon">🎁</div>
+            <div className="order-stat-info">
               <h3>{deliveredOrders}</h3>
               <p>Delivered Orders</p>
             </div>
@@ -170,7 +187,7 @@ const AdminOrders = () => {
           </div>
         </div>
 
-        {/* Orders Table with Notes Column */}
+        {/* Orders Table */}
         <div className="orders-table-container">
           <table className="orders-table">
             <thead>
@@ -201,7 +218,7 @@ const AdminOrders = () => {
                     <td className="col-customer">{order.customerName}</td>
                     <td className="col-phone">{order.phone}</td>
                     <td className="col-products products-cell">
-                      {order.totalItems || order.items?.length || 0} items
+                      {order.totalItems || (order.items ? order.items.length : 0)} items
                     </td>
                     <td className="col-amount amount-cell">Rs. {(order.grandTotal || 0).toLocaleString()}</td>
                     <td className="col-notes notes-cell">
