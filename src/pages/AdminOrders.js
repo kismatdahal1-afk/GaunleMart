@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management with product details sub-columns
+// AdminOrders.js - Order management with single product header
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminOrders.css';
@@ -116,7 +116,7 @@ const AdminOrders = () => {
     return '';
   };
 
-  // Render product details as sub-rows
+  // Render product details
   const renderProductDetails = function(items) {
     if (!items || items.length === 0) {
       return <div className="product-detail-row">—</div>;
@@ -125,9 +125,9 @@ const AdminOrders = () => {
     return items.map(function(item, idx) {
       return (
         <div key={idx} className="product-detail-row">
-          <div className="product-detail-name">{item.name}</div>
-          <div className="product-detail-qty">{item.quantity} ×</div>
-          <div className="product-detail-price">Rs. {item.price.toLocaleString()}</div>
+          <span className="product-detail-name">{item.name}</span>
+          <span className="product-detail-qty">{item.quantity} ×</span>
+          <span className="product-detail-price">Rs. {item.price.toLocaleString()}</span>
         </div>
       );
     });
@@ -218,7 +218,14 @@ const AdminOrders = () => {
                 <th className="col-date">Date</th>
                 <th className="col-customer">Customer</th>
                 <th className="col-phone">Phone</th>
-                <th className="col-products-header">Products</th>
+                <th className="col-products">
+                  Products
+                  <div className="products-sub-header">
+                    <span>Product Name</span>
+                    <span>Qty</span>
+                    <span>Price</span>
+                  </div>
+                </th>
                 <th className="col-amount">Amount</th>
                 <th className="col-notes">Order Notes</th>
                 <th className="col-status">Status</th>
@@ -239,13 +246,7 @@ const AdminOrders = () => {
                       <td className="col-date">{formatDate(order.orderDate)}</td>
                       <td className="col-customer">{order.customerName}</td>
                       <td className="col-phone">{order.phone}</td>
-                      {/* Products Column with Sub-rows for Name, Qty, Price */}
                       <td className="col-products products-cell">
-                        <div className="products-header-row">
-                          <div className="product-col-name">Product Name</div>
-                          <div className="product-col-qty">Qty</div>
-                          <div className="product-col-price">Price</div>
-                        </div>
                         <div className="products-list-container">
                           {renderProductDetails(order.items)}
                         </div>
