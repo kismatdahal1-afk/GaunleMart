@@ -1,4 +1,5 @@
 // AdminDashboard.js - Fixed version with real product data from deployed backend
+// Updated: Added order statistics from localStorage
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
@@ -17,6 +18,10 @@ const AdminDashboard = () => {
     totalRevenue: 0,
     lowStock: 0
   });
+  const [orderStats, setOrderStats] = useState({
+    totalOrders: 0,
+    totalRevenue: 0
+  });
   const [allProducts, setAllProducts] = useState([]);
   const [recentProducts, setRecentProducts] = useState([]);
   const [showAllProducts, setShowAllProducts] = useState(false);
@@ -29,6 +34,23 @@ const AdminDashboard = () => {
   // Handle Google Analytics button click - opens GA dashboard in new tab
   const handleOpenAnalytics = () => {
     window.open('https://analytics.google.com/analytics/web/', '_blank');
+  };
+
+  // Fetch order statistics from localStorage
+  const fetchOrderStats = function() {
+    var storedOrders = localStorage.getItem('allOrders');
+    if (storedOrders) {
+      var orders = JSON.parse(storedOrders);
+      var totalOrdersCount = orders.length;
+      var totalRevenueAmount = 0;
+      for (var i = 0; i < orders.length; i++) {
+        totalRevenueAmount = totalRevenueAmount + (orders[i].grandTotal || 0);
+      }
+      setOrderStats({ 
+        totalOrders: totalOrdersCount, 
+        totalRevenue: totalRevenueAmount 
+      });
+    }
   };
 
   // Fetch products from backend
@@ -53,7 +75,7 @@ const AdminDashboard = () => {
       
       setStats({
         totalProducts: data.length,
-        totalOrders: 0, // TEMPORARY: Order system not built yet
+        totalOrders: 0,
         totalRevenue: totalRevenue,
         lowStock: lowStockCount
       });
@@ -73,9 +95,19 @@ const AdminDashboard = () => {
     }
   }, [API_URL]);
 
+  // Fetch products on component mount
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
+
+  // Fetch order stats on component mount and listen for storage changes
+  useEffect(function() {
+    fetchOrderStats();
+    window.addEventListener('storage', fetchOrderStats);
+    return function() {
+      window.removeEventListener('storage', fetchOrderStats);
+    };
+  }, []);
 
   const handleLogout = () => {
     sessionStorage.removeItem('adminAuthenticated');
@@ -149,7 +181,7 @@ const AdminDashboard = () => {
         </button>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards with real order data */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">📦</div>
@@ -163,18 +195,18 @@ const AdminDashboard = () => {
         <div className="stat-card">
           <div className="stat-icon">🛒</div>
           <div className="stat-info">
-            <h3>{stats.totalOrders}</h3>
+            <h3>{orderStats.totalOrders}</h3>
             <p>Total Orders</p>
-            <span className="stat-trend">Coming soon</span>
+            <span className="stat-trend">From orders</span>
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-icon">💰</div>
           <div className="stat-info">
-            <h3>Rs. {stats.totalRevenue.toLocaleString()}</h3>
+            <h3>Rs. {orderStats.totalRevenue.toLocaleString()}</h3>
             <p>Total Revenue</p>
-            <span className="stat-trend">Product value sum</span>
+            <span className="stat-trend">From orders</span>
           </div>
         </div>
 
@@ -255,11 +287,11 @@ const AdminDashboard = () => {
                         {product.inStock ? 'In Stock' : 'Out of Stock'}
                       </span>
                     </td>
-                  </tr>
+                   </tr>
                 ))
               )}
             </tbody>
-          </table>
+           </table>
         </div>
         
         {/* Show More / Show Less Button */}
@@ -274,32 +306,31 @@ const AdminDashboard = () => {
       </div>
 
       {/* Quick Actions */}
-<div className="dashboard-actions">
-  <h2>Quick Actions</h2>
-  <div className="actions-grid">
-    <div onClick={() => navigate('/admin/add-product')} className="action-card">
-      <span className="action-icon">➕</span>
-      <h3>Add Product</h3>
-      <p>Add new products to your store</p>
-    </div>
-    <div onClick={() => navigate('/admin/manage-products')} className="action-card">
-      <span className="action-icon">✏️</span>
-      <h3>Manage Products</h3>
-      <p>Edit or delete existing products</p>
-    </div>
-    {/* 👇 ADD THIS NEW BUTTON */}
-    <div onClick={() => navigate('/admin/orders')} className="action-card">
-    <span className="action-icon">📋</span>
-    <h3>Manage Orders</h3>
-    <p>View and manage customer orders</p>
-    </div>
-    <div onClick={handleOpenAnalytics} className="action-card">
-      <span className="action-icon">📊</span>
-      <h3>Analytics Dashboard</h3>
-      <p>View Google Analytics insights</p>
-    </div>
-  </div>
-</div>
+      <div className="dashboard-actions">
+        <h2>Quick Actions</h2>
+        <div className="actions-grid">
+          <div onClick={() => navigate('/admin/add-product')} className="action-card">
+            <span className="action-icon">➕</span>
+            <h3>Add Product</h3>
+            <p>Add new products to your store</p>
+          </div>
+          <div onClick={() => navigate('/admin/manage-products')} className="action-card">
+            <span className="action-icon">✏️</span>
+            <h3>Manage Products</h3>
+            <p>Edit or delete existing products</p>
+          </div>
+          <div onClick={() => navigate('/admin/orders')} className="action-card">
+            <span className="action-icon">📋</span>
+            <h3>Manage Orders</h3>
+            <p>View and manage customer orders</p>
+          </div>
+          <div onClick={handleOpenAnalytics} className="action-card">
+            <span className="action-icon">📊</span>
+            <h3>Analytics Dashboard</h3>
+            <p>View Google Analytics insights</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

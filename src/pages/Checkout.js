@@ -1,4 +1,4 @@
-// Checkout.js - With localStorage save functionality (No backend dependency)
+// Checkout.js - With sequential Order ID and immediate navigation
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -23,34 +23,49 @@ const Checkout = () => {
   
   const [errors, setErrors] = useState({});
 
-  // Removed unused API_URL - no backend needed for now
-
   useEffect(() => {
     if (cartItems.length === 0) {
       navigate('/cart');
     }
   }, [cartItems, navigate]);
 
-  const showNotificationMessage = (message, type = 'success') => {
+  const showNotificationMessage = function(message, type) {
+    var msgType = type || 'success';
     setNotificationMessage(message);
-    setNotificationType(type);
+    setNotificationType(msgType);
     setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
+    setTimeout(function() {
+      setShowNotification(false);
+    }, 2000);
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+  const handleChange = function(e) {
+    var name = e.target.name;
+    var value = e.target.value;
+    var newFormData = {};
+    newFormData[name] = value;
+    setFormData(function(prev) {
+      return Object.assign({}, prev, newFormData);
+    });
+    if (errors[name]) {
+      setErrors(function(prev) {
+        var newErrors = Object.assign({}, prev);
+        newErrors[name] = '';
+        return newErrors;
+      });
+    }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
+  const validateForm = function() {
+    var newErrors = {};
     if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-      newErrors.phone = 'Please enter a valid phone number (10 digits)';
+    } else {
+      var phoneDigits = formData.phone.replace(/\D/g, '');
+      if (!/^[0-9]{10}$/.test(phoneDigits)) {
+        newErrors.phone = 'Please enter a valid phone number (10 digits)';
+      }
     }
     if (!formData.email.trim()) {
       newErrors.email = 'Email address is required';
@@ -61,21 +76,49 @@ const Checkout = () => {
     if (!formData.city.trim()) newErrors.city = 'City is required';
     
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    var hasErrors = false;
+    for (var key in newErrors) {
+      if (newErrors.hasOwnProperty(key)) {
+        hasErrors = true;
+        break;
+      }
+    }
+    return !hasErrors;
   };
 
-  const generateOrderId = () => {
-    const prefix = 'GAUNLE';
-    const timestamp = Date.now().toString().slice(-8);
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-    return `${prefix}-${timestamp}-${random}`;
+  // Generate sequential Order ID
+  var generateSequentialOrderId = function() {
+    // Get existing orders from localStorage
+    var existingOrders = localStorage.getItem('allOrders');
+    var orders = existingOrders ? JSON.parse(existingOrders) : [];
+    
+    // Find the highest order number
+    var maxNumber = 0;
+    var prefix = 'GAUNLE-166008-';
+    
+    for (var i = 0; i < orders.length; i++) {
+      var order = orders[i];
+      if (order.orderId && order.orderId.indexOf(prefix) === 0) {
+        var numPart = order.orderId.replace(prefix, '');
+        var num = parseInt(numPart, 10);
+        if (!isNaN(num) && num > maxNumber) {
+          maxNumber = num;
+        }
+      }
+    }
+    
+    // If no orders exist, start from 1
+    var nextNumber = maxNumber + 1;
+    var paddedNumber = nextNumber.toString().padStart(4, '0');
+    
+    return prefix + paddedNumber;
   };
 
   // Save order to localStorage and update admin orders
-  const saveOrderToLocalStorage = (orderData) => {
+  var saveOrderToLocalStorage = function(orderData) {
     // Get existing orders from localStorage
-    const existingOrders = localStorage.getItem('allOrders');
-    let orders = existingOrders ? JSON.parse(existingOrders) : [];
+    var existingOrders = localStorage.getItem('allOrders');
+    var orders = existingOrders ? JSON.parse(existingOrders) : [];
     
     // Add new order to the beginning
     orders.unshift(orderData);
@@ -85,28 +128,43 @@ const Checkout = () => {
     
     // Also save current order for confirmation page
     localStorage.setItem('orderData', JSON.stringify(orderData));
+    
+    // Trigger storage event for admin dashboard
+    window.dispatchEvent(new Event('storage'));
   };
 
-  const handlePlaceOrder = () => {
+  var handlePlaceOrder = function() {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
     
-    const deliveryFee = getTotalPrice() > 1500 ? 0 : 100;
-    const subtotal = getTotalPrice();
-    const grandTotal = subtotal + deliveryFee;
+    var deliveryFee = getTotalPrice() > 1500 ? 0 : 100;
+    var subtotal = getTotalPrice();
+    var grandTotal = subtotal + deliveryFee;
     
-    const orderItems = cartItems.map(item => ({
-      id: item.id || item._id,
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      imageUrl: item.imageUrl,
-      total: item.price * item.quantity
-    }));
+    var orderItems = [];
+    for (var i = 0; i < cartItems.length; i++) {
+      var item = cartItems[i];
+      orderItems.push({
+        id: item.id || item._id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        imageUrl: item.imageUrl,
+        total: item.price * item.quantity
+      });
+    }
     
-    const orderData = {
-      orderId: generateOrderId(),
+    // Generate sequential order ID
+    var sequentialOrderId = generateSequentialOrderId();
+    
+    var totalItemCount = 0;
+    for (var j = 0; j < cartItems.length; j++) {
+      totalItemCount = totalItemCount + cartItems[j].quantity;
+    }
+    
+    var orderData = {
+      orderId: sequentialOrderId,
       orderDate: new Date().toISOString(),
       customerName: formData.fullName,
       phone: formData.phone,
@@ -115,7 +173,7 @@ const Checkout = () => {
       city: formData.city,
       notes: formData.notes || '',
       items: orderItems,
-      totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0),
+      totalItems: totalItemCount,
       subtotal: subtotal,
       deliveryFee: deliveryFee,
       grandTotal: grandTotal,
@@ -143,21 +201,23 @@ const Checkout = () => {
     // Clear cart
     clearCart();
     
-    showNotificationMessage('✅ Order placed successfully! Redirecting...');
+    // Show notification briefly
+    showNotificationMessage('✅ Order placed! Redirecting...', 'success');
     
-    setTimeout(() => {
-      navigate('/order-confirmation');
-    }, 1500);
+    // Immediate navigation without lag
+    navigate('/order-confirmation');
   };
 
-  const goBackToCart = () => navigate('/cart');
+  var goBackToCart = function() {
+    navigate('/cart');
+  };
 
   if (cartItems.length === 0) return null;
 
   return (
     <div className="checkout-page">
       {showNotification && (
-        <div className={`checkout-notification ${notificationType}`}>
+        <div className={'checkout-notification ' + notificationType}>
           <span>{notificationMessage}</span>
         </div>
       )}
@@ -217,16 +277,18 @@ const Checkout = () => {
           <div className="checkout-summary-section">
             <h2>Order Summary</h2>
             <div className="checkout-items">
-              {cartItems.map(item => (
-                <div key={item.id} className="checkout-item">
-                  <img src={item.imageUrl} alt={item.name} className="checkout-item-img" />
-                  <div className="checkout-item-details">
-                    <div className="checkout-item-name">{item.name}</div>
-                    <div className="checkout-item-price">Rs. {item.price.toLocaleString()} x {item.quantity}</div>
+              {cartItems.map(function(item) {
+                return (
+                  <div key={item.id} className="checkout-item">
+                    <img src={item.imageUrl} alt={item.name} className="checkout-item-img" />
+                    <div className="checkout-item-details">
+                      <div className="checkout-item-name">{item.name}</div>
+                      <div className="checkout-item-price">Rs. {item.price.toLocaleString()} x {item.quantity}</div>
+                    </div>
+                    <div className="checkout-item-total">Rs. {(item.price * item.quantity).toLocaleString()}</div>
                   </div>
-                  <div className="checkout-item-total">Rs. {(item.price * item.quantity).toLocaleString()}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
             
             <div className="checkout-totals">
