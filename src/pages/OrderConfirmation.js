@@ -1,6 +1,6 @@
-// OrderConfirmation.js - Fixed version with proper data reading
+// OrderConfirmation.js - Receipt style order confirmation page
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './OrderConfirmation.css';
 
 const OrderConfirmation = () => {
@@ -9,22 +9,17 @@ const OrderConfirmation = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Small delay to ensure localStorage is ready
-    setTimeout(() => {
-      const storedOrder = localStorage.getItem('orderData');
-      console.log('🔍 Checking localStorage for orderData:', storedOrder);
-      
-      if (storedOrder) {
-        const parsedOrder = JSON.parse(storedOrder);
-        console.log('✅ Order data found:', parsedOrder);
-        setOrderData(parsedOrder);
-      } else {
-        console.log('❌ No order data found in localStorage');
-      }
-      setLoading(false);
-    }, 100);
+    // Fetch order data from localStorage
+    const storedOrder = localStorage.getItem('orderData');
+    console.log('📦 Stored Order:', storedOrder);
+    
+    if (storedOrder) {
+      setOrderData(JSON.parse(storedOrder));
+    }
+    setLoading(false);
   }, []);
 
+  // Back to checkout button handler
   const goBackToCheckout = () => {
     navigate('/checkout');
   };
@@ -45,9 +40,7 @@ const OrderConfirmation = () => {
           <span className="not-found-icon">⚠️</span>
           <h2>No Order Found</h2>
           <p>We couldn't find any order information. Please place an order first.</p>
-          <button onClick={() => navigate('/products')} className="shop-now-btn">
-            Continue Shopping
-          </button>
+          <Link to="/products" className="shop-now-btn">Continue Shopping</Link>
         </div>
       </div>
     );
@@ -58,19 +51,16 @@ const OrderConfirmation = () => {
     orderDateFormatted, 
     items, 
     totalItems, 
-    totalPrice, 
-    deliveryDetails, 
-    status, 
-    statusSteps,
-    deliveryFee,
-    grandTotal 
+    subtotal, 
+    deliveryFee, 
+    grandTotal, 
+    deliveryDetails,
+    notes
   } = orderData;
-
-  const finalDeliveryFee = deliveryFee !== undefined ? deliveryFee : (totalPrice > 1500 ? 0 : 100);
-  const finalGrandTotal = grandTotal !== undefined ? grandTotal : (totalPrice + finalDeliveryFee);
 
   return (
     <div className="order-confirmation-page">
+      {/* Back Button */}
       <div className="confirmation-back-btn-container">
         <button onClick={goBackToCheckout} className="confirmation-back-btn">
           ← Back to Checkout
@@ -78,12 +68,14 @@ const OrderConfirmation = () => {
       </div>
 
       <div className="confirmation-container">
+        {/* Success Header */}
         <div className="success-header">
           <div className="success-icon">✓</div>
           <h1 className="success-title">Order Placed Successfully!</h1>
           <p className="success-message">Thank you for shopping with GaunleMart</p>
         </div>
 
+        {/* Order Info Card */}
         <div className="info-card">
           <div className="info-row">
             <span className="info-label">Order ID:</span>
@@ -91,10 +83,15 @@ const OrderConfirmation = () => {
           </div>
           <div className="info-row">
             <span className="info-label">Date & Time:</span>
-            <span className="info-value">{orderDateFormatted || new Date().toLocaleString()}</span>
+            <span className="info-value">{orderDateFormatted}</span>
+          </div>
+          <div className="info-row">
+            <span className="info-label">Status:</span>
+            <span className="info-value order-status-processing">Processing</span>
           </div>
         </div>
 
+        {/* Order Summary Card */}
         <div className="summary-card">
           <h3 className="card-title">Order Summary</h3>
           <div className="summary-items">
@@ -116,79 +113,57 @@ const OrderConfirmation = () => {
           
           <div className="summary-totals">
             <div className="total-line">
-              <span>Subtotal ({totalItems || 0} items):</span>
-              <span>Rs. {(totalPrice || 0).toLocaleString()}</span>
+              <span>Subtotal ({totalItems} items):</span>
+              <span>Rs. {subtotal?.toLocaleString() || 0}</span>
             </div>
             <div className="total-line">
               <span>Delivery Fee:</span>
-              <span>Rs. {finalDeliveryFee}</span>
+              <span>Rs. {deliveryFee || 0}</span>
             </div>
             <div className="total-line grand">
               <span>Grand Total:</span>
-              <span>Rs. {finalGrandTotal.toLocaleString()}</span>
+              <span>Rs. {grandTotal?.toLocaleString() || 0}</span>
             </div>
           </div>
         </div>
 
+        {/* Delivery Details Card */}
         <div className="delivery-card">
           <h3 className="card-title">Delivery Details</h3>
           <div className="delivery-info">
             <div className="delivery-field">
               <span className="field-label">Name:</span>
-              <span className="field-value">{deliveryDetails?.fullName || 'N/A'}</span>
+              <span className="field-value">{deliveryDetails?.fullName}</span>
             </div>
             <div className="delivery-field">
               <span className="field-label">Phone:</span>
-              <span className="field-value">{deliveryDetails?.phone || 'N/A'}</span>
+              <span className="field-value">{deliveryDetails?.phone}</span>
             </div>
             <div className="delivery-field">
               <span className="field-label">Email:</span>
-              <span className="field-value">{deliveryDetails?.email || 'N/A'}</span>
+              <span className="field-value">{deliveryDetails?.email}</span>
             </div>
             <div className="delivery-field">
               <span className="field-label">Address:</span>
-              <span className="field-value">{deliveryDetails?.address || 'N/A'}, {deliveryDetails?.city || 'N/A'}</span>
+              <span className="field-value">{deliveryDetails?.address}, {deliveryDetails?.city}</span>
             </div>
-            {deliveryDetails?.notes && (
+            {notes && (
               <div className="delivery-field">
-                <span className="field-label">Notes:</span>
-                <span className="field-value">{deliveryDetails.notes}</span>
+                <span className="field-label">Order Notes:</span>
+                <span className="field-value">{notes}</span>
               </div>
             )}
           </div>
         </div>
 
-        <div className="status-card">
-          <h3 className="card-title">Order Status</h3>
-          <div className="status-steps">
-            {(statusSteps || ['Processing', 'Confirmed', 'Shipped', 'Delivered']).map((step, index) => {
-              const currentStepIndex = (statusSteps || ['Processing']).indexOf(status || 'Processing');
-              const isCompleted = index <= currentStepIndex;
-              const isCurrent = index === currentStepIndex;
-              
-              return (
-                <div key={index} className={`status-step ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}`}>
-                  <div className="step-dot">
-                    {isCompleted ? '✓' : index + 1}
-                  </div>
-                  <div className="step-label">{step}</div>
-                  {index < (statusSteps || []).length - 1 && <div className="step-line"></div>}
-                </div>
-              );
-            })}
-          </div>
-          <div className="status-message">
-            Your order is currently being processed. You will receive an email confirmation shortly.
-          </div>
-        </div>
-
+        {/* Action Buttons */}
         <div className="action-buttons">
-          <button onClick={() => navigate('/products')} className="action-btn continue-shopping">
+          <Link to="/products" className="action-btn continue-shopping">
             Continue Shopping
-          </button>
-          <button onClick={() => navigate('/')} className="action-btn go-home">
+          </Link>
+          <Link to="/" className="action-btn go-home">
             Go to Home
-          </button>
+          </Link>
         </div>
       </div>
     </div>

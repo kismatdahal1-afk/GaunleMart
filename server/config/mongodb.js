@@ -1,10 +1,19 @@
-// config/mongodb.js - MongoDB Atlas Connection
+// config/mongodb.js - MongoDB Atlas Connection (Fixed for newer Mongoose)
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Get connection string from environment variable
-    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    const uri = process.env.MONGODB_URI;
+    
+    if (!uri) {
+      console.error('❌ MONGODB_URI is not defined in environment variables');
+      process.exit(1);
+    }
+    
+    console.log('🔄 Connecting to MongoDB Atlas...');
+    
+    // REMOVED deprecated options - useNewUrlParser and useUnifiedTopology
+    const conn = await mongoose.connect(uri);
     
     console.log(`✅ MongoDB Connected Successfully!`);
     console.log(`📦 Database Name: ${conn.connection.name}`);
@@ -13,7 +22,7 @@ const connectDB = async () => {
     return conn;
   } catch (error) {
     console.error(`❌ MongoDB Connection Error: ${error.message}`);
-    process.exit(1); // Stop server if connection fails
+    process.exit(1);
   }
 };
 

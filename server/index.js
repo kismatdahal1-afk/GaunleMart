@@ -1,4 +1,4 @@
-// index.js - Main server with MongoDB + Cloudinary
+// index.js - Main server with MongoDB + Cloudinary + Orders
 require('dotenv').config();
 
 const express = require('express');
@@ -8,6 +8,7 @@ const connectDB = require('./config/mongodb');
 // Import routes
 const productRoutes = require('./routes/products');
 const uploadRoutes = require('./routes/upload');
+const orderRoutes = require('./routes/orderRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -22,6 +23,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // API Routes
 app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Test route
 app.get('/', (req, res) => {
@@ -39,4 +41,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server is running on http://localhost:${PORT}`);
   console.log(`📦 Products API: http://localhost:${PORT}/api/products`);
   console.log(`📸 Upload API: http://localhost:${PORT}/api/upload`);
+  console.log(`📋 Orders API: http://localhost:${PORT}/api/orders`);
 });

@@ -21,6 +21,7 @@ import AdminRoute from './components/AdminRoute';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminAddProduct from './pages/AdminAddProduct';
 import AdminManageProducts from './pages/AdminManageProducts';
+import AdminOrders from './pages/AdminOrders';  // 👈 ADD THIS LINE
 import './App.css';
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
     <Router>
       <div className="App">
         <Navbar />
-        <ScrollToTop /> {/* This ensures scroll to top on route change */}
+        <ScrollToTop />
         <div className="container">
           <Routes>
             {/* Public Routes */}
@@ -64,6 +65,12 @@ function App() {
             <Route path="/admin/manage-products" element={
               <AdminRoute>
                 <AdminManageProducts />
+              </AdminRoute>
+            } />
+            {/* 👇 ADD THIS NEW ROUTE */}
+            <Route path="/admin/orders" element={
+              <AdminRoute>
+                <AdminOrders />
               </AdminRoute>
             } />
           </Routes>

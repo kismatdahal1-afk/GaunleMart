@@ -273,28 +273,33 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Quick Actions - ADDED ANALYTICS BUTTON */}
-      <div className="dashboard-actions">
-        <h2>Quick Actions</h2>
-        <div className="actions-grid">
-          <div onClick={() => navigate('/admin/add-product')} className="action-card">
-            <span className="action-icon">➕</span>
-            <h3>Add Product</h3>
-            <p>Add new products to your store</p>
-          </div>
-          <div onClick={() => navigate('/admin/manage-products')} className="action-card">
-            <span className="action-icon">✏️</span>
-            <h3>Manage Products</h3>
-            <p>Edit or delete existing products</p>
-          </div>
-          {/* NEW: Analytics Dashboard Button */}
-          <div onClick={handleOpenAnalytics} className="action-card">
-            <span className="action-icon">📊</span>
-            <h3>Analytics Dashboard</h3>
-            <p>View Google Analytics insights</p>
-          </div>
-        </div>
-      </div>
+      {/* Quick Actions */}
+<div className="dashboard-actions">
+  <h2>Quick Actions</h2>
+  <div className="actions-grid">
+    <div onClick={() => navigate('/admin/add-product')} className="action-card">
+      <span className="action-icon">➕</span>
+      <h3>Add Product</h3>
+      <p>Add new products to your store</p>
+    </div>
+    <div onClick={() => navigate('/admin/manage-products')} className="action-card">
+      <span className="action-icon">✏️</span>
+      <h3>Manage Products</h3>
+      <p>Edit or delete existing products</p>
+    </div>
+    {/* 👇 ADD THIS NEW BUTTON */}
+    <div onClick={() => navigate('/admin/orders')} className="action-card">
+    <span className="action-icon">📋</span>
+    <h3>Manage Orders</h3>
+    <p>View and manage customer orders</p>
+    </div>
+    <div onClick={handleOpenAnalytics} className="action-card">
+      <span className="action-icon">📊</span>
+      <h3>Analytics Dashboard</h3>
+      <p>View Google Analytics insights</p>
+    </div>
+  </div>
+</div>
     </div>
   );
 };
