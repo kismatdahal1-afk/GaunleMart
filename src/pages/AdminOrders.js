@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management with product names in Products column
+// AdminOrders.js - Order management with product details sub-columns
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminOrders.css';
@@ -116,14 +116,21 @@ const AdminOrders = () => {
     return '';
   };
 
-  // Get product names as comma separated list
-  const getProductNames = function(items) {
-    if (!items || items.length === 0) return '—';
-    var productNames = [];
-    for (var i = 0; i < items.length; i++) {
-      productNames.push(items[i].name);
+  // Render product details as sub-rows
+  const renderProductDetails = function(items) {
+    if (!items || items.length === 0) {
+      return <div className="product-detail-row">—</div>;
     }
-    return productNames.join(', ');
+    
+    return items.map(function(item, idx) {
+      return (
+        <div key={idx} className="product-detail-row">
+          <div className="product-detail-name">{item.name}</div>
+          <div className="product-detail-qty">{item.quantity} ×</div>
+          <div className="product-detail-price">Rs. {item.price.toLocaleString()}</div>
+        </div>
+      );
+    });
   };
 
   if (loading) {
@@ -211,7 +218,7 @@ const AdminOrders = () => {
                 <th className="col-date">Date</th>
                 <th className="col-customer">Customer</th>
                 <th className="col-phone">Phone</th>
-                <th className="col-products">Products</th>
+                <th className="col-products-header">Products</th>
                 <th className="col-amount">Amount</th>
                 <th className="col-notes">Order Notes</th>
                 <th className="col-status">Status</th>
@@ -232,10 +239,15 @@ const AdminOrders = () => {
                       <td className="col-date">{formatDate(order.orderDate)}</td>
                       <td className="col-customer">{order.customerName}</td>
                       <td className="col-phone">{order.phone}</td>
-                      {/* Products Column - Shows product names instead of item count */}
+                      {/* Products Column with Sub-rows for Name, Qty, Price */}
                       <td className="col-products products-cell">
-                        <div className="products-list" title={getProductNames(order.items)}>
-                          {getProductNames(order.items)}
+                        <div className="products-header-row">
+                          <div className="product-col-name">Product Name</div>
+                          <div className="product-col-qty">Qty</div>
+                          <div className="product-col-price">Price</div>
+                        </div>
+                        <div className="products-list-container">
+                          {renderProductDetails(order.items)}
                         </div>
                       </td>
                       <td className="col-amount amount-cell">Rs. {(order.grandTotal || 0).toLocaleString()}</td>

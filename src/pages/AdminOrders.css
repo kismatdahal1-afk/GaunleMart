@@ -56,7 +56,7 @@
   color: #8B6914;
 }
 
-/* Stats Cards - 6 cards in one row */
+/* Stats Cards */
 .order-stats-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
@@ -103,7 +103,7 @@
 .orders-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1100px;
+  min-width: 1200px;
 }
 
 .orders-table thead {
@@ -124,20 +124,101 @@
   border-bottom: 1px solid #f0e6d3;
   font-family: 'Poppins', sans-serif;
   font-size: 0.85rem;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 /* Column Widths */
-.col-sn { width: 60px; text-align: center; }
-.col-order-id { width: 180px; }
-.col-date { width: 110px; }
-.col-customer { width: 140px; }
-.col-phone { width: 120px; }
-.col-products { width: 90px; text-align: center; }
-.col-amount { width: 110px; }
-.col-notes { width: 200px; min-width: 180px; max-width: 250px; }
-.col-status { width: 120px; }
-.col-actions { width: 90px; text-align: center; }
+.col-sn { width: 60px; text-align: center; vertical-align: middle; }
+.col-order-id { width: 170px; vertical-align: middle; }
+.col-date { width: 100px; vertical-align: middle; }
+.col-customer { width: 130px; vertical-align: middle; }
+.col-phone { width: 115px; vertical-align: middle; }
+.col-products { width: 280px; }
+.col-amount { width: 110px; vertical-align: middle; }
+.col-notes { width: 180px; vertical-align: middle; }
+.col-status { width: 110px; vertical-align: middle; }
+.col-actions { width: 90px; text-align: center; vertical-align: middle; }
+
+/* Products Column - Header Row (Name, Qty, Price) */
+.products-header-row {
+  display: grid;
+  grid-template-columns: 1fr 50px 90px;
+  gap: 8px;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 2px solid #FF8C42;
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: #2c1810;
+  background-color: #FFF9F0;
+  position: sticky;
+  top: 0;
+}
+
+.product-col-name {
+  text-align: left;
+}
+
+.product-col-qty {
+  text-align: center;
+}
+
+.product-col-price {
+  text-align: right;
+}
+
+/* Product Details Rows */
+.products-list-container {
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.product-detail-row {
+  display: grid;
+  grid-template-columns: 1fr 50px 90px;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #f0e6d3;
+  font-size: 0.75rem;
+}
+
+.product-detail-row:last-child {
+  border-bottom: none;
+}
+
+.product-detail-name {
+  text-align: left;
+  color: #2c1810;
+  font-weight: 500;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.product-detail-qty {
+  text-align: center;
+  color: #8B6914;
+}
+
+.product-detail-price {
+  text-align: right;
+  color: #e74c3c;
+  font-weight: 500;
+}
+
+/* Scrollbar for products list */
+.products-list-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.products-list-container::-webkit-scrollbar-track {
+  background: #f0e6d3;
+  border-radius: 4px;
+}
+
+.products-list-container::-webkit-scrollbar-thumb {
+  background: #FF8C42;
+  border-radius: 4px;
+}
 
 /* Cell Content Styling */
 .order-id-cell {
@@ -151,14 +232,9 @@
   color: #e74c3c;
 }
 
-.products-cell {
-  text-align: center;
-}
-
-/* Notes Column - Full text with word wrap */
+/* Notes Column */
 .notes-cell {
   vertical-align: top;
-  padding: 12px;
 }
 
 .notes-text-full {
@@ -167,10 +243,9 @@
   word-wrap: break-word;
   word-break: break-word;
   line-height: 1.4;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: #555;
-  font-style: normal;
-  max-width: 100%;
+  max-width: 180px;
 }
 
 /* Status Badges */
@@ -178,7 +253,7 @@
   display: inline-block;
   padding: 5px 12px;
   border-radius: 20px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
 }
 
@@ -313,6 +388,10 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
   }
+  
+  .orders-table {
+    min-width: 1200px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -338,7 +417,7 @@
   }
   
   .orders-table {
-    min-width: 1100px;
+    min-width: 1200px;
   }
   
   .actions-cell {
@@ -346,12 +425,24 @@
     gap: 5px;
   }
   
-  .col-notes {
-    min-width: 150px;
+  .product-detail-row {
+    grid-template-columns: 1fr 40px 70px;
+    gap: 5px;
+    font-size: 0.7rem;
   }
   
-  .notes-text-full {
-    font-size: 0.75rem;
+  .products-header-row {
+    grid-template-columns: 1fr 40px 70px;
+    gap: 5px;
+    font-size: 0.7rem;
+  }
+  
+  .product-col-qty, .product-detail-qty {
+    width: 40px;
+  }
+  
+  .product-col-price, .product-detail-price {
+    width: 70px;
   }
 }
 
@@ -360,36 +451,4 @@
     grid-template-columns: 1fr;
     gap: 10px;
   }
-}
-/* Products Column - Show product names with proper wrapping */
-.products-cell {
-  max-width: 250px;
-  min-width: 180px;
-}
-
-.products-list {
-  display: block;
-  white-space: normal;
-  word-wrap: break-word;
-  word-break: break-word;
-  line-height: 1.4;
-  font-size: 0.8rem;
-  color: #2c1810;
-  max-height: 100px;
-  overflow-y: auto;
-}
-
-/* Scrollbar for products list */
-.products-list::-webkit-scrollbar {
-  width: 4px;
-}
-
-.products-list::-webkit-scrollbar-track {
-  background: #f0e6d3;
-  border-radius: 4px;
-}
-
-.products-list::-webkit-scrollbar-thumb {
-  background: #FF8C42;
-  border-radius: 4px;
 }
