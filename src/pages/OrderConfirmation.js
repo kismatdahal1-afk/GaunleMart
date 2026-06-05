@@ -11,15 +11,19 @@ const OrderConfirmation = () => {
   useEffect(() => {
     // Fetch order data from localStorage
     const storedOrder = localStorage.getItem('orderData');
-    console.log('📦 Stored Order:', storedOrder);
+    console.log('OrderConfirmation - Stored Order:', storedOrder);
     
     if (storedOrder) {
       setOrderData(JSON.parse(storedOrder));
+    } else {
+      // If no order data, redirect to products page after 3 seconds
+      setTimeout(() => {
+        navigate('/products');
+      }, 3000);
     }
     setLoading(false);
-  }, []);
+  }, [navigate]);
 
-  // Back to checkout button handler
   const goBackToCheckout = () => {
     navigate('/checkout');
   };
