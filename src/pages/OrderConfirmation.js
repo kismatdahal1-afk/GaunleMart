@@ -11,12 +11,16 @@ const OrderConfirmation = () => {
   useEffect(() => {
     // Fetch order data from localStorage
     const storedOrder = localStorage.getItem('orderData');
-    console.log('OrderConfirmation - Stored Order:', storedOrder);
+    console.log('🔍 OrderConfirmation - Checking localStorage');
+    console.log('📦 orderData:', storedOrder);
     
     if (storedOrder) {
-      setOrderData(JSON.parse(storedOrder));
+      const parsedOrder = JSON.parse(storedOrder);
+      console.log('✅ Order found:', parsedOrder.orderId);
+      setOrderData(parsedOrder);
     } else {
-      // If no order data, redirect to products page after 3 seconds
+      console.log('❌ No order found in localStorage');
+      // Redirect to products page after 3 seconds if no order
       setTimeout(() => {
         navigate('/products');
       }, 3000);

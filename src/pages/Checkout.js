@@ -1,4 +1,4 @@
-// Checkout.js - With sequential Order ID and immediate navigation (NO CART PAGE FLASH)
+// Checkout.js - With sequential Order ID and localStorage save
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -96,11 +96,24 @@ const Checkout = () => {
 
   // Save order to localStorage
   const saveOrderToLocalStorage = (orderData) => {
+    // Get existing orders
     const existingOrders = localStorage.getItem('allOrders');
     let orders = existingOrders ? JSON.parse(existingOrders) : [];
+    
+    // Add new order to the beginning
     orders.unshift(orderData);
+    
+    // Save all orders
     localStorage.setItem('allOrders', JSON.stringify(orders));
+    
+    // Save current order separately for confirmation page
     localStorage.setItem('orderData', JSON.stringify(orderData));
+    
+    // Debug log
+    console.log('✅ Order saved to localStorage:', orderData.orderId);
+    console.log('📦 All orders count:', orders.length);
+    
+    // Trigger storage event for admin dashboard
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -163,12 +176,13 @@ const Checkout = () => {
     // Clear cart
     clearCart();
     
-    // Show notification briefly
-    showNotificationMessage('✅ Order placed!', 'success');
+    // Show notification
+    showNotificationMessage('✅ Order placed! Redirecting...', 'success');
     
-    // DIRECT NAVIGATION - NO DELAY to avoid cart page flash
-    // Use replace to prevent going back to cart
-    navigate('/order-confirmation', { replace: true });
+    // Immediate navigation to confirmation page
+    setTimeout(() => {
+      navigate('/order-confirmation', { replace: true });
+    }, 500);
   };
 
   const goBackToCart = () => {
