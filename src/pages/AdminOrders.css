@@ -361,3 +361,35 @@
     gap: 10px;
   }
 }
+/* Products Column - Show product names with proper wrapping */
+.products-cell {
+  max-width: 250px;
+  min-width: 180px;
+}
+
+.products-list {
+  display: block;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.4;
+  font-size: 0.8rem;
+  color: #2c1810;
+  max-height: 100px;
+  overflow-y: auto;
+}
+
+/* Scrollbar for products list */
+.products-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.products-list::-webkit-scrollbar-track {
+  background: #f0e6d3;
+  border-radius: 4px;
+}
+
+.products-list::-webkit-scrollbar-thumb {
+  background: #FF8C42;
+  border-radius: 4px;
+}

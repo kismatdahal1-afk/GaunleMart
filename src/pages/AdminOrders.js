@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management with sequential IDs and wrapped notes
+// AdminOrders.js - Order management with product names in Products column
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminOrders.css';
@@ -32,7 +32,6 @@ const AdminOrders = () => {
   const saveOrders = (updatedOrders) => {
     localStorage.setItem('allOrders', JSON.stringify(updatedOrders));
     setOrders(updatedOrders);
-    // Trigger storage event for admin dashboard
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -47,7 +46,7 @@ const AdminOrders = () => {
     }, 3000);
   };
 
-  // Update order status - WITHOUT confirmation popup
+  // Update order status
   const updateOrderStatus = (orderId, currentStatus) => {
     const statuses = ['Processing', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
     const currentIndex = statuses.indexOf(currentStatus);
@@ -70,7 +69,7 @@ const AdminOrders = () => {
     showNotificationMessage('success', 'Order status updated to ' + nextStatus);
   };
 
-  // Delete order (keep confirmation for safety)
+  // Delete order
   const deleteOrder = (orderId) => {
     const confirmDelete = window.confirm('Are you sure you want to delete order ' + orderId + '?');
     if (confirmDelete) {
@@ -117,6 +116,16 @@ const AdminOrders = () => {
     return '';
   };
 
+  // Get product names as comma separated list
+  const getProductNames = function(items) {
+    if (!items || items.length === 0) return '—';
+    var productNames = [];
+    for (var i = 0; i < items.length; i++) {
+      productNames.push(items[i].name);
+    }
+    return productNames.join(', ');
+  };
+
   if (loading) {
     return (
       <div className="admin-loading">
@@ -146,7 +155,7 @@ const AdminOrders = () => {
           <p>View and manage all customer orders</p>
         </div>
 
-        {/* Stats Cards - 6 Cards in One Row */}
+        {/* Stats Cards */}
         <div className="order-stats-grid">
           <div className="order-stat-card">
             <div className="order-stat-icon">📦</div>
@@ -192,7 +201,7 @@ const AdminOrders = () => {
           </div>
         </div>
 
-        {/* Orders Table with wrapped notes */}
+        {/* Orders Table */}
         <div className="orders-table-container">
           <table className="orders-table">
             <thead>
@@ -216,7 +225,6 @@ const AdminOrders = () => {
                 </tr>
               ) : (
                 orders.map(function(order, index) {
-                  var itemCount = order.totalItems || (order.items ? order.items.length : 0);
                   return (
                     <tr key={order.orderId}>
                       <td className="col-sn">{index + 1}</td>
@@ -224,7 +232,12 @@ const AdminOrders = () => {
                       <td className="col-date">{formatDate(order.orderDate)}</td>
                       <td className="col-customer">{order.customerName}</td>
                       <td className="col-phone">{order.phone}</td>
-                      <td className="col-products products-cell">{itemCount} items</td>
+                      {/* Products Column - Shows product names instead of item count */}
+                      <td className="col-products products-cell">
+                        <div className="products-list" title={getProductNames(order.items)}>
+                          {getProductNames(order.items)}
+                        </div>
+                      </td>
                       <td className="col-amount amount-cell">Rs. {(order.grandTotal || 0).toLocaleString()}</td>
                       <td className="col-notes notes-cell">
                         <div className="notes-text-full" title={order.notes || 'No notes'}>

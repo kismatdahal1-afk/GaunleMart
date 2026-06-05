@@ -1,4 +1,4 @@
-// Checkout.js - With sequential Order ID and immediate navigation (FIXED)
+// Checkout.js - With sequential Order ID and immediate navigation (NO CART PAGE FLASH)
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -35,7 +35,7 @@ const Checkout = () => {
     setShowNotification(true);
     setTimeout(() => {
       setShowNotification(false);
-    }, 2000);
+    }, 1500);
   };
 
   const handleChange = (e) => {
@@ -71,11 +71,9 @@ const Checkout = () => {
 
   // Generate sequential Order ID
   const generateSequentialOrderId = () => {
-    // Get existing orders from localStorage
     const existingOrders = localStorage.getItem('allOrders');
     let orders = existingOrders ? JSON.parse(existingOrders) : [];
     
-    // Find the highest order number
     let maxNumber = 0;
     const prefix = 'GAUNLE-166008-';
     
@@ -90,29 +88,19 @@ const Checkout = () => {
       }
     }
     
-    // If no orders exist, start from 1
     const nextNumber = maxNumber + 1;
     const paddedNumber = nextNumber.toString().padStart(4, '0');
     
     return prefix + paddedNumber;
   };
 
-  // Save order to localStorage and update admin orders
+  // Save order to localStorage
   const saveOrderToLocalStorage = (orderData) => {
-    // Get existing orders from localStorage
     const existingOrders = localStorage.getItem('allOrders');
     let orders = existingOrders ? JSON.parse(existingOrders) : [];
-    
-    // Add new order to the beginning
     orders.unshift(orderData);
-    
-    // Save back to localStorage
     localStorage.setItem('allOrders', JSON.stringify(orders));
-    
-    // Also save current order for confirmation page
     localStorage.setItem('orderData', JSON.stringify(orderData));
-    
-    // Trigger storage event for admin dashboard
     window.dispatchEvent(new Event('storage'));
   };
 
@@ -135,8 +123,6 @@ const Checkout = () => {
     }));
     
     const totalItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-    
-    // Generate sequential order ID
     const sequentialOrderId = generateSequentialOrderId();
     
     const orderData = {
@@ -177,14 +163,12 @@ const Checkout = () => {
     // Clear cart
     clearCart();
     
-    // Show notification
-    showNotificationMessage('✅ Order placed! Redirecting...', 'success');
+    // Show notification briefly
+    showNotificationMessage('✅ Order placed!', 'success');
     
-    // Use setTimeout to ensure notification is seen, then navigate
-    setTimeout(() => {
-      setIsSubmitting(false);
-      navigate('/order-confirmation');
-    }, 500);
+    // DIRECT NAVIGATION - NO DELAY to avoid cart page flash
+    // Use replace to prevent going back to cart
+    navigate('/order-confirmation', { replace: true });
   };
 
   const goBackToCart = () => {
