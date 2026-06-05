@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management with single product header
+// AdminOrders.js - Order management with Email column
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminOrders.css';
@@ -217,6 +217,7 @@ const AdminOrders = () => {
                 <th className="col-order-id">Order ID</th>
                 <th className="col-date">Date</th>
                 <th className="col-customer">Customer</th>
+                <th className="col-email">Email</th>
                 <th className="col-phone">Phone</th>
                 <th className="col-products">
                   Products
@@ -235,7 +236,7 @@ const AdminOrders = () => {
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan="10" className="no-data">No orders found</td>
+                  <td colSpan="11" className="no-data">No orders found</td>
                 </tr>
               ) : (
                 orders.map(function(order, index) {
@@ -245,7 +246,8 @@ const AdminOrders = () => {
                       <td className="col-order-id order-id-cell">{order.orderId}</td>
                       <td className="col-date">{formatDate(order.orderDate)}</td>
                       <td className="col-customer">{order.customerName}</td>
-                      <td className="col-phone">{order.phone}</td>
+                      <td className="col-email email-cell">{order.email || order.deliveryDetails?.email || '—'}</td>
+                      <td className="col-phone">{order.phone || order.deliveryDetails?.phone || '—'}</td>
                       <td className="col-products products-cell">
                         <div className="products-list-container">
                           {renderProductDetails(order.items)}
