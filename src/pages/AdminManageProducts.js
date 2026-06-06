@@ -1,7 +1,8 @@
-// AdminManageProducts.js - FIXED: Product rows NEVER disappear when editing name
+// AdminManageProducts.js - Complete working version with custom delete modal
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageReplaceModal from '../components/ImageReplaceModal';
+import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import './AdminManageProducts.css';
 
 const AdminManageProducts = () => {
@@ -18,6 +19,11 @@ const AdminManageProducts = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState('');
+  
+  // Delete modal states
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Fetch products from backend
   const fetchProducts = async () => {
@@ -72,7 +78,7 @@ const AdminManageProducts = () => {
     return { ...product, ...changes };
   };
 
-  // Handle field change - Allows empty string for name
+  // Handle field change
   const handleFieldChange = (productId, field, value) => {
     setPendingChanges(prev => ({
       ...prev,
@@ -87,7 +93,7 @@ const AdminManageProducts = () => {
     ));
   };
 
-  // Handle price change - allows empty string
+  // Handle price change
   const handlePriceChange = (productId, value) => {
     if (value === '') {
       handleFieldChange(productId, 'price', '');
@@ -174,24 +180,41 @@ const AdminManageProducts = () => {
     setIsModalOpen(true);
   };
 
-  // Delete product
-  const handleDelete = async (id, name) => {
-    if (window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${id}`, {
-          method: 'DELETE'
-        });
+  // Open delete confirmation modal
+  const openDeleteModal = (product) => {
+    setProductToDelete(product);
+    setIsDeleteModalOpen(true);
+  };
 
-        if (response.ok) {
-          showNotificationMessage('success', `✅ Product "${name}" deleted successfully!`);
-          fetchProducts();
-        } else {
-          showNotificationMessage('error', 'Failed to delete product');
-        }
-      } catch (error) {
-        console.error('Error deleting product:', error);
-        showNotificationMessage('error', 'Network error. Make sure server is running.');
+  // Close delete modal
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setProductToDelete(null);
+  };
+
+  // Confirm delete product
+  const confirmDeleteProduct = async () => {
+    if (!productToDelete) return;
+    
+    setIsDeleting(true);
+    
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/${productToDelete._id}`, {
+        method: 'DELETE'
+      });
+
+      if (response.ok) {
+        showNotificationMessage('success', `✅ Product "${productToDelete.name}" deleted successfully!`);
+        await fetchProducts();
+      } else {
+        showNotificationMessage('error', 'Failed to delete product');
       }
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      showNotificationMessage('error', 'Network error. Make sure server is running.');
+    } finally {
+      setIsDeleting(false);
+      closeDeleteModal();
     }
   };
 
@@ -282,7 +305,7 @@ const AdminManageProducts = () => {
     return text.substring(0, 100) + '...';
   };
 
-  // Get display price - handles empty/undefined values
+  // Get display price
   const getDisplayPrice = (product) => {
     if (!product) return '';
     const price = product.price;
@@ -292,15 +315,10 @@ const AdminManageProducts = () => {
     return price;
   };
 
-  // FIXED: Filter uses safe check - product rows NEVER disappear when name is empty
-  // The filter now checks if name exists and includes search term
-  // Empty string "" is allowed and will be shown in search results if it matches
+  // Filter products based on search term
   const filteredProducts = products.filter(product => {
     if (!product) return false;
-    // If search term is empty, show all products (including those with empty names)
     if (!searchTerm) return true;
-    // If search term exists, only show products whose name contains the search term
-    // Products with empty names will NOT match search term (correct behavior)
     return product.name && product.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
@@ -317,6 +335,15 @@ const AdminManageProducts = () => {
 
   return (
     <div className="admin-manage-products">
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDeleteProduct}
+        itemName={productToDelete?.name}
+        isDeleting={isDeleting}
+      />
+
       {/* Fixed Notification Bar */}
       {showNotification && (
         <div className={`fixed-notification ${notificationType}`}>
@@ -414,7 +441,7 @@ const AdminManageProducts = () => {
                         </div>
                       </td>
                       
-                      {/* Product Name - FIXED: Shows placeholder when empty, NEVER disappears */}
+                      {/* Product Name */}
                       <td className="col-name">
                         <input
                           type="text"
@@ -525,7 +552,7 @@ const AdminManageProducts = () => {
                       {/* Actions */}
                       <td className="col-actions">
                         <button 
-                          onClick={() => handleDelete(product._id, product.name)}
+                          onClick={() => openDeleteModal(product)}
                           className="delete-btn"
                         >
                           🗑️ Delete
