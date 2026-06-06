@@ -1,350 +1,421 @@
-/* AdminOrders.css - Completely isolated with .manage-orders-page wrapper */
-.manage-orders-page {
-  all: initial;
-  display: block;
-}
-
-.manage-orders-page .admin-orders {
+/* AdminOrders.css - Fixed alignment, centered table */
+.admin-orders {
   padding: 30px 20px;
   background-color: #FFF9F0;
   min-height: calc(100vh - 75px);
 }
 
 /* Back Button */
-.manage-orders-page .orders-header-top {
+.orders-header-top {
   max-width: 1400px;
   margin: 0 auto 20px;
 }
 
-.manage-orders-page .back-to-admin-btn {
+.back-to-admin-btn {
   background: transparent;
   border: 2px solid #FF8C42;
   color: #FF8C42;
-  padding: 10px 20px;
+  padding: 8px 18px;
   border-radius: 30px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.manage-orders-page .back-to-admin-btn:hover {
+.back-to-admin-btn:hover {
   background: #FF8C42;
   color: white;
   transform: translateX(-3px);
 }
 
+/* Laptop view - slightly smaller */
+@media screen and (max-width: 1280px) and (min-width: 769px) {
+  .back-to-admin-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    gap: 5px;
+  }
+}
+
+/* Tablet view */
+@media screen and (max-width: 768px) {
+  .back-to-admin-btn {
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+}
+
+/* Mobile view */
+@media screen and (max-width: 480px) {
+  .back-to-admin-btn {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    gap: 3px;
+  }
+}
+
 /* Header */
-.manage-orders-page .orders-container {
+.orders-container {
   max-width: 1400px;
   margin: 0 auto;
+  background: transparent;
+  width: 100%;
 }
 
-.manage-orders-page .orders-header {
+.orders-header {
   text-align: center;
   margin-bottom: 30px;
+  width: 100%;
 }
 
-.manage-orders-page .orders-header h1 {
+.orders-header h1 {
   font-family: 'Oswald', sans-serif;
   font-size: 2rem;
   color: #2c1810;
   margin-bottom: 10px;
 }
 
-.manage-orders-page .orders-header p {
+.orders-header p {
   font-family: 'Poppins', sans-serif;
   color: #8B6914;
 }
 
-/* Stats Cards - 6 cards in one row */
-.manage-orders-page .order-stats-grid {
+/* Stats Cards */
+.order-stats-grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 15px;
   margin-bottom: 30px;
+  width: 100%;
 }
 
-.manage-orders-page .order-stat-card {
+.order-stat-card {
   background: white;
   border-radius: 15px;
-  padding: 15px;
+  padding: 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 15px;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
 }
 
-.manage-orders-page .order-stat-icon {
-  font-size: 2rem;
+.order-stat-icon {
+  font-size: 2.5rem;
 }
 
-.manage-orders-page .order-stat-info h3 {
+.order-stat-info h3 {
   font-family: 'Montserrat', sans-serif;
-  font-size: 1.3rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #FF8C42;
   margin-bottom: 5px;
 }
 
-.manage-orders-page .order-stat-info p {
+.order-stat-info p {
   font-family: 'Poppins', sans-serif;
   color: #666;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
-/* Orders Table */
-.manage-orders-page .orders-table-container {
+/* Table Container - Fixed centering */
+.orders-table-container {
   background: white;
-  border-radius: 15px;
-  overflow-x: auto;
+  border-radius: 20px;
+  overflow: hidden;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  margin: 0;
 }
 
-.manage-orders-page .orders-table {
+.orders-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1100px;
+  table-layout: auto;
+  min-width: 1200px;
 }
 
-.manage-orders-page .orders-table thead {
+.orders-table thead {
   background: linear-gradient(135deg, #2c1810, #3d2317);
 }
 
-.manage-orders-page .orders-table th {
-  padding: 12px 10px;
+/* Curved corners for table header */
+.orders-table thead tr:first-child th:first-child {
+  border-top-left-radius: 20px;
+}
+
+.orders-table thead tr:first-child th:last-child {
+  border-top-right-radius: 20px;
+}
+
+.orders-table th {
+  padding: 15px 12px;
   text-align: left;
   color: white;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  vertical-align: top;
 }
 
-.manage-orders-page .orders-table td {
-  padding: 10px;
+.orders-table td {
+  padding: 12px;
   border-bottom: 1px solid #f0e6d3;
   font-family: 'Poppins', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   vertical-align: top;
 }
 
 /* Column Widths */
-.manage-orders-page .col-sn { width: 45px; text-align: center; vertical-align: middle; }
-.manage-orders-page .col-order-id { width: 95px; }
-.manage-orders-page .col-date { width: 75px; }
-.manage-orders-page .col-customer { width: 110px; }
-.manage-orders-page .col-email { width: 150px; word-break: break-word; }
-.manage-orders-page .col-phone { width: 100px; white-space: nowrap; }
-.manage-orders-page .col-address { width: 150px; word-break: break-word; }
-.manage-orders-page .col-products { width: 260px; }
-.manage-orders-page .col-amount { width: 95px; }
-.manage-orders-page .col-status { width: 100px; }
-.manage-orders-page .col-actions { width: 75px; }
+.col-sn { width: 50px; text-align: center; vertical-align: middle; }
+.col-order-id { width: 120px; vertical-align: middle; }
+.col-date { width: 90px; vertical-align: middle; }
+.col-customer { width: 120px; vertical-align: middle; }
+.col-email { width: 160px; vertical-align: middle; word-break: break-word; }
+.col-phone { width: 110px; vertical-align: middle; }
+.col-address { width: 150px; vertical-align: middle; word-break: break-word; }
+.col-products { width: 250px; }
+.col-amount { width: 100px; vertical-align: middle; }
+.col-notes { width: 130px; vertical-align: middle; }
+.col-status { width: 110px; vertical-align: middle; }
+.col-actions { width: 80px; text-align: center; vertical-align: middle; }
 
-/* Order ID Column - Orange color, 2 lines */
-.manage-orders-page .col-order-id {
-  color: #FF8C42;
-  font-weight: 600;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.manage-orders-page .order-id-line1,
-.manage-orders-page .order-id-line2 {
-  display: block;
-  line-height: 1.3;
-}
-
-.manage-orders-page .order-id-line1 {
-  font-size: 0.75rem;
-}
-
-.manage-orders-page .order-id-line2 {
-  font-size: 0.65rem;
-  opacity: 0.85;
-}
-
-/* Date Column - 2 lines */
-.manage-orders-page .date-line1,
-.manage-orders-page .date-line2 {
-  display: block;
-  line-height: 1.3;
-}
-
-.manage-orders-page .date-line1 {
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
-.manage-orders-page .date-line2 {
-  font-size: 0.65rem;
-  color: #8B6914;
-}
-
-/* Products Sub-header */
-.manage-orders-page .products-sub-header {
+/* Products Column Header with Sub-header */
+.products-sub-header {
   display: grid;
-  grid-template-columns: 1fr 40px 65px;
+  grid-template-columns: 1fr 40px 70px;
   gap: 8px;
   margin-top: 8px;
-  padding-top: 6px;
+  padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 500;
   color: #FFD700;
 }
 
-.manage-orders-page .products-sub-header span:first-child { text-align: left; }
-.manage-orders-page .products-sub-header span:nth-child(2) { text-align: center; }
-.manage-orders-page .products-sub-header span:last-child { text-align: right; }
+.products-sub-header span:first-child {
+  text-align: left;
+}
 
-.manage-orders-page .products-list-container {
+.products-sub-header span:nth-child(2) {
+  text-align: center;
+}
+
+.products-sub-header span:last-child {
+  text-align: right;
+}
+
+/* Address Column Styling */
+.address-cell {
+  color: #2c1810;
+  word-break: break-word;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Email Column Styling */
+.email-cell {
+  color: #2c1810;
+  word-break: break-word;
+  font-size: 0.8rem;
+}
+
+/* Products List Container */
+.products-list-container {
   max-height: 180px;
   overflow-y: auto;
 }
 
-.manage-orders-page .product-detail-row {
+/* Product Detail Rows */
+.product-detail-row {
   display: grid;
-  grid-template-columns: 1fr 40px 65px;
+  grid-template-columns: 1fr 40px 70px;
   gap: 8px;
-  padding: 5px 0;
+  padding: 6px 0;
   border-bottom: 1px solid #f0e6d3;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
+  font-family: 'Poppins', sans-serif;
   align-items: center;
 }
 
-.manage-orders-page .product-detail-row:last-child {
+.product-detail-row:last-child {
   border-bottom: none;
 }
 
-.manage-orders-page .product-detail-name {
+.product-detail-name {
   text-align: left;
-  font-size: 0.75rem;
-  font-weight: 400;
   color: #2c1810;
-  font-family: 'Poppins', sans-serif;
-  word-break: break-word;
-}
-
-.manage-orders-page .product-detail-qty {
-  text-align: center;
-  font-size: 0.75rem;
-  font-weight: 400;
-  color: #8B6914;
-  font-family: 'Poppins', sans-serif;
-}
-
-.manage-orders-page .product-detail-price {
-  text-align: right;
-  font-size: 0.75rem;
   font-weight: 500;
-  color: #e74c3c;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Scrollbar */
-.manage-orders-page .products-list-container::-webkit-scrollbar {
-  width: 4px;
-}
-
-.manage-orders-page .products-list-container::-webkit-scrollbar-track {
-  background: #f0e6d3;
-  border-radius: 4px;
-}
-
-.manage-orders-page .products-list-container::-webkit-scrollbar-thumb {
-  background: #FF8C42;
-  border-radius: 4px;
-}
-
-/* Amount Column */
-.manage-orders-page .amount-cell {
-  font-weight: 700;
-  color: #e74c3c;
+  white-space: normal;
+  word-break: break-word;
   font-size: 0.8rem;
   font-family: 'Poppins', sans-serif;
 }
 
+.product-detail-qty {
+  text-align: center;
+  color: #8B6914;
+  font-size: 0.8rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+.product-detail-price {
+  text-align: right;
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 0.8rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Scrollbar for products list */
+.products-list-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+.products-list-container::-webkit-scrollbar-track {
+  background: #f0e6d3;
+  border-radius: 5px;
+}
+
+.products-list-container::-webkit-scrollbar-thumb {
+  background: #FF8C42;
+  border-radius: 5px;
+}
+
+/* Cell Content Styling */
+.order-id-cell {
+  font-weight: 600;
+  color: #FF8C42;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.8rem;
+}
+
+.amount-cell {
+  font-weight: 600;
+  color: #e74c3c;
+  font-size: 0.85rem;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Notes Column */
+.notes-cell {
+  vertical-align: top;
+}
+
+.notes-text-full {
+  display: block;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.4;
+  font-size: 0.8rem;
+  color: #555;
+  max-width: 130px;
+  font-family: 'Poppins', sans-serif;
+}
+
 /* Status Badges */
-.manage-orders-page .order-status {
+.order-status {
   display: inline-block;
-  padding: 4px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
   font-size: 0.7rem;
   font-weight: 600;
   font-family: 'Montserrat', sans-serif;
 }
 
-.manage-orders-page .status-processing { background: #fff3cd; color: #856404; }
-.manage-orders-page .status-confirmed { background: #cce5ff; color: #004085; }
-.manage-orders-page .status-shipped { background: #d4edda; color: #155724; }
-.manage-orders-page .status-delivered { background: #d1ecf1; color: #0c5460; }
-.manage-orders-page .status-cancelled { background: #f8d7da; color: #721c24; }
+.status-processing {
+  background: #fff3cd;
+  color: #856404;
+}
 
-/* Action Buttons - Vertical layout */
-.manage-orders-page .col-actions {
+.status-confirmed {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.status-shipped {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-delivered {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Action Buttons */
+.actions-cell {
   display: flex;
   flex-direction: column;
   gap: 6px;
   align-items: center;
-  justify-content: center;
 }
 
-.manage-orders-page .update-status-btn {
-  background: linear-gradient(135deg, #27ae60, #2ecc71);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+.update-status-btn {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+  padding: 4px 10px;
+  border-radius: 15px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.65rem;
+  font-weight: 500;
+  font-size: 0.7rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
+  width: 70px;
   text-align: center;
 }
 
-.manage-orders-page .update-status-btn:hover {
-  background: linear-gradient(135deg, #219a52, #27ae60);
+.update-status-btn:hover {
+  background: #c8e6c9;
   transform: translateY(-1px);
+  border-color: #4caf50;
 }
 
-.manage-orders-page .delete-order-btn {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
+.delete-order-btn {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+  padding: 4px 10px;
+  border-radius: 15px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.65rem;
+  font-weight: 500;
+  font-size: 0.7rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
+  width: 70px;
   text-align: center;
 }
 
-.manage-orders-page .delete-order-btn:hover {
-  background: linear-gradient(135deg, #c0392b, #a93226);
+.delete-order-btn:hover {
+  background: #ffcdd2;
   transform: translateY(-1px);
+  border-color: #ef5350;
 }
 
 /* Notification */
-.manage-orders-page .order-notification {
+.order-notification {
   position: fixed;
   top: 80px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 2000;
-  padding: 10px 20px;
-  border-radius: 10px;
+  padding: 12px 24px;
+  border-radius: 12px;
   font-family: 'Poppins', sans-serif;
   font-weight: 500;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   animation: slideDownFade 0.3s ease-out;
@@ -352,13 +423,13 @@
   min-width: 250px;
 }
 
-.manage-orders-page .order-notification.success {
+.order-notification.success {
   background: linear-gradient(135deg, #d4edda, #c3e6cb);
   color: #155724;
   border-left: 4px solid #28a745;
 }
 
-.manage-orders-page .order-notification.error {
+.order-notification.error {
   background: linear-gradient(135deg, #f8d7da, #f5c6cb);
   color: #721c24;
   border-left: 4px solid #dc3545;
@@ -375,16 +446,16 @@
   }
 }
 
-/* No Data & Loading */
-.manage-orders-page .no-data {
+/* No Data */
+.no-data {
   text-align: center;
   padding: 40px;
   color: #8B6914;
   font-family: 'Poppins', sans-serif;
-  font-size: 0.85rem;
 }
 
-.manage-orders-page .admin-loading {
+/* Loading */
+.admin-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -392,7 +463,7 @@
   min-height: 60vh;
 }
 
-.manage-orders-page .loader {
+.loader {
   width: 50px;
   height: 50px;
   border: 4px solid #f0e6d3;
@@ -406,48 +477,114 @@
   to { transform: rotate(360deg); }
 }
 
-/* Responsive */
-@media screen and (max-width: 1200px) {
-  .manage-orders-page .order-stats-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Desktop */
+@media screen and (min-width: 1300px) {
+  .orders-table-container {
+    overflow-x: visible;
+  }
+  
+  .orders-table {
+    min-width: 100%;
   }
 }
 
+/* Tablet */
+@media screen and (max-width: 1299px) and (min-width: 1025px) {
+  .col-email { width: 140px; }
+  .col-address { width: 130px; }
+  .col-products { width: 230px; }
+  .col-notes { width: 110px; }
+}
+
+/* Tablet View - Horizontal scroll enabled */
+@media screen and (max-width: 1024px) {
+  .order-stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  
+  .orders-table-container {
+    overflow-x: auto;
+  }
+  
+  .orders-table {
+    min-width: 1100px;
+  }
+}
+
+/* Mobile View */
 @media screen and (max-width: 768px) {
-  .manage-orders-page .admin-orders {
+  .admin-orders {
     padding: 20px 15px;
   }
   
-  .manage-orders-page .order-stats-grid {
+  .order-stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
   
-  .manage-orders-page .order-stat-card {
-    padding: 12px;
+  .order-stat-card {
+    padding: 15px;
   }
   
-  .manage-orders-page .order-stat-icon {
-    font-size: 1.5rem;
+  .order-stat-icon {
+    font-size: 2rem;
   }
   
-  .manage-orders-page .order-stat-info h3 {
-    font-size: 1rem;
+  .order-stat-info h3 {
+    font-size: 1.2rem;
   }
   
-  .manage-orders-page .orders-table-container {
+  .orders-table-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
-  .manage-orders-page .col-actions {
-    flex-direction: column;
-    gap: 4px;
+  .orders-table {
+    min-width: 1100px;
   }
   
-  .manage-orders-page .update-status-btn,
-  .manage-orders-page .delete-order-btn {
+  .actions-cell {
+    gap: 5px;
+  }
+  
+  .update-status-btn,
+  .delete-order-btn {
+    padding: 3px 8px;
+    font-size: 0.65rem;
+    width: 65px;
+  }
+  
+  .products-sub-header {
+    grid-template-columns: 1fr 35px 60px;
+    gap: 6px;
+    font-size: 0.65rem;
+  }
+  
+  .product-detail-row {
+    grid-template-columns: 1fr 35px 60px;
+    gap: 6px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Small Mobile */
+@media screen and (max-width: 480px) {
+  .order-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .orders-table {
+    min-width: 1100px;
+  }
+  
+  .update-status-btn,
+  .delete-order-btn {
+    padding: 3px 6px;
     font-size: 0.6rem;
-    padding: 4px 8px;
+    width: 60px;
   }
 }

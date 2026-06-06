@@ -20,9 +20,11 @@ const ProductDetail = () => {
   const params = new URLSearchParams(location.search);
   const returnCategory = params.get('category') || 'All';
 
+  // Show notification with auto-hide
   const showNotificationMessage = (message) => {
     setNotificationMessage(message);
     setShowNotification(true);
+    
     setTimeout(() => {
       setShowNotification(false);
     }, 3000);
@@ -97,6 +99,7 @@ const ProductDetail = () => {
     navigate(productsUrl);
   };
 
+  // Handle continue shopping - FIXED: Now redirects to Products page
   const handleContinueShopping = () => {
     navigate('/products');
   };
@@ -126,9 +129,6 @@ const ProductDetail = () => {
   const isInStock = product.inStock === true;
   const stockText = isInStock ? '✓ In Stock' : '✗ Out of Stock';
   const stockClass = isInStock ? 'in-stock' : 'out-of-stock';
-  
-  const fullStars = Math.floor(product.rating || 4);
-  const emptyStars = 5 - fullStars;
 
   return (
     <div className="product-detail">
@@ -156,8 +156,9 @@ const ProductDetail = () => {
             <p className="product-detail-price">Rs. {product.price.toLocaleString()}</p>
             
             <div className="product-detail-rating">
-              {'★'.repeat(fullStars)}
-              {'☆'.repeat(emptyStars)}
+              {'★'.repeat(Math.floor(product.rating || 4))}
+              {'☆'.repeat(5 - Math.floor(product.rating || 4))}
+              <span className="rating-text">({product.rating || 4} out of 5)</span>
             </div>
             
             <div className="product-detail-stock">
@@ -194,6 +195,7 @@ const ProductDetail = () => {
               {isInStock ? 'Add to Cart' : 'Out of Stock'}
             </button>
             
+            {/* FIXED: Continue Shopping button now redirects to Products page */}
             <button onClick={handleContinueShopping} className="continue-shopping-btn">
               Continue Shopping
             </button>

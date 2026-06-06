@@ -1,4 +1,4 @@
-// Checkout.js - Complete working checkout with localStorage preservation
+// Checkout.js - With sequential Order ID and localStorage save
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -23,25 +23,27 @@ const Checkout = () => {
   
   const [errors, setErrors] = useState({});
 
-  const API_URL = process.env.REACT_APP_API_URL || 'https://gaunlemart-api.onrender.com';
-
   useEffect(() => {
     if (cartItems.length === 0) {
       navigate('/cart');
     }
   }, [cartItems, navigate]);
 
-  const showNotificationMessage = (message, type = 'success') => {
+  const showNotificationMessage = (message, type) => {
     setNotificationMessage(message);
-    setNotificationType(type);
+    setNotificationType(type || 'success');
     setShowNotification(true);
-    setTimeout(() => setShowNotification(false), 3000);
+    setTimeout(() => {
+      setShowNotification(false);
+    }, 1500);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }));
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const validateForm = () => {
@@ -49,8 +51,11 @@ const Checkout = () => {
     if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-      newErrors.phone = 'Please enter a valid phone number (10 digits)';
+    } else {
+      const phoneDigits = formData.phone.replace(/\D/g, '');
+      if (!/^[0-9]{10}$/.test(phoneDigits)) {
+        newErrors.phone = 'Please enter a valid phone number (10 digits)';
+      }
     }
     if (!formData.email.trim()) {
       newErrors.email = 'Email address is required';
@@ -64,54 +69,55 @@ const Checkout = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Generate sequential Order ID - preserves existing IDs
-  const generateSequentialOrderId = () => {
-    // Get existing orders from localStorage to check existing IDs
-    const existingOrders = localStorage.getItem('allOrders');
-    let orders = existingOrders ? JSON.parse(existingOrders) : [];
-    
-    let maxNumber = 0;
-    const prefix = 'G-1660-';
-    
-    for (let i = 0; i < orders.length; i++) {
-      const order = orders[i];
-      if (order.orderId && order.orderId.startsWith(prefix)) {
-        const numPart = order.orderId.replace(prefix, '');
-        const num = parseInt(numPart, 10);
-        if (!isNaN(num) && num > maxNumber) {
-          maxNumber = num;
-        }
+// Generate sequential Order ID in new format: G-1660-0001
+const generateSequentialOrderId = () => {
+  const existingOrders = localStorage.getItem('allOrders');
+  let orders = existingOrders ? JSON.parse(existingOrders) : [];
+  
+  let maxNumber = 0;
+  const prefix = 'G-1660-';
+  
+  for (let i = 0; i < orders.length; i++) {
+    const order = orders[i];
+    if (order.orderId && order.orderId.startsWith(prefix)) {
+      const numPart = order.orderId.replace(prefix, '');
+      const num = parseInt(numPart, 10);
+      if (!isNaN(num) && num > maxNumber) {
+        maxNumber = num;
       }
     }
-    
-    const nextNumber = maxNumber + 1;
-    const paddedNumber = nextNumber.toString().padStart(4, '0');
-    
-    return prefix + paddedNumber;
-  };
+  }
+  
+  const nextNumber = maxNumber + 1;
+  const paddedNumber = nextNumber.toString().padStart(4, '0');
+  
+  return prefix + paddedNumber;
+};
 
-  // Save order to localStorage (preserve existing orders)
+  // Save order to localStorage
   const saveOrderToLocalStorage = (orderData) => {
     // Get existing orders
     const existingOrders = localStorage.getItem('allOrders');
     let orders = existingOrders ? JSON.parse(existingOrders) : [];
     
-    // Add new order to the beginning (newest first)
+    // Add new order to the beginning
     orders.unshift(orderData);
     
-    // Save back to localStorage - NEVER OVERWRITE, always merge
+    // Save all orders
     localStorage.setItem('allOrders', JSON.stringify(orders));
     
-    // Also save current order separately for confirmation page
+    // Save current order separately for confirmation page
     localStorage.setItem('orderData', JSON.stringify(orderData));
+    
+    // Debug log
+    console.log('✅ Order saved to localStorage:', orderData.orderId);
+    console.log('📦 All orders count:', orders.length);
     
     // Trigger storage event for admin dashboard
     window.dispatchEvent(new Event('storage'));
-    
-    return orders;
   };
 
-  const handlePlaceOrder = async () => {
+  const handlePlaceOrder = () => {
     if (!validateForm()) return;
     
     setIsSubmitting(true);
@@ -129,7 +135,7 @@ const Checkout = () => {
       total: item.price * item.quantity
     }));
     
-    // Use sequential order ID (preserves existing IDs)
+    const totalItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
     const sequentialOrderId = generateSequentialOrderId();
     
     const orderData = {
@@ -140,12 +146,12 @@ const Checkout = () => {
       email: formData.email,
       address: formData.address,
       city: formData.city,
+      notes: formData.notes || '',
       items: orderItems,
-      totalItems: cartItems.reduce((sum, item) => sum + item.quantity, 0),
+      totalItems: totalItemCount,
       subtotal: subtotal,
       deliveryFee: deliveryFee,
       grandTotal: grandTotal,
-      notes: formData.notes || '',
       status: 'Processing',
       orderDateFormatted: new Date().toLocaleDateString('en-NP', {
         year: 'numeric',
@@ -164,41 +170,28 @@ const Checkout = () => {
       }
     };
     
-    try {
-      // Save to API first
-      const response = await fetch(`${API_URL}/api/orders`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-      });
-      
-      if (response.ok) {
-        // Save to localStorage (preserves existing orders)
-        saveOrderToLocalStorage(orderData);
-        
-        // Clear cart
-        clearCart();
-        
-        showNotificationMessage('✅ Order placed successfully!');
-        setTimeout(() => navigate('/order-confirmation'), 1500);
-      } else {
-        const result = await response.json();
-        showNotificationMessage(result.message || 'Failed to place order', 'error');
-        setIsSubmitting(false);
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      // Fallback: save to localStorage even if API fails
-      saveOrderToLocalStorage(orderData);
-      clearCart();
-      showNotificationMessage('✅ Order saved locally! (Network issue)', 'success');
-      setTimeout(() => navigate('/order-confirmation'), 1500);
-    }
+    // Save to localStorage
+    saveOrderToLocalStorage(orderData);
+    
+    // Clear cart
+    clearCart();
+    
+    // Show notification
+    showNotificationMessage('✅ Order placed! Redirecting...', 'success');
+    
+    // Immediate navigation to confirmation page
+    setTimeout(() => {
+      navigate('/order-confirmation', { replace: true });
+    }, 500);
   };
 
-  const goBackToCart = () => navigate('/cart');
+  const goBackToCart = () => {
+    navigate('/cart');
+  };
 
-  if (cartItems.length === 0) return null;
+  if (cartItems.length === 0) {
+    return null;
+  }
 
   return (
     <div className="checkout-page">
@@ -209,7 +202,9 @@ const Checkout = () => {
       )}
 
       <div className="checkout-back-btn-container">
-        <button onClick={goBackToCart} className="checkout-back-btn">← Back to Cart</button>
+        <button onClick={goBackToCart} className="checkout-back-btn">
+          ← Back to Cart
+        </button>
       </div>
 
       <div className="checkout-container">
@@ -221,41 +216,77 @@ const Checkout = () => {
             <form className="delivery-form">
               <div className="form-group">
                 <label>Full Name *</label>
-                <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Enter your full name" />
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder="Enter your full name"
+                />
                 {errors.fullName && <span className="error-text">{errors.fullName}</span>}
               </div>
               
               <div className="form-row">
                 <div className="form-group">
                   <label>Phone Number *</label>
-                  <input type="tel" name="phone" value={formData.phone} onChange={handleChange} placeholder="Enter your phone number" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Enter your phone number"
+                  />
                   {errors.phone && <span className="error-text">{errors.phone}</span>}
                 </div>
                 
                 <div className="form-group">
                   <label>Email Address *</label>
-                  <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Enter your email" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="Enter your email"
+                  />
                   {errors.email && <span className="error-text">{errors.email}</span>}
                 </div>
               </div>
               
               <div className="form-group">
                 <label>Delivery Address *</label>
-                <input type="text" name="address" value={formData.address} onChange={handleChange} placeholder="Street address" />
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="Street address"
+                />
                 {errors.address && <span className="error-text">{errors.address}</span>}
               </div>
               
               <div className="form-row">
                 <div className="form-group">
                   <label>City *</label>
-                  <input type="text" name="city" value={formData.city} onChange={handleChange} placeholder="City" />
+                  <input
+                    type="text"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    placeholder="City"
+                  />
                   {errors.city && <span className="error-text">{errors.city}</span>}
                 </div>
               </div>
               
               <div className="form-group">
                 <label>Order Notes (Optional)</label>
-                <textarea name="notes" value={formData.notes} onChange={handleChange} placeholder="Special instructions..." rows="3" />
+                <textarea
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  placeholder="Special instructions for delivery..."
+                  rows="3"
+                />
               </div>
             </form>
           </div>
@@ -263,29 +294,48 @@ const Checkout = () => {
           <div className="checkout-summary-section">
             <h2>Order Summary</h2>
             <div className="checkout-items">
-              {cartItems.map(item => (
+              {cartItems.map((item) => (
                 <div key={item.id} className="checkout-item">
                   <img src={item.imageUrl} alt={item.name} className="checkout-item-img" />
                   <div className="checkout-item-details">
                     <div className="checkout-item-name">{item.name}</div>
-                    <div className="checkout-item-price">Rs. {item.price.toLocaleString()} x {item.quantity}</div>
+                    <div className="checkout-item-price">
+                      Rs. {item.price.toLocaleString()} x {item.quantity}
+                    </div>
                   </div>
-                  <div className="checkout-item-total">Rs. {(item.price * item.quantity).toLocaleString()}</div>
+                  <div className="checkout-item-total">
+                    Rs. {(item.price * item.quantity).toLocaleString()}
+                  </div>
                 </div>
               ))}
             </div>
             
             <div className="checkout-totals">
-              <div className="total-row"><span>Subtotal:</span><span>Rs. {getTotalPrice().toLocaleString()}</span></div>
-              <div className="total-row"><span>Delivery Fee:</span><span>Rs. {getTotalPrice() > 1500 ? 0 : 100}</span></div>
-              <div className="total-row grand-total"><span>Grand Total:</span><span>Rs. {(getTotalPrice() + (getTotalPrice() > 1500 ? 0 : 100)).toLocaleString()}</span></div>
+              <div className="total-row">
+                <span>Subtotal:</span>
+                <span>Rs. {getTotalPrice().toLocaleString()}</span>
+              </div>
+              <div className="total-row">
+                <span>Delivery Fee:</span>
+                <span>Rs. {getTotalPrice() > 1500 ? 0 : 100}</span>
+              </div>
+              <div className="total-row grand-total">
+                <span>Grand Total:</span>
+                <span>Rs. {(getTotalPrice() + (getTotalPrice() > 1500 ? 0 : 100)).toLocaleString()}</span>
+              </div>
             </div>
             
-            <button onClick={handlePlaceOrder} className="place-order-btn" disabled={isSubmitting}>
+            <button 
+              onClick={handlePlaceOrder} 
+              className="place-order-btn" 
+              disabled={isSubmitting}
+            >
               {isSubmitting ? 'Placing Order...' : 'Place Order'}
             </button>
             
-            <Link to="/cart" className="checkout-cart-link">← Return to Cart</Link>
+            <Link to="/cart" className="checkout-cart-link">
+              ← Return to Cart
+            </Link>
           </div>
         </div>
       </div>
