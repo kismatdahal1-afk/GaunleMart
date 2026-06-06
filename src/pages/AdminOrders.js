@@ -178,14 +178,17 @@ const AdminOrders = () => {
 
   return (
     <div className="admin-orders">
-      {/* Delete Confirmation Modal */}
-      <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onClose={closeDeleteModal}
-        onConfirm={confirmDeleteOrder}
-        itemName={orderToDelete?.orderId}
-        isDeleting={isDeleting}
-      />
+     {/* Delete Confirmation Modal - For Orders */}
+     <DeleteConfirmationModal
+      isOpen={isDeleteModalOpen}
+      onClose={closeDeleteModal}
+      onConfirm={confirmDeleteOrder}
+      itemName={orderToDelete?.orderId}
+      isDeleting={isDeleting}
+      title="Delete Order"
+      confirmText="Delete Order"
+      itemType="order"
+     />
 
       {showNotification && (
         <div className={'order-notification ' + notificationType}>
