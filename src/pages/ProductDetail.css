@@ -82,10 +82,10 @@
   align-items: flex-start !important;
 }
 
-/* ========== PRODUCT NAME - 40px DESKTOP, LESS BOLD (600) ========== */
+/* ========== PRODUCT NAME - 30px DESKTOP ========== */
 .product-detail-name {
   font-family: 'Montserrat', sans-serif !important;
-  font-size: 35px !important;
+  font-size: 30px !important;
   font-weight: 600 !important;
   color: #1a1a1a !important;
   margin: 0 0 5px 0 !important;
@@ -105,10 +105,10 @@
   float: none !important;
 }
 
-/* ========== PRICE ========== */
+/* ========== PRICE - REDUCED BY 10% (28px -> 25px) ========== */
 .product-detail-price {
   font-family: 'Montserrat', sans-serif !important;
-  font-size: 28px !important;
+  font-size: 25px !important;
   color: #e74c3c !important;
   font-weight: 700 !important;
   margin: 5px 0 10px 0 !important;
@@ -304,11 +304,11 @@
 /* Tablet Landscape (1024px - 1280px) */
 @media screen and (max-width: 1280px) and (min-width: 1025px) {
   .product-detail-name {
-    font-size: 36px !important;
+    font-size: 28px !important;
     font-weight: 600 !important;
   }
   .product-detail-price {
-    font-size: 26px !important;
+    font-size: 23px !important;
   }
   .product-detail-category {
     font-size: 15px !important;
@@ -325,12 +325,12 @@
   }
   
   .product-detail-name {
-    font-size: 32px !important;
+    font-size: 26px !important;
     font-weight: 600 !important;
   }
   
   .product-detail-price {
-    font-size: 24px !important;
+    font-size: 22px !important;
   }
   
   .product-detail-category {
@@ -364,12 +364,12 @@
   }
   
   .product-detail-name {
-    font-size: 28px !important;
+    font-size: 24px !important;
     font-weight: 600 !important;
   }
   
   .product-detail-price {
-    font-size: 22px !important;
+    font-size: 20px !important;
   }
   
   .product-detail-category {
@@ -388,12 +388,12 @@
 /* Mobile Portrait (480px - 600px) */
 @media screen and (max-width: 600px) {
   .product-detail-name {
-    font-size: 24px !important;
+    font-size: 22px !important;
     font-weight: 600 !important;
   }
   
   .product-detail-price {
-    font-size: 20px !important;
+    font-size: 18px !important;
   }
   
   .product-detail-category {
@@ -426,12 +426,12 @@
   }
   
   .product-detail-name {
-    font-size: 22px !important;
+    font-size: 20px !important;
     font-weight: 600 !important;
   }
   
   .product-detail-price {
-    font-size: 18px !important;
+    font-size: 17px !important;
   }
   
   .product-detail-category {
@@ -462,12 +462,12 @@
 /* Very Small Mobile (under 360px) */
 @media screen and (max-width: 360px) {
   .product-detail-name {
-    font-size: 20px !important;
+    font-size: 18px !important;
     font-weight: 600 !important;
   }
   
   .product-detail-price {
-    font-size: 17px !important;
+    font-size: 16px !important;
   }
   
   .product-detail-category {
@@ -490,12 +490,12 @@
   }
   
   .product-detail-name {
-    font-size: 48px !important;
+    font-size: 34px !important;
     font-weight: 600 !important;
   }
   
   .product-detail-price {
-    font-size: 32px !important;
+    font-size: 28px !important;
   }
   
   .product-detail-category {
