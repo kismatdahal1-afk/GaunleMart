@@ -81,23 +81,35 @@
   gap: 15px;
 }
 
+/* Product Name - LARGER, BOLDER, BLACK */
 .product-detail-name {
-  font-size: 2rem;
-  color: #2c3e50;
+  font-family: 'Montserrat', 'Poppins', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 5px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+/* Category - smaller, subtle */
+.product-detail-category {
+  font-family: 'Poppins', sans-serif;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 5px;
 }
 
-.product-detail-category {
-  color: #7f8c8d;
-  font-size: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
+/* Price - BOLD RED, LEFT ALIGNED */
 .product-detail-price {
+  font-family: 'Montserrat', sans-serif;
   font-size: 2rem;
   color: #e74c3c;
-  font-weight: bold;
+  font-weight: 800;
+  margin: 10px 0 5px;
+  text-align: left;
 }
 
 .product-detail-rating {
@@ -307,11 +319,11 @@
   }
   
   .product-detail-name {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
   }
   
   .product-detail-price {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
   
   .back-button-container {
@@ -339,7 +351,7 @@
   }
   
   .product-detail-name {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
   }
   
   .product-detail-price {
@@ -372,7 +384,16 @@
   .product-detail-image {
     height: 500px;
   }
+  
+  .product-detail-name {
+    font-size: 3rem;
+  }
+  
+  .product-detail-price {
+    font-size: 2.2rem;
+  }
 }
+
 /* ========== FIXED ADD TO CART NOTIFICATION ========== */
 .fixed-notification-cart {
   position: fixed;
