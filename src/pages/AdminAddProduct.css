@@ -10,22 +10,49 @@
   background: transparent;
   border: 2px solid #FF8C42;
   color: #FF8C42;
-  padding: 10px 20px;
+  padding: 8px 18px;
   border-radius: 30px;
   font-family: 'Montserrat', sans-serif;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .back-to-admin-btn:hover {
   background: #FF8C42;
   color: white;
   transform: translateX(-3px);
+}
+
+/* Laptop view - slightly smaller */
+@media screen and (max-width: 1280px) and (min-width: 769px) {
+  .back-to-admin-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    gap: 5px;
+  }
+}
+
+/* Tablet view */
+@media screen and (max-width: 768px) {
+  .back-to-admin-btn {
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+}
+
+/* Mobile view */
+@media screen and (max-width: 480px) {
+  .back-to-admin-btn {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    gap: 3px;
+  }
 }
 
 /* Main Container */
@@ -374,11 +401,6 @@
   
   .add-product-header h1 {
     font-size: 1.4rem;
-  }
-  
-  .back-to-admin-btn {
-    padding: 8px 16px;
-    font-size: 0.8rem;
   }
   
   .form-group label {
