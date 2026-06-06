@@ -1,4 +1,4 @@
-/* AdminOrders.css - Optimized for desktop (no scroll) and mobile (scrollable) */
+/* AdminOrders.css - Fixed container alignment */
 .admin-orders {
   padding: 30px 20px;
   background-color: #FFF9F0;
@@ -37,11 +37,13 @@
 .orders-container {
   max-width: 1400px;
   margin: 0 auto;
+  background: transparent;
 }
 
 .orders-header {
   text-align: center;
   margin-bottom: 30px;
+  padding: 0 20px;
 }
 
 .orders-header h1 {
@@ -62,6 +64,7 @@
   grid-template-columns: repeat(6, 1fr);
   gap: 15px;
   margin-bottom: 30px;
+  padding: 0 20px;
 }
 
 .order-stat-card {
@@ -92,22 +95,25 @@
   font-size: 0.8rem;
 }
 
-/* Table Container - Desktop: no scroll, Mobile: scroll */
+/* Table Container - Fixed alignment */
 .orders-table-container {
   background: white;
-  border-radius: 15px;
+  border-radius: 20px;
   overflow-x: auto;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  margin: 0 20px;
 }
 
 .orders-table {
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  min-width: 1200px;
 }
 
 .orders-table thead {
   background: linear-gradient(135deg, #2c1810, #3d2317);
+  border-radius: 20px 20px 0 0;
 }
 
 .orders-table th {
