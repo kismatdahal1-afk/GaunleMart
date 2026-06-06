@@ -127,7 +127,7 @@
 .orders-table-container {
   background: white;
   border-radius: 20px;
-  overflow-x: auto;
+  overflow: hidden;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
   margin: 0;
@@ -142,6 +142,15 @@
 
 .orders-table thead {
   background: linear-gradient(135deg, #2c1810, #3d2317);
+}
+
+/* Curved corners for table header */
+.orders-table thead tr:first-child th:first-child {
+  border-top-left-radius: 20px;
+}
+
+.orders-table thead tr:first-child th:last-child {
+  border-top-right-radius: 20px;
 }
 
 .orders-table th {
