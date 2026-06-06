@@ -84,7 +84,7 @@
 
 /* ========== PRODUCT NAME - 30px DESKTOP ========== */
 .product-detail-name {
-  font-family: 'Montserrat', sans-serif !important;
+  font-family: 'Poppins', sans-serif !important;
   font-size: 30px !important;
   font-weight: 600 !important;
   color: #1a1a1a !important;
@@ -107,7 +107,7 @@
 
 /* ========== PRICE - REDUCED BY 10% (28px -> 25px) ========== */
 .product-detail-price {
-  font-family: 'Montserrat', sans-serif !important;
+  font-family: 'Poppins', sans-serif !important;
   font-size: 25px !important;
   color: #e74c3c !important;
   font-weight: 700 !important;
