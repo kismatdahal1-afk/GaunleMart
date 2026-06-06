@@ -63,14 +63,6 @@ const AdminOrders = () => {
     loadOrders();
   }, []);
 
-  // Save orders to localStorage whenever they change
-  const saveOrdersToLocalStorage = (updatedOrders) => {
-    localStorage.setItem('allOrders', JSON.stringify(updatedOrders));
-    setOrders(updatedOrders);
-    // Also trigger storage event for dashboard sync
-    window.dispatchEvent(new Event('storage'));
-  };
-
   const showNotificationMessage = (type, text) => {
     setMessage(text);
     setNotificationType(type);
