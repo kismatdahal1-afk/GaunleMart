@@ -1,5 +1,5 @@
 // AdminOrders.js - Complete order management with localStorage sync and 6 stats cards
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import './AdminOrders.css';
@@ -21,7 +21,7 @@ const AdminOrders = () => {
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   // Load orders from both localStorage and API
-  const loadOrders = async () => {
+  const loadOrders = useCallback(async () => {
     try {
       // First try to get from localStorage (for offline/backup)
       const localOrders = localStorage.getItem('allOrders');
@@ -57,11 +57,11 @@ const AdminOrders = () => {
       setError('Failed to load orders from server, showing local data');
       setLoading(false);
     }
-  };
+  }, [API_URL]);
 
   useEffect(() => {
     loadOrders();
-  }, []);
+  }, [loadOrders]);
 
   const showNotificationMessage = (type, text) => {
     setMessage(text);
