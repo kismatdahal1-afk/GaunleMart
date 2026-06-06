@@ -78,50 +78,45 @@
 .product-detail-info {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 }
 
-/* Product Name - VERY LARGE, much bigger than category */
+/* ========== PRODUCT NAME - VERY LARGE & BOLD ========== */
 .product-detail-name {
   font-family: 'Montserrat', 'Poppins', sans-serif;
-  font-size: 3.5rem;
+  font-size: 3.2rem;
   font-weight: 800;
   color: #1a1a1a;
-  margin-bottom: 5px;
-  letter-spacing: -1px;
+  margin: 0 0 5px 0;
+  letter-spacing: -0.5px;
   line-height: 1.2;
 }
 
-/* Category - smaller, subtle (much smaller than product name) */
+/* ========== CATEGORY - SMALL & SUBTLE ========== */
 .product-detail-category {
   font-family: 'Poppins', sans-serif;
   color: #7f8c8d;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 5px;
+  margin: 0 0 5px 0;
 }
 
-/* Price - BELOW product name, LEFT ALIGNED */
+/* ========== PRICE - BELOW CATEGORY, LEFT ALIGNED, RED & BOLD ========== */
 .product-detail-price {
   font-family: 'Montserrat', sans-serif;
-  font-size: 2rem;
+  font-size: 1.8rem;
   color: #e74c3c;
-  font-weight: 800;
-  margin: 10px 0 10px;
+  font-weight: 700;
+  margin: 5px 0 10px 0;
   text-align: left;
-  display: block;
 }
 
+/* ========== RATING - STARS ONLY, NO TEXT ========== */
 .product-detail-rating {
   color: #f39c12;
-  font-size: 1.2rem;
-}
-
-.rating-text {
-  color: #7f8c8d;
-  margin-left: 10px;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
+  margin: 5px 0;
 }
 
 .product-detail-stock {
@@ -299,11 +294,11 @@
   }
   
   .product-detail-name {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
   }
   
   .product-detail-price {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 }
 
@@ -328,11 +323,15 @@
   }
   
   .product-detail-name {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
   
   .product-detail-price {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+  }
+  
+  .product-detail-rating {
+    font-size: 1.1rem;
   }
   
   .back-button-container {
@@ -360,11 +359,15 @@
   }
   
   .product-detail-name {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
   
   .product-detail-price {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
+  }
+  
+  .product-detail-rating {
+    font-size: 1rem;
   }
   
   .qty-btn {
@@ -395,11 +398,11 @@
   }
   
   .product-detail-name {
-    font-size: 4rem;
+    font-size: 3.8rem;
   }
   
   .product-detail-price {
-    font-size: 2.2rem;
+    font-size: 2rem;
   }
 }
 
