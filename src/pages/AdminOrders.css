@@ -613,3 +613,167 @@
     font-size: 0.7rem;
   }
 }
+/* ========== CSS ISOLATION - Prevent leakage from ProductDetail page ========== */
+/* This wrapper ensures Manage Orders page styles are completely isolated */
+
+.manage-orders-page {
+  /* Reset any inherited styles that might leak from ProductDetail */
+  all: initial;
+  display: block;
+}
+
+/* Reset all table-related styles inside Manage Orders page */
+.manage-orders-page table,
+.manage-orders-page table *,
+.manage-orders-page td,
+.manage-orders-page th,
+.manage-orders-page tr,
+.manage-orders-page tbody,
+.manage-orders-page thead {
+  all: unset;
+  display: table-cell;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: normal;
+  color: #333;
+  line-height: 1.4;
+  padding: 12px;
+  border-bottom: 1px solid #f0e6d3;
+  vertical-align: middle;
+}
+
+/* Restore table structure */
+.manage-orders-page table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.manage-orders-page thead {
+  display: table-header-group;
+}
+
+.manage-orders-page tbody {
+  display: table-row-group;
+}
+
+.manage-orders-page tr {
+  display: table-row;
+}
+
+.manage-orders-page td {
+  display: table-cell;
+}
+
+/* Override any ProductDetail styles that leaked into table cells */
+.manage-orders-page td .product-name,
+.manage-orders-page td .product-price,
+.manage-orders-page td h3,
+.manage-orders-page td p {
+  font-size: 0.85rem !important;
+  font-weight: normal !important;
+  font-family: 'Poppins', sans-serif !important;
+  color: #333 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  line-height: 1.4 !important;
+}
+
+/* Ensure price in orders table is NOT red or bold */
+.manage-orders-page .amount-cell,
+.manage-orders-page td .product-price {
+  color: #333 !important;
+  font-weight: normal !important;
+  font-size: 0.85rem !important;
+}
+
+/* Keep order ID special styling */
+.manage-orders-page .order-id-cell {
+  color: #FF8C42 !important;
+  font-weight: 600 !important;
+  font-family: 'Montserrat', sans-serif !important;
+  font-size: 0.85rem !important;
+}
+
+/* Keep status badges styling (they should remain) */
+.manage-orders-page .order-status {
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  padding: 5px 12px !important;
+  border-radius: 20px !important;
+  display: inline-block !important;
+}
+
+/* Action buttons remain small */
+.manage-orders-page .update-status-btn,
+.manage-orders-page .delete-order-btn {
+  font-size: 1rem !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 5px !important;
+  border-radius: 5px !important;
+}
+
+.manage-orders-page .update-status-btn:hover {
+  background: #e8f5e9 !important;
+}
+
+.manage-orders-page .delete-order-btn:hover {
+  background: #fef0ef !important;
+}
+
+/* Products cell styling */
+.manage-orders-page .products-cell {
+  text-align: center;
+}
+
+/* Stats cards remain same */
+.manage-orders-page .order-stat-card {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.manage-orders-page .order-stat-icon {
+  font-size: 2.5rem;
+}
+
+.manage-orders-page .order-stat-info h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #FF8C42;
+  margin-bottom: 5px;
+}
+
+.manage-orders-page .order-stat-info p {
+  font-family: 'Poppins', sans-serif;
+  color: #666;
+  font-size: 0.8rem;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .manage-orders-page .order-stat-card {
+    padding: 15px;
+  }
+  
+  .manage-orders-page .order-stat-icon {
+    font-size: 2rem;
+  }
+  
+  .manage-orders-page .order-stat-info h3 {
+    font-size: 1.2rem;
+  }
+  
+  .manage-orders-page .actions-cell {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
