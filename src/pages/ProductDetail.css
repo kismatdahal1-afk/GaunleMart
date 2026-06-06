@@ -81,18 +81,18 @@
   gap: 15px;
 }
 
-/* Product Name - LARGER, BOLDER, BLACK */
+/* Product Name - LARGE & BOLD */
 .product-detail-name {
   font-family: 'Montserrat', 'Poppins', sans-serif;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 800;
   color: #1a1a1a;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   letter-spacing: -0.5px;
   line-height: 1.2;
 }
 
-/* Category - smaller, subtle */
+/* Category - subtle */
 .product-detail-category {
   font-family: 'Poppins', sans-serif;
   color: #7f8c8d;
@@ -102,14 +102,15 @@
   margin-bottom: 5px;
 }
 
-/* Price - BOLD RED, LEFT ALIGNED */
+/* Price - LARGE, BOLD RED, LEFT ALIGNED */
 .product-detail-price {
   font-family: 'Montserrat', sans-serif;
-  font-size: 2rem;
-  color: #e74c3c;
+  font-size: 2.2rem;
   font-weight: 800;
+  color: #e74c3c;
   margin: 10px 0 5px;
   text-align: left;
+  display: block;
 }
 
 .product-detail-rating {
@@ -134,6 +135,7 @@
   background-color: #d5f5e3;
   border-radius: 5px;
   display: inline-block;
+  font-size: 0.9rem;
 }
 
 .out-of-stock {
@@ -143,12 +145,14 @@
   background-color: #fadbd8;
   border-radius: 5px;
   display: inline-block;
+  font-size: 0.9rem;
 }
 
 .product-detail-description h3 {
   color: #2c3e50;
   margin-bottom: 10px;
   font-size: 1.2rem;
+  font-weight: 600;
 }
 
 .product-detail-description p {
@@ -205,6 +209,7 @@
   border: none;
   padding: 15px 30px;
   font-size: 1.1rem;
+  font-weight: 600;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
@@ -226,6 +231,7 @@
   border: 2px solid #3498db;
   padding: 12px 30px;
   font-size: 1rem;
+  font-weight: 500;
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -296,6 +302,14 @@
   .product-detail-wrapper {
     max-width: 90%;
   }
+  
+  .product-detail-name {
+    font-size: 2.2rem;
+  }
+  
+  .product-detail-price {
+    font-size: 1.8rem;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -351,7 +365,7 @@
   }
   
   .product-detail-name {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
   }
   
   .product-detail-price {
@@ -386,11 +400,11 @@
   }
   
   .product-detail-name {
-    font-size: 3rem;
+    font-size: 3.2rem;
   }
   
   .product-detail-price {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
   }
 }
 
