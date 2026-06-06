@@ -1,4 +1,4 @@
-// AdminManageProducts.js - Complete working version with custom delete modal
+// AdminManageProducts.js - Complete working version with custom delete modal for products
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ImageReplaceModal from '../components/ImageReplaceModal';
@@ -180,7 +180,7 @@ const AdminManageProducts = () => {
     setIsModalOpen(true);
   };
 
-  // Open delete confirmation modal
+  // Open delete confirmation modal for product
   const openDeleteModal = (product) => {
     setProductToDelete(product);
     setIsDeleteModalOpen(true);
@@ -335,13 +335,16 @@ const AdminManageProducts = () => {
 
   return (
     <div className="admin-manage-products">
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal - For Products */}
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={closeDeleteModal}
         onConfirm={confirmDeleteProduct}
         itemName={productToDelete?.name}
         isDeleting={isDeleting}
+        title="Delete Product"
+        confirmText="Delete Product"
+        itemType="product"
       />
 
       {/* Fixed Notification Bar */}
