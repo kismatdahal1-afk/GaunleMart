@@ -99,7 +99,7 @@ const ProductDetail = () => {
     navigate(productsUrl);
   };
 
-  // Handle continue shopping - FIXED: Now redirects to Products page
+  // Handle continue shopping - redirects to Products page
   const handleContinueShopping = () => {
     navigate('/products');
   };
@@ -195,7 +195,6 @@ const ProductDetail = () => {
               {isInStock ? 'Add to Cart' : 'Out of Stock'}
             </button>
             
-            {/* FIXED: Continue Shopping button now redirects to Products page */}
             <button onClick={handleContinueShopping} className="continue-shopping-btn">
               Continue Shopping
             </button>
