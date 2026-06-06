@@ -1,11 +1,256 @@
-/* AdminOrders.css - Uniform font sizes across all columns */
+/* AdminOrders.css - Enhanced UI with structured product column and action buttons */
+.manage-orders-page {
+  overflow-x: auto;
+}
+
 .admin-orders {
   padding: 30px 20px;
   background-color: #FFF9F0;
   min-height: calc(100vh - 75px);
 }
 
-/* ========== BACK BUTTON ========== */
+/* Table container - horizontal scroll on mobile */
+.orders-table-container {
+  background: white;
+  border-radius: 15px;
+  overflow-x: auto;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1200px;
+}
+
+.orders-table thead {
+  background: linear-gradient(135deg, #2c1810, #3d2317);
+}
+
+.orders-table th {
+  padding: 15px 12px;
+  text-align: left;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Consistent font for all table cells */
+.orders-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f0e6d3;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: normal;
+  color: #333;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+/* Task 1: Order ID column - Orange color */
+.order-id-cell {
+  font-weight: 600;
+  color: #FF6B00 !important;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+}
+
+/* Task 2: Email wrap fix */
+.email-cell {
+  word-break: break-word;
+  max-width: 180px;
+}
+
+/* Address cell */
+.address-cell {
+  word-break: break-word;
+  max-width: 180px;
+}
+
+/* Amount cell */
+.amount-cell {
+  font-weight: 500;
+  color: #e74c3c;
+  font-size: 0.85rem;
+}
+
+/* Notes cell */
+.notes-cell {
+  max-width: 150px;
+}
+
+.notes-text {
+  display: block;
+  white-space: normal;
+  word-wrap: break-word;
+  word-break: break-word;
+  line-height: 1.4;
+  font-size: 0.8rem;
+  color: #555;
+}
+
+/* Task 3: Products column - Structured sub-table */
+.products-cell {
+  min-width: 200px;
+}
+
+.product-sub-table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.product-sub-header {
+  display: grid;
+  grid-template-columns: 2fr 0.7fr 1fr;
+  gap: 8px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #666;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 2px;
+}
+
+.product-sub-header span:first-child {
+  text-align: left;
+}
+
+.product-sub-header span:nth-child(2) {
+  text-align: center;
+}
+
+.product-sub-header span:last-child {
+  text-align: right;
+}
+
+.product-sub-row {
+  display: grid;
+  grid-template-columns: 2fr 0.7fr 1fr;
+  gap: 8px;
+  font-size: 0.8rem;
+  padding: 4px 0;
+}
+
+.product-sub-row span:first-child {
+  text-align: left;
+  font-weight: normal;
+}
+
+.product-sub-row span:nth-child(2) {
+  text-align: center;
+}
+
+.product-sub-row span:last-child {
+  text-align: right;
+}
+
+.product-name-cell {
+  color: #2c1810;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+.product-qty-cell {
+  color: #8B6914;
+  font-size: 0.8rem;
+}
+
+.product-price-cell {
+  color: #e74c3c;
+  font-weight: normal;
+  font-size: 0.8rem;
+}
+
+/* Status Badges */
+.order-status {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.status-processing {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.status-shipped {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-delivered {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Task 4: Action buttons - Vertical layout */
+.actions-cell {
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+}
+
+.update-status-btn {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 80px;
+  text-align: center;
+}
+
+.update-status-btn:hover {
+  background: linear-gradient(135deg, #27ae60, #219a52);
+  transform: translateY(-1px);
+}
+
+.delete-order-btn {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 80px;
+  text-align: center;
+}
+
+.delete-order-btn:hover {
+  background: linear-gradient(135deg, #c0392b, #a93226);
+  transform: translateY(-1px);
+}
+
+/* Back Button */
 .orders-header-top {
   max-width: 1400px;
   margin: 0 auto 20px;
@@ -33,7 +278,7 @@
   transform: translateX(-3px);
 }
 
-/* ========== HEADER ========== */
+/* Header */
 .orders-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -57,7 +302,7 @@
   font-size: 0.9rem;
 }
 
-/* ========== STATS CARDS ========== */
+/* Stats Cards */
 .order-stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -93,224 +338,7 @@
   font-size: 0.8rem;
 }
 
-/* ========== ORDERS TABLE ========== */
-.orders-table-container {
-  background: white;
-  border-radius: 15px;
-  overflow-x: auto;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-}
-
-.orders-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1200px;
-}
-
-.orders-table thead {
-  background: linear-gradient(135deg, #2c1810, #3d2317);
-}
-
-.orders-table th {
-  padding: 15px 12px;
-  text-align: left;
-  color: white;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-/* UNIFORM FONT SIZE FOR ALL TABLE CELLS */
-.orders-table td {
-  padding: 12px;
-  border-bottom: 1px solid #f0e6d3;
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #333;
-  vertical-align: middle;
-}
-
-/* Order ID Column */
-.order-id-cell {
-  font-weight: 600;
-  color: #FF8C42;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 0.85rem;
-}
-
-/* Amount Column */
-.amount-cell {
-  font-weight: 500;
-  color: #e74c3c;
-  font-size: 0.85rem;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Products Column - Override any larger fonts */
-.products-cell {
-  text-align: left;
-  font-size: 0.85rem;
-  font-weight: 400;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Products Column - Product Name */
-.products-cell .product-name {
-  font-size: 0.85rem;
-  font-weight: 400;
-  font-family: 'Poppins', sans-serif;
-  color: #333;
-  margin: 0;
-  padding: 0;
-}
-
-/* Products Column - Price */
-.products-cell .product-price {
-  font-size: 0.85rem;
-  font-weight: 400;
-  font-family: 'Poppins', sans-serif;
-  color: #333;
-}
-
-/* Product detail rows inside products column */
-.products-cell .product-detail-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 6px 0;
-  border-bottom: 1px solid #f0e6d3;
-}
-
-.products-cell .product-detail-row:last-child {
-  border-bottom: none;
-}
-
-.products-cell .product-detail-name {
-  flex: 2;
-  text-align: left;
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #2c1810;
-  font-family: 'Poppins', sans-serif;
-}
-
-.products-cell .product-detail-qty {
-  width: 50px;
-  text-align: center;
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #8B6914;
-  font-family: 'Poppins', sans-serif;
-}
-
-.products-cell .product-detail-price {
-  width: 80px;
-  text-align: right;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #e74c3c;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Phone column */
-.orders-table td:nth-child(6) {
-  font-size: 0.85rem;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Email column */
-.orders-table td:nth-child(5) {
-  font-size: 0.85rem;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Customer column */
-.orders-table td:nth-child(4) {
-  font-size: 0.85rem;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* Date column */
-.orders-table td:nth-child(3) {
-  font-size: 0.85rem;
-  font-family: 'Poppins', sans-serif;
-}
-
-/* ========== STATUS BADGES ========== */
-.order-status {
-  display: inline-block;
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-family: 'Montserrat', sans-serif;
-}
-
-.status-processing {
-  background: #fff3cd;
-  color: #856404;
-}
-
-.status-confirmed {
-  background: #cce5ff;
-  color: #004085;
-}
-
-.status-shipped {
-  background: #d4edda;
-  color: #155724;
-}
-
-.status-delivered {
-  background: #d1ecf1;
-  color: #0c5460;
-}
-
-.status-cancelled {
-  background: #f8d7da;
-  color: #721c24;
-}
-
-/* ========== ACTION BUTTONS ========== */
-.actions-cell {
-  display: flex;
-  gap: 8px;
-}
-
-.update-status-btn,
-.delete-order-btn {
-  background: transparent;
-  border: none;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 5px 8px;
-  border-radius: 5px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-}
-
-.update-status-btn {
-  color: #27ae60;
-}
-
-.update-status-btn:hover {
-  background: #e8f5e9;
-  transform: scale(1.05);
-}
-
-.delete-order-btn {
-  color: #e74c3c;
-}
-
-.delete-order-btn:hover {
-  background: #fef0ef;
-  transform: scale(1.05);
-}
-
-/* ========== NOTIFICATION ========== */
+/* Notification */
 .order-notification {
   position: fixed;
   top: 80px;
@@ -352,13 +380,12 @@
   }
 }
 
-/* ========== NO DATA & LOADING ========== */
+/* No Data & Loading */
 .no-data {
   text-align: center;
   padding: 40px;
   color: #8B6914;
   font-family: 'Poppins', sans-serif;
-  font-size: 0.9rem;
 }
 
 .admin-loading {
@@ -412,29 +439,27 @@
     font-size: 1.2rem;
   }
   
-  .actions-cell {
-    flex-direction: column;
-    gap: 5px;
+  .orders-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   
-  .products-cell .product-detail-row {
-    flex-wrap: wrap;
-    gap: 5px;
+  .orders-table {
+    min-width: 1200px;
   }
   
-  .products-cell .product-detail-name {
-    flex: 1 1 100%;
+  .product-sub-header {
+    font-size: 0.65rem;
   }
   
-  .products-cell .product-detail-qty,
-  .products-cell .product-detail-price {
-    flex: 1;
-    text-align: left;
+  .product-sub-row {
+    font-size: 0.7rem;
   }
   
   .update-status-btn,
   .delete-order-btn {
-    font-size: 0.85rem;
-    padding: 3px 6px;
+    padding: 4px 12px;
+    font-size: 0.65rem;
+    width: 70px;
   }
 }
