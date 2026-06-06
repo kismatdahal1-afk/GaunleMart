@@ -1,4 +1,4 @@
-/* AdminOrders.css - Fixed container alignment */
+/* AdminOrders.css - Fixed alignment, centered table */
 .admin-orders {
   padding: 30px 20px;
   background-color: #FFF9F0;
@@ -38,12 +38,13 @@
   max-width: 1400px;
   margin: 0 auto;
   background: transparent;
+  width: 100%;
 }
 
 .orders-header {
   text-align: center;
   margin-bottom: 30px;
-  padding: 0 20px;
+  width: 100%;
 }
 
 .orders-header h1 {
@@ -64,7 +65,7 @@
   grid-template-columns: repeat(6, 1fr);
   gap: 15px;
   margin-bottom: 30px;
-  padding: 0 20px;
+  width: 100%;
 }
 
 .order-stat-card {
@@ -95,25 +96,25 @@
   font-size: 0.8rem;
 }
 
-/* Table Container - Fixed alignment */
+/* Table Container - Fixed centering */
 .orders-table-container {
   background: white;
   border-radius: 20px;
   overflow-x: auto;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-  margin: 0 20px;
+  width: 100%;
+  margin: 0;
 }
 
 .orders-table {
   width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  table-layout: auto;
   min-width: 1200px;
 }
 
 .orders-table thead {
   background: linear-gradient(135deg, #2c1810, #3d2317);
-  border-radius: 20px 20px 0 0;
 }
 
 .orders-table th {
@@ -134,19 +135,19 @@
   vertical-align: top;
 }
 
-/* Column Widths - Optimized for desktop (all visible) */
-.col-sn { width: 45px; text-align: center; vertical-align: middle; }
-.col-order-id { width: 110px; vertical-align: middle; }
-.col-date { width: 95px; vertical-align: middle; }
-.col-customer { width: 115px; vertical-align: middle; }
-.col-email { width: 150px; vertical-align: middle; word-break: break-word; }
-.col-phone { width: 105px; vertical-align: middle; }
+/* Column Widths */
+.col-sn { width: 50px; text-align: center; vertical-align: middle; }
+.col-order-id { width: 120px; vertical-align: middle; }
+.col-date { width: 90px; vertical-align: middle; }
+.col-customer { width: 120px; vertical-align: middle; }
+.col-email { width: 160px; vertical-align: middle; word-break: break-word; }
+.col-phone { width: 110px; vertical-align: middle; }
 .col-address { width: 150px; vertical-align: middle; word-break: break-word; }
-.col-products { width: 240px; }
-.col-amount { width: 95px; vertical-align: middle; }
+.col-products { width: 250px; }
+.col-amount { width: 100px; vertical-align: middle; }
 .col-notes { width: 130px; vertical-align: middle; }
-.col-status { width: 105px; vertical-align: middle; }
-.col-actions { width: 75px; text-align: center; vertical-align: middle; }
+.col-status { width: 110px; vertical-align: middle; }
+.col-actions { width: 80px; text-align: center; vertical-align: middle; }
 
 /* Products Column Header with Sub-header */
 .products-sub-header {
@@ -317,7 +318,7 @@
   color: #721c24;
 }
 
-/* Action Buttons - Compact & Elegant */
+/* Action Buttons */
 .actions-cell {
   display: flex;
   flex-direction: column;
@@ -442,7 +443,7 @@
 
 /* ========== RESPONSIVE DESIGN ========== */
 
-/* Desktop: All columns visible, no scroll needed */
+/* Desktop */
 @media screen and (min-width: 1300px) {
   .orders-table-container {
     overflow-x: visible;
@@ -450,25 +451,15 @@
   
   .orders-table {
     min-width: 100%;
-    table-layout: fixed;
   }
 }
 
-/* Tablet / Small Desktop: Slight adjustment */
+/* Tablet */
 @media screen and (max-width: 1299px) and (min-width: 1025px) {
-  .col-email { width: 130px; }
+  .col-email { width: 140px; }
   .col-address { width: 130px; }
-  .col-products { width: 220px; }
+  .col-products { width: 230px; }
   .col-notes { width: 110px; }
-  .col-status { width: 95px; }
-  
-  .product-detail-name {
-    font-size: 0.75rem;
-  }
-  
-  .notes-text-full {
-    max-width: 110px;
-  }
 }
 
 /* Tablet View - Horizontal scroll enabled */
@@ -484,11 +475,10 @@
   
   .orders-table {
     min-width: 1100px;
-    table-layout: auto;
   }
 }
 
-/* Mobile View - Horizontal scroll enabled */
+/* Mobile View */
 @media screen and (max-width: 768px) {
   .admin-orders {
     padding: 20px 15px;
@@ -542,27 +532,6 @@
     gap: 6px;
     font-size: 0.75rem;
   }
-  
-  .product-detail-name {
-    font-size: 0.75rem;
-  }
-  
-  .product-detail-qty {
-    font-size: 0.75rem;
-  }
-  
-  .product-detail-price {
-    font-size: 0.75rem;
-  }
-  
-  .email-cell,
-  .address-cell {
-    font-size: 0.75rem;
-  }
-  
-  .notes-text-full {
-    font-size: 0.75rem;
-  }
 }
 
 /* Small Mobile */
@@ -574,30 +543,6 @@
   
   .orders-table {
     min-width: 1100px;
-  }
-  
-  .products-sub-header {
-    grid-template-columns: 1fr 30px 55px;
-    gap: 5px;
-    font-size: 0.6rem;
-  }
-  
-  .product-detail-row {
-    grid-template-columns: 1fr 30px 55px;
-    gap: 5px;
-    font-size: 0.7rem;
-  }
-  
-  .product-detail-name {
-    font-size: 0.7rem;
-  }
-  
-  .product-detail-qty {
-    font-size: 0.7rem;
-  }
-  
-  .product-detail-price {
-    font-size: 0.7rem;
   }
   
   .update-status-btn,
