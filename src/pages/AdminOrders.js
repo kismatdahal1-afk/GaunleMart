@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management page with enhanced UI
+// AdminOrders.js - Complete order management with improved UI
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
@@ -49,8 +49,8 @@ const AdminOrders = () => {
     }, 3000);
   };
 
-  // Update order status
-  const updateOrderStatus = async (orderId, currentStatus) => {
+  // Update order status - opens modal (kept as popup)
+  const updateOrderStatus = (orderId, currentStatus) => {
     const statuses = ['Processing', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
     const currentIndex = statuses.indexOf(currentStatus);
     let nextStatus = '';
@@ -64,29 +64,33 @@ const AdminOrders = () => {
     }
     
     if (window.confirm(`Change order status from "${currentStatus}" to "${nextStatus}"?`)) {
-      try {
-        const response = await fetch(`${API_URL}/api/orders/${orderId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ status: nextStatus })
-        });
-        
-        if (response.ok) {
-          showNotificationMessage('success', `Order status updated to ${nextStatus}`);
-          fetchOrders();
-        } else {
-          showNotificationMessage('error', 'Failed to update order status');
-        }
-      } catch (error) {
-        console.error('Error updating order:', error);
-        showNotificationMessage('error', 'Network error');
-      }
+      updateOrderStatusAPI(orderId, nextStatus);
     }
   };
 
-  // Open delete confirmation modal
+  const updateOrderStatusAPI = async (orderId, newStatus) => {
+    try {
+      const response = await fetch(`${API_URL}/api/orders/${orderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+      
+      if (response.ok) {
+        showNotificationMessage('success', `Order status updated to ${newStatus}`);
+        fetchOrders();
+      } else {
+        showNotificationMessage('error', 'Failed to update order status');
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+      showNotificationMessage('error', 'Network error');
+    }
+  };
+
+  // Delete order
   const openDeleteModal = (order) => {
     setOrderToDelete(order);
     setIsDeleteModalOpen(true);
@@ -129,19 +133,29 @@ const AdminOrders = () => {
   // Calculate statistics
   const totalOrders = orders.length;
   const pendingOrders = orders.filter(o => o.status === 'Processing').length;
-  const confirmedOrders = orders.filter(o => o.status === 'Confirmed').length;
-  const shippedOrders = orders.filter(o => o.status === 'Shipped').length;
   const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
   const totalRevenue = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
 
-  // Format date
+  // Format date - 2 lines: Month Day / Year
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-NP', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
+    return {
+      line1: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      line2: date.getFullYear().toString()
+    };
+  };
+
+  // Format Order ID - 2 lines
+  const formatOrderId = (orderId) => {
+    if (!orderId) return { line1: 'N/A', line2: '' };
+    const parts = orderId.split('-');
+    if (parts.length >= 2) {
+      return {
+        line1: parts.slice(0, -1).join('-'),
+        line2: parts[parts.length - 1]
+      };
+    }
+    return { line1: orderId, line2: '' };
   };
 
   // Get status badge class
@@ -156,38 +170,19 @@ const AdminOrders = () => {
     }
   };
 
-  // Format address as "address, city"
-  const getFullAddress = (order) => {
-    const address = order.address || order.deliveryDetails?.address || '';
-    const city = order.city || order.deliveryDetails?.city || '';
-    if (address && city) {
-      return address + ', ' + city;
-    }
-    return address || city || '—';
-  };
-
-  // Render product details with structured sub-table
+  // Render product details with 3 sub-columns
   const renderProductDetails = (items) => {
     if (!items || items.length === 0) {
-      return <div className="product-sub-row">—</div>;
+      return <div className="product-detail-row">—</div>;
     }
     
-    return (
-      <div className="product-sub-table">
-        <div className="product-sub-header">
-          <span>Name</span>
-          <span>Qty</span>
-          <span>Price</span>
-        </div>
-        {items.map((item, idx) => (
-          <div key={idx} className="product-sub-row">
-            <span className="product-name-cell">{item.name}</span>
-            <span className="product-qty-cell">{item.quantity}</span>
-            <span className="product-price-cell">Rs. {item.price.toLocaleString()}</span>
-          </div>
-        ))}
+    return items.map((item, idx) => (
+      <div key={idx} className="product-detail-row">
+        <span className="product-detail-name">{item.name}</span>
+        <span className="product-detail-qty">{item.quantity}</span>
+        <span className="product-detail-price">Rs. {item.price.toLocaleString()}</span>
       </div>
-    );
+    ));
   };
 
   if (loading) {
@@ -200,7 +195,7 @@ const AdminOrders = () => {
   }
 
   return (
-    <div className="manage-orders-page">
+    <div className="admin-orders">
       {/* Delete Confirmation Modal */}
       <DeleteConfirmationModal
         isOpen={isDeleteModalOpen}
@@ -213,141 +208,138 @@ const AdminOrders = () => {
         itemType="order"
       />
 
-      <div className="admin-orders">
-        {showNotification && (
-          <div className={`order-notification ${notificationType}`}>
-            <span>{message || error}</span>
-          </div>
-        )}
+      {showNotification && (
+        <div className={`order-notification ${notificationType}`}>
+          <span>{message || error}</span>
+        </div>
+      )}
 
-        <div className="orders-header-top">
-          <button onClick={goBackToAdmin} className="back-to-admin-btn">
-            ← Back to Admin Dashboard
-          </button>
+      <div className="orders-header-top">
+        <button onClick={goBackToAdmin} className="back-to-admin-btn">
+          ← Back to Admin Dashboard
+        </button>
+      </div>
+
+      <div className="orders-container">
+        <div className="orders-header">
+          <h1>Manage Orders</h1>
+          <p>View and manage all customer orders</p>
         </div>
 
-        <div className="orders-container">
-          <div className="orders-header">
-            <h1>Manage Orders</h1>
-            <p>View and manage all customer orders</p>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="order-stats-grid">
-            <div className="order-stat-card">
-              <div className="order-stat-icon">📦</div>
-              <div className="order-stat-info">
-                <h3>{totalOrders}</h3>
-                <p>Total Orders</p>
-              </div>
-            </div>
-            <div className="order-stat-card">
-              <div className="order-stat-icon">⏳</div>
-              <div className="order-stat-info">
-                <h3>{pendingOrders}</h3>
-                <p>Pending Orders</p>
-              </div>
-            </div>
-            <div className="order-stat-card">
-              <div className="order-stat-icon">✅</div>
-              <div className="order-stat-info">
-                <h3>{confirmedOrders}</h3>
-                <p>Confirmed Orders</p>
-              </div>
-            </div>
-            <div className="order-stat-card">
-              <div className="order-stat-icon">🚚</div>
-              <div className="order-stat-info">
-                <h3>{shippedOrders}</h3>
-                <p>Shipped Orders</p>
-              </div>
-            </div>
-            <div className="order-stat-card">
-              <div className="order-stat-icon">🎁</div>
-              <div className="order-stat-info">
-                <h3>{deliveredOrders}</h3>
-                <p>Delivered Orders</p>
-              </div>
-            </div>
-            <div className="order-stat-card">
-              <div className="order-stat-icon">💰</div>
-              <div className="order-stat-info">
-                <h3>Rs. {totalRevenue.toLocaleString()}</h3>
-                <p>Total Revenue</p>
-              </div>
+        {/* Stats Cards */}
+        <div className="order-stats-grid">
+          <div className="order-stat-card">
+            <div className="order-stat-icon">📦</div>
+            <div className="order-stat-info">
+              <h3>{totalOrders}</h3>
+              <p>Total Orders</p>
             </div>
           </div>
+          <div className="order-stat-card">
+            <div className="order-stat-icon">⏳</div>
+            <div className="order-stat-info">
+              <h3>{pendingOrders}</h3>
+              <p>Pending Orders</p>
+            </div>
+          </div>
+          <div className="order-stat-card">
+            <div className="order-stat-icon">✅</div>
+            <div className="order-stat-info">
+              <h3>{deliveredOrders}</h3>
+              <p>Delivered Orders</p>
+            </div>
+          </div>
+          <div className="order-stat-card">
+            <div className="order-stat-icon">💰</div>
+            <div className="order-stat-info">
+              <h3>Rs. {totalRevenue.toLocaleString()}</h3>
+              <p>Total Revenue</p>
+            </div>
+          </div>
+        </div>
 
-          {/* Orders Table */}
-          <div className="orders-table-container">
-            <table className="orders-table">
-              <thead>
+        {/* Orders Table */}
+        <div className="orders-table-container">
+          <table className="orders-table">
+            <thead>
+              <tr>
+                <th className="col-sn">SN</th>
+                <th className="col-order-id">Order ID</th>
+                <th className="col-date">Date</th>
+                <th className="col-customer">Customer</th>
+                <th className="col-email">Email</th>
+                <th className="col-phone">Phone</th>
+                <th className="col-address">Address</th>
+                <th className="col-products">
+                  Products
+                  <div className="products-sub-header">
+                    <span>Name</span>
+                    <span>Qty</span>
+                    <span>Price</span>
+                  </div>
+                </th>
+                <th className="col-amount">Amount</th>
+                <th className="col-status">Status</th>
+                <th className="col-actions">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.length === 0 ? (
                 <tr>
-                  <th>SN</th>
-                  <th>Order ID</th>
-                  <th>Date</th>
-                  <th>Customer</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Products</th>
-                  <th>Amount</th>
-                  <th>Order Notes</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <td colSpan="11" className="no-data">No orders found</td>
                 </tr>
-              </thead>
-              <tbody>
-                {orders.length === 0 ? (
-                  <tr>
-                    <td colSpan="12" className="no-data">No orders found</td>
-                  </tr>
-                ) : (
-                  orders.map((order, index) => (
+              ) : (
+                orders.map((order, index) => {
+                  const formattedOrderId = formatOrderId(order.orderId);
+                  const formattedDate = formatDate(order.createdAt);
+                  const address = `${order.address || order.deliveryDetails?.address || ''}, ${order.city || order.deliveryDetails?.city || ''}`.replace(/^,\s|,\s$/, '') || '—';
+                  
+                  return (
                     <tr key={order._id}>
-                      <td>{index + 1}</td>
-                      <td className="order-id-cell">{order.orderId}</td>
-                      <td>{formatDate(order.createdAt)}</td>
-                      <td>{order.customerName}</td>
-                      <td className="email-cell">{order.email || order.deliveryDetails?.email || '—'}</td>
-                      <td>{order.phone || order.deliveryDetails?.phone || '—'}</td>
-                      <td className="address-cell">{getFullAddress(order)}</td>
-                      <td className="products-cell">
-                        {renderProductDetails(order.items)}
+                      <td className="col-sn">{index + 1}</td>
+                      <td className="col-order-id">
+                        <div className="order-id-line1">{formattedOrderId.line1}</div>
+                        <div className="order-id-line2">{formattedOrderId.line2}</div>
                       </td>
-                      <td className="amount-cell">Rs. {(order.grandTotal || 0).toLocaleString()}</td>
-                      <td className="notes-cell">
-                        <div className="notes-text" title={order.notes || 'No notes'}>
-                          {order.notes || '—'}
+                      <td className="col-date">
+                        <div className="date-line1">{formattedDate.line1}</div>
+                        <div className="date-line2">{formattedDate.line2}</div>
+                      </td>
+                      <td className="col-customer">{order.customerName}</td>
+                      <td className="col-email">{order.email || order.deliveryDetails?.email || '—'}</td>
+                      <td className="col-phone">{order.phone || order.deliveryDetails?.phone || '—'}</td>
+                      <td className="col-address">{address}</td>
+                      <td className="col-products">
+                        <div className="products-list-container">
+                          {renderProductDetails(order.items)}
                         </div>
                       </td>
-                      <td>
+                      <td className="col-amount amount-cell">Rs. {(order.grandTotal || 0).toLocaleString()}</td>
+                      <td className="col-status">
                         <span className={`order-status ${getStatusClass(order.status)}`}>
                           {order.status || 'Processing'}
                         </span>
                       </td>
-                      <td className="actions-cell">
-                        <div className="action-buttons">
-                          <button
-                            onClick={() => updateOrderStatus(order._id, order.status || 'Processing')}
-                            className="update-status-btn"
-                          >
-                            Update
-                          </button>
-                          <button
-                            onClick={() => openDeleteModal(order)}
-                            className="delete-order-btn"
-                          >
-                            Delete
-                          </button>
-                        </div>
+                      <td className="col-actions">
+                        <button
+                          onClick={() => updateOrderStatus(order._id, order.status || 'Processing')}
+                          className="update-status-btn"
+                        >
+                          Update
+                        </button>
+                        <button
+                          onClick={() => openDeleteModal(order)}
+                          className="delete-order-btn"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  );
+                })
+              )}
+            </tbody>
+           </table>
         </div>
       </div>
     </div>
