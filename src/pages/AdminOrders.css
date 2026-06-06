@@ -1,4 +1,4 @@
-/* AdminOrders.css - Complete with consistent fonts (0.85rem for all data) */
+/* AdminOrders.css - Fixed alignment, centered table */
 .admin-orders {
   padding: 30px 20px;
   background-color: #FFF9F0;
@@ -31,6 +31,33 @@
   background: #FF8C42;
   color: white;
   transform: translateX(-3px);
+}
+
+/* Laptop view - slightly smaller */
+@media screen and (max-width: 1280px) and (min-width: 769px) {
+  .back-to-admin-btn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    gap: 5px;
+  }
+}
+
+/* Tablet view */
+@media screen and (max-width: 768px) {
+  .back-to-admin-btn {
+    padding: 5px 12px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+}
+
+/* Mobile view */
+@media screen and (max-width: 480px) {
+  .back-to-admin-btn {
+    padding: 4px 10px;
+    font-size: 0.7rem;
+    gap: 3px;
+  }
 }
 
 /* Header */
@@ -96,10 +123,11 @@
   font-size: 0.8rem;
 }
 
-/* Table Container */
+/* Table Container - Fixed centering */
 .orders-table-container {
   background: white;
   border-radius: 20px;
+  overflow-x: auto;
   overflow: hidden;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
   width: 100%;
@@ -117,6 +145,7 @@
   background: linear-gradient(135deg, #2c1810, #3d2317);
 }
 
+/* Curved corners for table header */
 .orders-table thead tr:first-child th:first-child {
   border-top-left-radius: 20px;
 }
@@ -135,7 +164,6 @@
   vertical-align: top;
 }
 
-/* ========== ALL TABLE CELLS - CONSISTENT 0.85rem ========== */
 .orders-table td {
   padding: 12px;
   border-bottom: 1px solid #f0e6d3;
@@ -158,7 +186,7 @@
 .col-status { width: 110px; vertical-align: middle; }
 .col-actions { width: 80px; text-align: center; vertical-align: middle; }
 
-/* Products Column Sub-header */
+/* Products Column Header with Sub-header */
 .products-sub-header {
   display: grid;
   grid-template-columns: 1fr 40px 70px;
@@ -166,10 +194,9 @@
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 500;
   color: #FFD700;
-  font-family: 'Poppins', sans-serif;
 }
 
 .products-sub-header span:first-child {
@@ -184,13 +211,19 @@
   text-align: right;
 }
 
-/* Address/Email Column */
-.address-cell, .email-cell {
+/* Address Column Styling */
+.address-cell {
   color: #2c1810;
   word-break: break-word;
   font-size: 0.85rem;
   line-height: 1.4;
-  font-family: 'Poppins', sans-serif;
+}
+
+/* Email Column Styling */
+.email-cell {
+  color: #2c1810;
+  word-break: break-word;
+  font-size: 0.85rem;
 }
 
 /* Products List Container */
@@ -199,7 +232,7 @@
   overflow-y: auto;
 }
 
-/* ========== PRODUCT DETAIL ROWS - SAME 0.85rem AS OTHER CELLS ========== */
+/* Product Detail Rows - CONSISTENT FONT SIZE WITH TABLE CELLS */
 .product-detail-row {
   display: grid;
   grid-template-columns: 1fr 40px 70px;
@@ -240,7 +273,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
-/* Scrollbar */
+/* Scrollbar for products list */
 .products-list-container::-webkit-scrollbar {
   width: 5px;
 }
@@ -297,11 +330,30 @@
   font-family: 'Montserrat', sans-serif;
 }
 
-.status-processing { background: #fff3cd; color: #856404; }
-.status-confirmed { background: #cce5ff; color: #004085; }
-.status-shipped { background: #d4edda; color: #155724; }
-.status-delivered { background: #d1ecf1; color: #0c5460; }
-.status-cancelled { background: #f8d7da; color: #721c24; }
+.status-processing {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-confirmed {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.status-shipped {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-delivered {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
 
 /* Action Buttons */
 .actions-cell {
@@ -321,6 +373,7 @@
   font-weight: 500;
   font-size: 0.7rem;
   cursor: pointer;
+  transition: all 0.3s ease;
   width: 70px;
   text-align: center;
 }
@@ -328,6 +381,7 @@
 .update-status-btn:hover {
   background: #c8e6c9;
   transform: translateY(-1px);
+  border-color: #4caf50;
 }
 
 .delete-order-btn {
@@ -340,6 +394,7 @@
   font-weight: 500;
   font-size: 0.7rem;
   cursor: pointer;
+  transition: all 0.3s ease;
   width: 70px;
   text-align: center;
 }
@@ -347,6 +402,7 @@
 .delete-order-btn:hover {
   background: #ffcdd2;
   transform: translateY(-1px);
+  border-color: #ef5350;
 }
 
 /* Notification */
@@ -381,10 +437,17 @@
 }
 
 @keyframes slideDownFade {
-  from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
 }
 
+/* No Data */
 .no-data {
   text-align: center;
   padding: 40px;
@@ -392,6 +455,7 @@
   font-family: 'Poppins', sans-serif;
 }
 
+/* Loading */
 .admin-loading {
   display: flex;
   flex-direction: column;
@@ -414,78 +478,138 @@
   to { transform: rotate(360deg); }
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE DESIGN ========== */
+
+/* Desktop */
+@media screen and (min-width: 1300px) {
+  .orders-table-container {
+    overflow-x: visible;
+  }
+  
+  .orders-table {
+    min-width: 100%;
+  }
+}
+
+/* Tablet */
+@media screen and (max-width: 1299px) and (min-width: 1025px) {
+  .col-email { width: 140px; }
+  .col-address { width: 130px; }
+  .col-products { width: 230px; }
+  .col-notes { width: 110px; }
+}
+
+/* Tablet View - Horizontal scroll enabled */
 @media screen and (max-width: 1024px) {
   .order-stats-grid {
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
   }
+  
+  .orders-table-container {
+    overflow-x: auto;
+  }
+  
   .orders-table {
     min-width: 1100px;
   }
 }
 
+/* Mobile View */
 @media screen and (max-width: 768px) {
   .admin-orders {
     padding: 20px 15px;
   }
+  
   .order-stats-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
+  
+  .order-stat-card {
+    padding: 15px;
+  }
+  
+  .order-stat-icon {
+    font-size: 2rem;
+  }
+  
+  .order-stat-info h3 {
+    font-size: 1.2rem;
+  }
+  
+  .orders-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
   .orders-table {
     min-width: 1100px;
   }
-  .products-sub-header {
-    grid-template-columns: 1fr 35px 60px;
-    gap: 6px;
-    font-size: 0.7rem;
+  
+  .actions-cell {
+    gap: 5px;
   }
-  .product-detail-row {
-    grid-template-columns: 1fr 35px 60px;
-    gap: 6px;
-    font-size: 0.75rem;
-  }
-  .product-detail-name,
-  .product-detail-qty,
-  .product-detail-price {
-    font-size: 0.75rem;
-  }
+  
   .update-status-btn,
   .delete-order-btn {
     padding: 3px 8px;
     font-size: 0.65rem;
     width: 65px;
   }
+  
+  .products-sub-header {
+    grid-template-columns: 1fr 35px 60px;
+    gap: 6px;
+    font-size: 0.65rem;
+  }
+  
+  .product-detail-row {
+    grid-template-columns: 1fr 35px 60px;
+    gap: 6px;
+    font-size: 0.75rem;
+  }
+  
+  .product-detail-name,
+  .product-detail-qty,
+  .product-detail-price {
+    font-size: 0.75rem;
+  }
 }
 
+/* Small Mobile */
 @media screen and (max-width: 480px) {
   .order-stats-grid {
     grid-template-columns: 1fr;
     gap: 10px;
   }
+  
   .orders-table {
     min-width: 1100px;
   }
-  .products-sub-header {
-    grid-template-columns: 1fr 30px 50px;
-    gap: 5px;
-    font-size: 0.65rem;
-  }
-  .product-detail-row {
-    grid-template-columns: 1fr 30px 50px;
-    gap: 5px;
-    font-size: 0.7rem;
-  }
-  .product-detail-name,
-  .product-detail-qty,
-  .product-detail-price {
-    font-size: 0.7rem;
-  }
+  
   .update-status-btn,
   .delete-order-btn {
     padding: 3px 6px;
     font-size: 0.6rem;
     width: 60px;
+  }
+  
+  .products-sub-header {
+    grid-template-columns: 1fr 30px 50px;
+    gap: 5px;
+    font-size: 0.6rem;
+  }
+  
+  .product-detail-row {
+    grid-template-columns: 1fr 30px 50px;
+    gap: 5px;
+    font-size: 0.7rem;
+  }
+  
+  .product-detail-name,
+  .product-detail-qty,
+  .product-detail-price {
+    font-size: 0.7rem;
   }
 }
