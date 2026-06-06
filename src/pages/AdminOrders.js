@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management with Address column and styled buttons
+// AdminOrders.js - Order management with optimized layout
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminOrders.css';
