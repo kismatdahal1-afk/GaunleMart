@@ -1,5 +1,5 @@
-// AdminOrders.js - Complete order management with CSS isolation
-import React, { useState, useEffect, useCallback } from 'react';
+// AdminOrders.js - Complete order management with localStorage sync and 6 stats cards
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import './AdminOrders.css';
@@ -20,29 +20,56 @@ const AdminOrders = () => {
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  // Fetch all orders from localStorage (NOT from backend API)
-  const fetchOrders = useCallback(() => {
+  // Load orders from both localStorage and API
+  const loadOrders = async () => {
     try {
-      const storedOrders = localStorage.getItem('allOrders');
-      if (storedOrders) {
-        setOrders(JSON.parse(storedOrders));
+      // First try to get from localStorage (for offline/backup)
+      const localOrders = localStorage.getItem('allOrders');
+      let allOrders = [];
+      
+      if (localOrders) {
+        allOrders = JSON.parse(localOrders);
+      }
+      
+      // Then fetch from API to sync
+      const response = await fetch(`${API_URL}/api/orders`);
+      const apiOrders = await response.json();
+      
+      // Merge: API orders take precedence, but keep local as backup
+      if (apiOrders && apiOrders.length > 0) {
+        setOrders(apiOrders);
+        // Also save to localStorage for backup
+        localStorage.setItem('allOrders', JSON.stringify(apiOrders));
+      } else if (allOrders.length > 0) {
+        setOrders(allOrders);
       } else {
         setOrders([]);
       }
+      
       setLoading(false);
     } catch (error) {
       console.error('Error fetching orders:', error);
-      setError('Failed to load orders');
+      // Fallback to localStorage if API fails
+      const localOrders = localStorage.getItem('allOrders');
+      if (localOrders) {
+        setOrders(JSON.parse(localOrders));
+      }
+      setError('Failed to load orders from server, showing local data');
       setLoading(false);
     }
-  }, []);
+  };
 
   useEffect(() => {
-    fetchOrders();
-    // Listen for storage events (when new order is placed from another tab)
-    window.addEventListener('storage', fetchOrders);
-    return () => window.removeEventListener('storage', fetchOrders);
-  }, [fetchOrders]);
+    loadOrders();
+  }, []);
+
+  // Save orders to localStorage whenever they change
+  const saveOrdersToLocalStorage = (updatedOrders) => {
+    localStorage.setItem('allOrders', JSON.stringify(updatedOrders));
+    setOrders(updatedOrders);
+    // Also trigger storage event for dashboard sync
+    window.dispatchEvent(new Event('storage'));
+  };
 
   const showNotificationMessage = (type, text) => {
     setMessage(text);
@@ -55,8 +82,8 @@ const AdminOrders = () => {
     }, 3000);
   };
 
-  // Update order status - NO CONFIRMATION POPUP (direct update)
-  const updateOrderStatus = (orderId, currentStatus) => {
+  // Update order status - NO confirmation popup
+  const updateOrderStatus = async (orderId, currentStatus) => {
     const statuses = ['Processing', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
     const currentIndex = statuses.indexOf(currentStatus);
     let nextStatus = '';
@@ -69,16 +96,28 @@ const AdminOrders = () => {
       nextStatus = statuses[currentIndex + 1];
     }
     
-    // Update localStorage directly (no API call for demo)
-    const updatedOrders = orders.map(order => 
-      order.orderId === orderId ? { ...order, status: nextStatus } : order
-    );
-    localStorage.setItem('allOrders', JSON.stringify(updatedOrders));
-    setOrders(updatedOrders);
-    showNotificationMessage('success', `Order status updated to ${nextStatus}`);
+    try {
+      const response = await fetch(`${API_URL}/api/orders/${orderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: nextStatus })
+      });
+      
+      if (response.ok) {
+        showNotificationMessage('success', `Order status updated to ${nextStatus}`);
+        loadOrders(); // Reload orders
+      } else {
+        showNotificationMessage('error', 'Failed to update order status');
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+      showNotificationMessage('error', 'Network error');
+    }
   };
 
-  // Delete order - WITH CONFIRMATION POPUP
+  // Delete order - WITH confirmation popup
   const openDeleteModal = (order) => {
     setOrderToDelete(order);
     setIsDeleteModalOpen(true);
@@ -89,32 +128,51 @@ const AdminOrders = () => {
     setOrderToDelete(null);
   };
 
-  const confirmDeleteOrder = () => {
+  const confirmDeleteOrder = async () => {
     if (!orderToDelete) return;
     
     setIsDeleting(true);
     
-    const updatedOrders = orders.filter(order => order.orderId !== orderToDelete.orderId);
-    localStorage.setItem('allOrders', JSON.stringify(updatedOrders));
-    setOrders(updatedOrders);
-    
-    showNotificationMessage('success', `Order ${orderToDelete.orderId} deleted successfully`);
-    
-    setIsDeleting(false);
-    closeDeleteModal();
+    try {
+      const response = await fetch(`${API_URL}/api/orders/${orderToDelete._id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        showNotificationMessage('success', `Order ${orderToDelete.orderId} deleted successfully`);
+        loadOrders(); // Reload orders
+      } else {
+        showNotificationMessage('error', 'Failed to delete order');
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      showNotificationMessage('error', 'Network error');
+    } finally {
+      setIsDeleting(false);
+      closeDeleteModal();
+    }
   };
 
   const goBackToAdmin = () => {
     navigate('/admin/dashboard');
   };
 
-  // Calculate statistics from current orders
+  // Calculate statistics - 6 cards
   const totalOrders = orders.length;
   const pendingOrders = orders.filter(o => o.status === 'Processing').length;
   const confirmedOrders = orders.filter(o => o.status === 'Confirmed').length;
   const shippedOrders = orders.filter(o => o.status === 'Shipped').length;
   const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
   const totalRevenue = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
+
+  // Format date - 2 lines
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return {
+      line1: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      line2: date.getFullYear().toString()
+    };
+  };
 
   // Format Order ID - 2 lines
   const formatOrderId = (orderId) => {
@@ -129,15 +187,6 @@ const AdminOrders = () => {
     return { line1: orderId, line2: '' };
   };
 
-  // Format date - 2 lines
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return {
-      line1: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      line2: date.getFullYear().toString()
-    };
-  };
-
   // Get status badge class
   const getStatusClass = (status) => {
     switch (status) {
@@ -150,7 +199,7 @@ const AdminOrders = () => {
     }
   };
 
-  // Render product details
+  // Render product details with 3 sub-columns
   const renderProductDetails = (items) => {
     if (!items || items.length === 0) {
       return <div className="product-detail-row">—</div>;
@@ -286,11 +335,11 @@ const AdminOrders = () => {
                 ) : (
                   orders.map((order, index) => {
                     const formattedOrderId = formatOrderId(order.orderId);
-                    const formattedDate = formatDate(order.orderDate || order.createdAt);
+                    const formattedDate = formatDate(order.createdAt);
                     const address = `${order.address || order.deliveryDetails?.address || ''}, ${order.city || order.deliveryDetails?.city || ''}`.replace(/^,\s|,\s$/, '') || '—';
                     
                     return (
-                      <tr key={order.orderId || index}>
+                      <tr key={order._id}>
                         <td className="col-sn">{index + 1}</td>
                         <td className="col-order-id">
                           <div className="order-id-line1">{formattedOrderId.line1}</div>
@@ -317,7 +366,7 @@ const AdminOrders = () => {
                         </td>
                         <td className="col-actions">
                           <button
-                            onClick={() => updateOrderStatus(order.orderId, order.status || 'Processing')}
+                            onClick={() => updateOrderStatus(order._id, order.status || 'Processing')}
                             className="update-status-btn"
                           >
                             Update

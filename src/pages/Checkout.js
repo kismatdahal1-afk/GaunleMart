@@ -1,4 +1,4 @@
-// Checkout.js - Complete checkout page with localStorage persistence
+// Checkout.js - Complete working checkout with localStorage preservation
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -64,8 +64,9 @@ const Checkout = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Generate sequential Order ID (G-1660-0001 format)
+  // Generate sequential Order ID - preserves existing IDs
   const generateSequentialOrderId = () => {
+    // Get existing orders from localStorage to check existing IDs
     const existingOrders = localStorage.getItem('allOrders');
     let orders = existingOrders ? JSON.parse(existingOrders) : [];
     
@@ -89,19 +90,19 @@ const Checkout = () => {
     return prefix + paddedNumber;
   };
 
-  // Save order to localStorage - PRESERVE EXISTING ORDERS
+  // Save order to localStorage (preserve existing orders)
   const saveOrderToLocalStorage = (orderData) => {
-    // Get existing orders (NEVER overwrite)
+    // Get existing orders
     const existingOrders = localStorage.getItem('allOrders');
     let orders = existingOrders ? JSON.parse(existingOrders) : [];
     
-    // Add new order to the beginning (most recent first)
+    // Add new order to the beginning (newest first)
     orders.unshift(orderData);
     
-    // Save back to localStorage
+    // Save back to localStorage - NEVER OVERWRITE, always merge
     localStorage.setItem('allOrders', JSON.stringify(orders));
     
-    // Also save current order for confirmation page
+    // Also save current order separately for confirmation page
     localStorage.setItem('orderData', JSON.stringify(orderData));
     
     // Trigger storage event for admin dashboard
@@ -128,8 +129,11 @@ const Checkout = () => {
       total: item.price * item.quantity
     }));
     
+    // Use sequential order ID (preserves existing IDs)
+    const sequentialOrderId = generateSequentialOrderId();
+    
     const orderData = {
-      orderId: generateSequentialOrderId(),
+      orderId: sequentialOrderId,
       orderDate: new Date().toISOString(),
       customerName: formData.fullName,
       phone: formData.phone,
@@ -160,18 +164,36 @@ const Checkout = () => {
       }
     };
     
-    // Save to localStorage (preserves existing orders)
-    saveOrderToLocalStorage(orderData);
-    
-    // Clear cart
-    clearCart();
-    
-    showNotificationMessage('✅ Order placed successfully!');
-    
-    // Navigate to confirmation page
-    setTimeout(() => {
-      navigate('/order-confirmation');
-    }, 1500);
+    try {
+      // Save to API first
+      const response = await fetch(`${API_URL}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      });
+      
+      if (response.ok) {
+        // Save to localStorage (preserves existing orders)
+        saveOrderToLocalStorage(orderData);
+        
+        // Clear cart
+        clearCart();
+        
+        showNotificationMessage('✅ Order placed successfully!');
+        setTimeout(() => navigate('/order-confirmation'), 1500);
+      } else {
+        const result = await response.json();
+        showNotificationMessage(result.message || 'Failed to place order', 'error');
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      // Fallback: save to localStorage even if API fails
+      saveOrderToLocalStorage(orderData);
+      clearCart();
+      showNotificationMessage('✅ Order saved locally! (Network issue)', 'success');
+      setTimeout(() => navigate('/order-confirmation'), 1500);
+    }
   };
 
   const goBackToCart = () => navigate('/cart');

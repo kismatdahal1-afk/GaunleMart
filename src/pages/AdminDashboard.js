@@ -1,4 +1,4 @@
-// AdminDashboard.js - Complete dashboard with product and order stats
+// AdminDashboard.js - Fixed version with real order stats from localStorage
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
@@ -17,26 +17,21 @@ const AdminDashboard = () => {
     totalRevenue: 0,
     lowStock: 0
   });
+  const [orderStats, setOrderStats] = useState({
+    totalOrders: 0,
+    totalRevenue: 0
+  });
   const [allProducts, setAllProducts] = useState([]);
   const [recentProducts, setRecentProducts] = useState([]);
   const [showAllProducts, setShowAllProducts] = useState(false);
   const [categoryData, setCategoryData] = useState({});
   const [loading, setLoading] = useState(true);
-  const [orderStats, setOrderStats] = useState({
-    totalOrders: 0,
-    totalRevenue: 0
-  });
 
   // Get API URL from environment variable
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  // Handle Google Analytics button click
-  const handleOpenAnalytics = () => {
-    window.open('https://analytics.google.com/analytics/web/', '_blank');
-  };
-
-  // Fetch order statistics from localStorage
-  const fetchOrderStats = useCallback(() => {
+  // Fetch order statistics from localStorage (sync with Manage Orders)
+  const fetchOrderStats = () => {
     const storedOrders = localStorage.getItem('allOrders');
     if (storedOrders) {
       const orders = JSON.parse(storedOrders);
@@ -46,14 +41,13 @@ const AdminDashboard = () => {
         totalOrders: totalOrdersCount, 
         totalRevenue: totalRevenueAmount 
       });
-      // Update stats state to sync with dashboard
-      setStats(prev => ({
-        ...prev,
-        totalOrders: totalOrdersCount,
-        totalRevenue: totalRevenueAmount
-      }));
     }
-  }, []);
+  };
+
+  // Handle Google Analytics button click
+  const handleOpenAnalytics = () => {
+    window.open('https://analytics.google.com/analytics/web/', '_blank');
+  };
 
   // Fetch products from backend
   const fetchProducts = useCallback(async () => {
@@ -62,8 +56,8 @@ const AdminDashboard = () => {
       const data = await response.json();
       setAllProducts(data);
       
-      // Calculate total revenue from products (fallback)
-      const productTotalRevenue = data.reduce((sum, product) => sum + (product.price || 0), 0);
+      // Calculate total revenue: sum of all product prices
+      const totalRevenue = data.reduce((sum, product) => sum + (product.price || 0), 0);
       
       // Calculate category distribution
       const categories = {};
@@ -75,26 +69,16 @@ const AdminDashboard = () => {
       // Calculate low stock
       const lowStockCount = data.filter(p => (p.stock !== undefined ? p.stock : 10) < 5).length;
       
-      // Get order stats first to use for totalOrders and totalRevenue
-      const storedOrders = localStorage.getItem('allOrders');
-      let ordersTotal = 0;
-      let ordersRevenue = 0;
-      if (storedOrders) {
-        const orders = JSON.parse(storedOrders);
-        ordersTotal = orders.length;
-        ordersRevenue = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
-      }
-      
       setStats({
         totalProducts: data.length,
-        totalOrders: ordersTotal,
-        totalRevenue: ordersRevenue || productTotalRevenue,
+        totalOrders: 0,
+        totalRevenue: totalRevenue,
         lowStock: lowStockCount
       });
       
       setCategoryData(categories);
       
-      // Get recent products
+      // Get recent products (last 5 added)
       const recent = [...data].sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       }).slice(0, 5);
@@ -107,17 +91,19 @@ const AdminDashboard = () => {
     }
   }, [API_URL]);
 
-  // Fetch products on component mount
+  // Fetch products on mount
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
-  // Fetch order stats on component mount and listen for storage changes
+  // Fetch order stats on mount and listen for storage changes
   useEffect(() => {
     fetchOrderStats();
     window.addEventListener('storage', fetchOrderStats);
-    return () => window.removeEventListener('storage', fetchOrderStats);
-  }, [fetchOrderStats]);
+    return () => {
+      window.removeEventListener('storage', fetchOrderStats);
+    };
+  }, []);
 
   const handleLogout = () => {
     sessionStorage.removeItem('adminAuthenticated');
@@ -162,7 +148,7 @@ const AdminDashboard = () => {
       },
       title: {
         display: true,
-        text: 'Monthly Sales Trend (Dummy Data)',
+        text: 'Monthly Sales Trend',
       },
     },
   };
@@ -191,7 +177,7 @@ const AdminDashboard = () => {
         </button>
       </div>
 
-      {/* Stats Cards with real order data */}
+      {/* Stats Cards with Real Order Data */}
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-icon">📦</div>
@@ -205,7 +191,7 @@ const AdminDashboard = () => {
         <div className="stat-card">
           <div className="stat-icon">🛒</div>
           <div className="stat-info">
-            <h3>{stats.totalOrders}</h3>
+            <h3>{orderStats.totalOrders}</h3>
             <p>Total Orders</p>
             <span className="stat-trend">From orders</span>
           </div>
@@ -214,7 +200,7 @@ const AdminDashboard = () => {
         <div className="stat-card">
           <div className="stat-icon">💰</div>
           <div className="stat-info">
-            <h3>Rs. {stats.totalRevenue.toLocaleString()}</h3>
+            <h3>Rs. {orderStats.totalRevenue.toLocaleString()}</h3>
             <p>Total Revenue</p>
             <span className="stat-trend">From orders</span>
           </div>
@@ -251,7 +237,7 @@ const AdminDashboard = () => {
         </div>
       </div>
 
-      {/* Enhanced Recently Added Products Section */}
+      {/* Recently Added Products Section */}
       <div className="recent-products-section">
         <div className="recent-products-header">
           <h2>{showAllProducts ? 'All Products' : 'Recently Added Products'}</h2>
@@ -297,11 +283,11 @@ const AdminDashboard = () => {
                         {product.inStock ? 'In Stock' : 'Out of Stock'}
                       </span>
                     </td>
-                   </tr>
+                  </tr>
                 ))
               )}
             </tbody>
-           </table>
+          </table>
         </div>
         
         {/* Show More / Show Less Button */}
