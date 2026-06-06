@@ -1,4 +1,4 @@
-/* AdminOrders.css - Styling for order management page with Address column and styled buttons */
+/* AdminOrders.css - Optimized for laptop (no scroll) and mobile (scrollable) */
 .admin-orders {
   padding: 30px 20px;
   background-color: #FFF9F0;
@@ -92,7 +92,7 @@
   font-size: 0.8rem;
 }
 
-/* Orders Table */
+/* Orders Table Container - Laptop: no scroll, Mobile: scroll */
 .orders-table-container {
   background: white;
   border-radius: 15px;
@@ -100,10 +100,32 @@
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* LAPTOP VIEW (1200px and above) - No horizontal scroll, all columns visible */
+@media screen and (min-width: 1200px) {
+  .orders-table-container {
+    overflow-x: visible;
+  }
+}
+
+/* Table Styles */
 .orders-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1400px;
+}
+
+/* LAPTOP: Fixed width for all columns to fit without scroll */
+@media screen and (min-width: 1200px) {
+  .orders-table {
+    table-layout: fixed;
+  }
+}
+
+/* MOBILE: Allow scroll */
+@media screen and (max-width: 1199px) {
+  .orders-table {
+    min-width: 1300px;
+    table-layout: auto;
+  }
 }
 
 .orders-table thead {
@@ -128,19 +150,37 @@
   vertical-align: top;
 }
 
-/* Column Widths */
-.col-sn { width: 55px; text-align: center; vertical-align: middle; }
-.col-order-id { width: 130px; vertical-align: middle; }
-.col-date { width: 100px; vertical-align: middle; }
-.col-customer { width: 120px; vertical-align: middle; }
-.col-email { width: 160px; vertical-align: middle; word-break: break-word; }
-.col-phone { width: 110px; vertical-align: middle; }
-.col-address { width: 160px; vertical-align: middle; word-break: break-word; }
-.col-products { width: 280px; }
-.col-amount { width: 100px; vertical-align: middle; }
-.col-notes { width: 150px; vertical-align: middle; }
-.col-status { width: 110px; vertical-align: middle; }
-.col-actions { width: 120px; text-align: center; vertical-align: middle; }
+/* LAPTOP: Fixed column widths to fit 1400px container */
+@media screen and (min-width: 1200px) {
+  .col-sn { width: 5%; }
+  .col-order-id { width: 10%; }
+  .col-date { width: 8%; }
+  .col-customer { width: 9%; }
+  .col-email { width: 12%; }
+  .col-phone { width: 9%; }
+  .col-address { width: 12%; }
+  .col-products { width: 15%; }
+  .col-amount { width: 8%; }
+  .col-notes { width: 8%; }
+  .col-status { width: 8%; }
+  .col-actions { width: 6%; }
+}
+
+/* Mobile: Specific widths for scroll */
+@media screen and (max-width: 1199px) {
+  .col-sn { width: 60px; }
+  .col-order-id { width: 140px; }
+  .col-date { width: 100px; }
+  .col-customer { width: 120px; }
+  .col-email { width: 160px; }
+  .col-phone { width: 110px; }
+  .col-address { width: 160px; }
+  .col-products { width: 280px; }
+  .col-amount { width: 110px; }
+  .col-notes { width: 150px; }
+  .col-status { width: 110px; }
+  .col-actions { width: 100px; }
+}
 
 /* Products Column Header with Sub-header */
 .products-sub-header {
@@ -311,53 +351,55 @@
   color: #721c24;
 }
 
-/* Action Buttons - Professional Styled */
+/* Action Buttons - Small, Elegant, Horizontal */
 .actions-cell {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: row;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
 }
 
 .update-status-btn {
-  background: linear-gradient(135deg, #3498db, #2980b9);
+  background: #FF8C42;
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: 5px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.7rem;
+  font-weight: 500;
+  font-size: 0.65rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
   text-align: center;
+  white-space: nowrap;
 }
 
 .update-status-btn:hover {
-  background: linear-gradient(135deg, #2980b9, #1a6d9e);
+  background: #E67E22;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 2px 6px rgba(255, 140, 66, 0.3);
 }
 
 .delete-order-btn {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background: #e74c3c;
   color: white;
   border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
+  padding: 5px 10px;
+  border-radius: 5px;
   font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 0.7rem;
+  font-weight: 500;
+  font-size: 0.65rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
   text-align: center;
+  white-space: nowrap;
 }
 
 .delete-order-btn:hover {
-  background: linear-gradient(135deg, #c0392b, #a93226);
+  background: #c0392b;
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+  box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);
 }
 
 /* Notification */
@@ -439,10 +481,6 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 15px;
   }
-  
-  .orders-table {
-    min-width: 1400px;
-  }
 }
 
 @media screen and (max-width: 768px) {
@@ -467,19 +505,16 @@
     font-size: 1.2rem;
   }
   
-  .orders-table {
-    min-width: 1400px;
-  }
-  
   .actions-cell {
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
   }
   
   .update-status-btn,
   .delete-order-btn {
-    padding: 5px 10px;
-    font-size: 0.65rem;
+    padding: 4px 8px;
+    font-size: 0.6rem;
+    white-space: nowrap;
   }
   
   .products-sub-header {
@@ -509,12 +544,10 @@
   .email-cell,
   .address-cell {
     font-size: 0.7rem;
-    max-width: 130px;
   }
   
   .notes-text-full {
     font-size: 0.7rem;
-    max-width: 120px;
   }
 }
 
@@ -548,15 +581,9 @@
     font-size: 0.7rem;
   }
   
-  .email-cell,
-  .address-cell {
-    font-size: 0.65rem;
-    max-width: 100px;
-  }
-  
   .update-status-btn,
   .delete-order-btn {
-    padding: 4px 8px;
-    font-size: 0.6rem;
+    padding: 3px 6px;
+    font-size: 0.55rem;
   }
 }

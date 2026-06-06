@@ -282,17 +282,17 @@ const AdminOrders = () => {
                           className="update-status-btn"
                           title="Update Status"
                         >
-                          Update Status
+                          Update
                         </button>
                         <button
                           onClick={function() { deleteOrder(order.orderId); }}
                           className="delete-order-btn"
                           title="Delete Order"
                         >
-                          Delete Order
+                          Delete
                         </button>
                       </td>
-                     </tr>
+                    </tr>
                   );
                 })
               )}
