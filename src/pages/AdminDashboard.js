@@ -1,5 +1,4 @@
-// AdminDashboard.js - Fixed version with real product data from deployed backend
-// Updated: Added order statistics from localStorage
+// AdminDashboard.js - Complete dashboard with product and order stats
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
@@ -18,40 +17,43 @@ const AdminDashboard = () => {
     totalRevenue: 0,
     lowStock: 0
   });
-  const [orderStats, setOrderStats] = useState({
-    totalOrders: 0,
-    totalRevenue: 0
-  });
   const [allProducts, setAllProducts] = useState([]);
   const [recentProducts, setRecentProducts] = useState([]);
   const [showAllProducts, setShowAllProducts] = useState(false);
   const [categoryData, setCategoryData] = useState({});
   const [loading, setLoading] = useState(true);
+  const [orderStats, setOrderStats] = useState({
+    totalOrders: 0,
+    totalRevenue: 0
+  });
 
-  // Get API URL from environment variable (works on localhost + Vercel)
+  // Get API URL from environment variable
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  // Handle Google Analytics button click - opens GA dashboard in new tab
+  // Handle Google Analytics button click
   const handleOpenAnalytics = () => {
     window.open('https://analytics.google.com/analytics/web/', '_blank');
   };
 
   // Fetch order statistics from localStorage
-  const fetchOrderStats = function() {
-    var storedOrders = localStorage.getItem('allOrders');
+  const fetchOrderStats = useCallback(() => {
+    const storedOrders = localStorage.getItem('allOrders');
     if (storedOrders) {
-      var orders = JSON.parse(storedOrders);
-      var totalOrdersCount = orders.length;
-      var totalRevenueAmount = 0;
-      for (var i = 0; i < orders.length; i++) {
-        totalRevenueAmount = totalRevenueAmount + (orders[i].grandTotal || 0);
-      }
+      const orders = JSON.parse(storedOrders);
+      const totalOrdersCount = orders.length;
+      const totalRevenueAmount = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
       setOrderStats({ 
         totalOrders: totalOrdersCount, 
         totalRevenue: totalRevenueAmount 
       });
+      // Update stats state to sync with dashboard
+      setStats(prev => ({
+        ...prev,
+        totalOrders: totalOrdersCount,
+        totalRevenue: totalRevenueAmount
+      }));
     }
-  };
+  }, []);
 
   // Fetch products from backend
   const fetchProducts = useCallback(async () => {
@@ -60,8 +62,8 @@ const AdminDashboard = () => {
       const data = await response.json();
       setAllProducts(data);
       
-      // Calculate total revenue: sum of all product prices (temporary)
-      const totalRevenue = data.reduce((sum, product) => sum + (product.price || 0), 0);
+      // Calculate total revenue from products (fallback)
+      const productTotalRevenue = data.reduce((sum, product) => sum + (product.price || 0), 0);
       
       // Calculate category distribution
       const categories = {};
@@ -70,19 +72,29 @@ const AdminDashboard = () => {
         categories[cat] = (categories[cat] || 0) + 1;
       });
       
-      // Calculate low stock (products with stock < 5, default to 10 if no stock field)
+      // Calculate low stock
       const lowStockCount = data.filter(p => (p.stock !== undefined ? p.stock : 10) < 5).length;
+      
+      // Get order stats first to use for totalOrders and totalRevenue
+      const storedOrders = localStorage.getItem('allOrders');
+      let ordersTotal = 0;
+      let ordersRevenue = 0;
+      if (storedOrders) {
+        const orders = JSON.parse(storedOrders);
+        ordersTotal = orders.length;
+        ordersRevenue = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
+      }
       
       setStats({
         totalProducts: data.length,
-        totalOrders: 0,
-        totalRevenue: totalRevenue,
+        totalOrders: ordersTotal,
+        totalRevenue: ordersRevenue || productTotalRevenue,
         lowStock: lowStockCount
       });
       
       setCategoryData(categories);
       
-      // Get recent products (last 5 added - by createdAt descending)
+      // Get recent products
       const recent = [...data].sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       }).slice(0, 5);
@@ -101,13 +113,11 @@ const AdminDashboard = () => {
   }, [fetchProducts]);
 
   // Fetch order stats on component mount and listen for storage changes
-  useEffect(function() {
+  useEffect(() => {
     fetchOrderStats();
     window.addEventListener('storage', fetchOrderStats);
-    return function() {
-      window.removeEventListener('storage', fetchOrderStats);
-    };
-  }, []);
+    return () => window.removeEventListener('storage', fetchOrderStats);
+  }, [fetchOrderStats]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('adminAuthenticated');
@@ -131,7 +141,7 @@ const AdminDashboard = () => {
     ],
   };
 
-  // Bar chart data for monthly sales (dummy data - keep as is)
+  // Bar chart data for monthly sales (dummy data)
   const barChartData = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
     datasets: [
@@ -195,7 +205,7 @@ const AdminDashboard = () => {
         <div className="stat-card">
           <div className="stat-icon">🛒</div>
           <div className="stat-info">
-            <h3>{orderStats.totalOrders}</h3>
+            <h3>{stats.totalOrders}</h3>
             <p>Total Orders</p>
             <span className="stat-trend">From orders</span>
           </div>
@@ -204,7 +214,7 @@ const AdminDashboard = () => {
         <div className="stat-card">
           <div className="stat-icon">💰</div>
           <div className="stat-info">
-            <h3>Rs. {orderStats.totalRevenue.toLocaleString()}</h3>
+            <h3>Rs. {stats.totalRevenue.toLocaleString()}</h3>
             <p>Total Revenue</p>
             <span className="stat-trend">From orders</span>
           </div>
