@@ -1,4 +1,4 @@
-/* AdminOrders.css - Fixed alignment, centered table with consistent fonts */
+/* AdminOrders.css - Complete with consistent font sizes across all columns */
 .admin-orders {
   padding: 30px 20px;
   background-color: #FFF9F0;
@@ -163,6 +163,7 @@
   vertical-align: top;
 }
 
+/* ========== TABLE CELLS - CONSISTENT FONT SIZE (0.85rem) ========== */
 .orders-table td {
   padding: 12px;
   border-bottom: 1px solid #f0e6d3;
@@ -234,7 +235,7 @@
   overflow-y: auto;
 }
 
-/* Product Detail Rows - CONSISTENT FONT SIZE WITH OTHER COLUMNS */
+/* ========== PRODUCT DETAIL ROWS - CONSISTENT FONT (0.85rem) ========== */
 .product-detail-row {
   display: grid;
   grid-template-columns: 1fr 40px 70px;
