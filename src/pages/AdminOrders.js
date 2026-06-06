@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management with custom delete confirmation modal
+// AdminOrders.js - Order management with consistent fonts
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
@@ -13,12 +13,10 @@ const AdminOrders = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState('');
   
-  // Delete modal states
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Load orders from localStorage
   const loadOrders = () => {
     const storedOrders = localStorage.getItem('allOrders');
     if (storedOrders) {
@@ -34,7 +32,6 @@ const AdminOrders = () => {
     loadOrders();
   }, []);
 
-  // Save orders to localStorage
   const saveOrders = (updatedOrders) => {
     localStorage.setItem('allOrders', JSON.stringify(updatedOrders));
     setOrders(updatedOrders);
@@ -52,7 +49,6 @@ const AdminOrders = () => {
     }, 3000);
   };
 
-  // Update order status
   const updateOrderStatus = (orderId, currentStatus) => {
     const statuses = ['Processing', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
     const currentIndex = statuses.indexOf(currentStatus);
@@ -75,25 +71,19 @@ const AdminOrders = () => {
     showNotificationMessage('success', 'Order status updated to ' + nextStatus);
   };
 
-  // Open delete confirmation modal
   const openDeleteModal = (order) => {
     setOrderToDelete(order);
     setIsDeleteModalOpen(true);
   };
 
-  // Close delete modal
   const closeDeleteModal = () => {
     setIsDeleteModalOpen(false);
     setOrderToDelete(null);
   };
 
-  // Confirm delete order
-  const confirmDeleteOrder = async () => {
+  const confirmDeleteOrder = () => {
     if (!orderToDelete) return;
-    
     setIsDeleting(true);
-    
-    // Simulate async operation (for UI feedback)
     setTimeout(() => {
       const updatedOrders = orders.filter(order => order.orderId !== orderToDelete.orderId);
       saveOrders(updatedOrders);
@@ -107,7 +97,6 @@ const AdminOrders = () => {
     navigate('/admin/dashboard');
   };
 
-  // Format address as "address, city"
   const getFullAddress = (order) => {
     const address = order.address || order.deliveryDetails?.address || '';
     const city = order.city || order.deliveryDetails?.city || '';
@@ -117,22 +106,20 @@ const AdminOrders = () => {
     return address || city || '—';
   };
 
-  // Calculate statistics
   const totalOrders = orders.length;
-  const pendingOrders = orders.filter(function(o) { return o.status === 'Processing'; }).length;
-  const confirmedOrders = orders.filter(function(o) { return o.status === 'Confirmed'; }).length;
-  const shippedOrders = orders.filter(function(o) { return o.status === 'Shipped'; }).length;
-  const deliveredOrders = orders.filter(function(o) { return o.status === 'Delivered'; }).length;
+  const pendingOrders = orders.filter(o => o.status === 'Processing').length;
+  const confirmedOrders = orders.filter(o => o.status === 'Confirmed').length;
+  const shippedOrders = orders.filter(o => o.status === 'Shipped').length;
+  const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
   
   let totalRevenue = 0;
-  for (var i = 0; i < orders.length; i++) {
+  for (let i = 0; i < orders.length; i++) {
     totalRevenue = totalRevenue + (orders[i].grandTotal || 0);
   }
 
-  // Format date
-  const formatDate = function(dateString) {
+  const formatDate = (dateString) => {
     if (!dateString) return 'N/A';
-    var date = new Date(dateString);
+    const date = new Date(dateString);
     return date.toLocaleDateString('en-NP', {
       year: 'numeric',
       month: 'short',
@@ -140,31 +127,30 @@ const AdminOrders = () => {
     });
   };
 
-  // Get status badge class
-  const getStatusClass = function(status) {
-    if (status === 'Processing') return 'status-processing';
-    if (status === 'Confirmed') return 'status-confirmed';
-    if (status === 'Shipped') return 'status-shipped';
-    if (status === 'Delivered') return 'status-delivered';
-    if (status === 'Cancelled') return 'status-cancelled';
-    return '';
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'Processing': return 'status-processing';
+      case 'Confirmed': return 'status-confirmed';
+      case 'Shipped': return 'status-shipped';
+      case 'Delivered': return 'status-delivered';
+      case 'Cancelled': return 'status-cancelled';
+      default: return '';
+    }
   };
 
-  // Render product details
-  const renderProductDetails = function(items) {
+  // Render product details with consistent font class
+  const renderProductDetails = (items) => {
     if (!items || items.length === 0) {
       return <div className="product-detail-row">—</div>;
     }
     
-    return items.map(function(item, idx) {
-      return (
-        <div key={idx} className="product-detail-row">
-          <span className="product-detail-name">{item.name}</span>
-          <span className="product-detail-qty">{item.quantity} ×</span>
-          <span className="product-detail-price">Rs. {item.price.toLocaleString()}</span>
-        </div>
-      );
-    });
+    return items.map((item, idx) => (
+      <div key={idx} className="product-detail-row">
+        <span className="product-detail-name">{item.name}</span>
+        <span className="product-detail-qty">{item.quantity} ×</span>
+        <span className="product-detail-price">Rs. {item.price.toLocaleString()}</span>
+      </div>
+    ));
   };
 
   if (loading) {
@@ -178,17 +164,16 @@ const AdminOrders = () => {
 
   return (
     <div className="admin-orders">
-     {/* Delete Confirmation Modal - For Orders */}
-     <DeleteConfirmationModal
-      isOpen={isDeleteModalOpen}
-      onClose={closeDeleteModal}
-      onConfirm={confirmDeleteOrder}
-      itemName={orderToDelete?.orderId}
-      isDeleting={isDeleting}
-      title="Delete Order"
-      confirmText="Delete Order"
-      itemType="order"
-     />
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDeleteOrder}
+        itemName={orderToDelete?.orderId}
+        isDeleting={isDeleting}
+        title="Delete Order"
+        confirmText="Delete Order"
+        itemType="order"
+      />
 
       {showNotification && (
         <div className={'order-notification ' + notificationType}>
@@ -208,7 +193,6 @@ const AdminOrders = () => {
           <p>View and manage all customer orders</p>
         </div>
 
-        {/* Stats Cards */}
         <div className="order-stats-grid">
           <div className="order-stat-card">
             <div className="order-stat-icon">📦</div>
@@ -254,7 +238,6 @@ const AdminOrders = () => {
           </div>
         </div>
 
-        {/* Orders Table */}
         <div className="orders-table-container">
           <table className="orders-table">
             <thead>
@@ -286,51 +269,49 @@ const AdminOrders = () => {
                   <td colSpan="12" className="no-data">No orders found</td>
                 </tr>
               ) : (
-                orders.map(function(order, index) {
-                  return (
-                    <tr key={order.orderId}>
-                      <td className="col-sn">{index + 1}</td>
-                      <td className="col-order-id order-id-cell">{order.orderId}</td>
-                      <td className="col-date">{formatDate(order.orderDate)}</td>
-                      <td className="col-customer">{order.customerName}</td>
-                      <td className="col-email email-cell">{order.email || order.deliveryDetails?.email || '—'}</td>
-                      <td className="col-phone">{order.phone || order.deliveryDetails?.phone || '—'}</td>
-                      <td className="col-address address-cell">{getFullAddress(order)}</td>
-                      <td className="col-products products-cell">
-                        <div className="products-list-container">
-                          {renderProductDetails(order.items)}
-                        </div>
-                      </td>
-                      <td className="col-amount amount-cell">Rs. {(order.grandTotal || 0).toLocaleString()}</td>
-                      <td className="col-notes notes-cell">
-                        <div className="notes-text-full" title={order.notes || 'No notes'}>
-                          {order.notes || '—'}
-                        </div>
-                      </td>
-                      <td className="col-status">
-                        <span className={'order-status ' + getStatusClass(order.status)}>
-                          {order.status || 'Processing'}
-                        </span>
-                      </td>
-                      <td className="col-actions actions-cell">
-                        <button
-                          onClick={function() { updateOrderStatus(order.orderId, order.status || 'Processing'); }}
-                          className="update-status-btn"
-                          title="Update Status"
-                        >
-                          Update
-                        </button>
-                        <button
-                          onClick={function() { openDeleteModal(order); }}
-                          className="delete-order-btn"
-                          title="Delete Order"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  );
-                })
+                orders.map((order, index) => (
+                  <tr key={order.orderId}>
+                    <td className="col-sn">{index + 1}</td>
+                    <td className="col-order-id order-id-cell">{order.orderId}</td>
+                    <td className="col-date">{formatDate(order.orderDate)}</td>
+                    <td className="col-customer">{order.customerName}</td>
+                    <td className="col-email email-cell">{order.email || order.deliveryDetails?.email || '—'}</td>
+                    <td className="col-phone">{order.phone || order.deliveryDetails?.phone || '—'}</td>
+                    <td className="col-address address-cell">{getFullAddress(order)}</td>
+                    <td className="col-products products-cell">
+                      <div className="products-list-container">
+                        {renderProductDetails(order.items)}
+                      </div>
+                    </td>
+                    <td className="col-amount amount-cell">Rs. {(order.grandTotal || 0).toLocaleString()}</td>
+                    <td className="col-notes notes-cell">
+                      <div className="notes-text-full" title={order.notes || 'No notes'}>
+                        {order.notes || '—'}
+                      </div>
+                    </td>
+                    <td className="col-status">
+                      <span className={'order-status ' + getStatusClass(order.status)}>
+                        {order.status || 'Processing'}
+                      </span>
+                    </td>
+                    <td className="col-actions actions-cell">
+                      <button
+                        onClick={() => updateOrderStatus(order.orderId, order.status || 'Processing')}
+                        className="update-status-btn"
+                        title="Update Status"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={() => openDeleteModal(order)}
+                        className="delete-order-btn"
+                        title="Delete Order"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                   </tr>
+                ))
               )}
             </tbody>
           </table>
