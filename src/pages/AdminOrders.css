@@ -1,4 +1,4 @@
-/* AdminOrders.css - Fixed alignment, centered table */
+/* AdminOrders.css - Fixed alignment, centered table with consistent fonts */
 .admin-orders {
   padding: 30px 20px;
   background-color: #FFF9F0;
@@ -33,7 +33,7 @@
   transform: translateX(-3px);
 }
 
-/* Laptop view - slightly smaller */
+/* Laptop view */
 @media screen and (max-width: 1280px) and (min-width: 769px) {
   .back-to-admin-btn {
     padding: 6px 14px;
@@ -123,7 +123,7 @@
   font-size: 0.8rem;
 }
 
-/* Table Container - Fixed centering */
+/* Table Container */
 .orders-table-container {
   background: white;
   border-radius: 20px;
@@ -185,7 +185,7 @@
 .col-status { width: 110px; vertical-align: middle; }
 .col-actions { width: 80px; text-align: center; vertical-align: middle; }
 
-/* Products Column Header with Sub-header */
+/* Products Column Header with Sub-header - CONSISTENT FONT */
 .products-sub-header {
   display: grid;
   grid-template-columns: 1fr 40px 70px;
@@ -193,9 +193,10 @@
   margin-top: 8px;
   padding-top: 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 500;
   color: #FFD700;
+  font-family: 'Poppins', sans-serif;
 }
 
 .products-sub-header span:first-child {
@@ -214,15 +215,17 @@
 .address-cell {
   color: #2c1810;
   word-break: break-word;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   line-height: 1.4;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Email Column Styling */
 .email-cell {
   color: #2c1810;
   word-break: break-word;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
+  font-family: 'Poppins', sans-serif;
 }
 
 /* Products List Container */
@@ -231,14 +234,14 @@
   overflow-y: auto;
 }
 
-/* Product Detail Rows */
+/* Product Detail Rows - CONSISTENT FONT SIZE WITH OTHER COLUMNS */
 .product-detail-row {
   display: grid;
   grid-template-columns: 1fr 40px 70px;
   gap: 8px;
   padding: 6px 0;
   border-bottom: 1px solid #f0e6d3;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-family: 'Poppins', sans-serif;
   align-items: center;
 }
@@ -253,14 +256,14 @@
   font-weight: 500;
   white-space: normal;
   word-break: break-word;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-family: 'Poppins', sans-serif;
 }
 
 .product-detail-qty {
   text-align: center;
   color: #8B6914;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -268,7 +271,7 @@
   text-align: right;
   color: #e74c3c;
   font-weight: 500;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -292,7 +295,7 @@
   font-weight: 600;
   color: #FF8C42;
   font-family: 'Montserrat', sans-serif;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
 }
 
 .amount-cell {
@@ -313,7 +316,7 @@
   word-wrap: break-word;
   word-break: break-word;
   line-height: 1.4;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   color: #555;
   max-width: 130px;
   font-family: 'Poppins', sans-serif;
@@ -324,7 +327,7 @@
   display: inline-block;
   padding: 5px 12px;
   border-radius: 20px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
   font-family: 'Montserrat', sans-serif;
 }
@@ -560,12 +563,18 @@
   .products-sub-header {
     grid-template-columns: 1fr 35px 60px;
     gap: 6px;
-    font-size: 0.65rem;
+    font-size: 0.7rem;
   }
   
   .product-detail-row {
     grid-template-columns: 1fr 35px 60px;
     gap: 6px;
+    font-size: 0.75rem;
+  }
+  
+  .product-detail-name,
+  .product-detail-qty,
+  .product-detail-price {
     font-size: 0.75rem;
   }
 }
@@ -586,5 +595,23 @@
     padding: 3px 6px;
     font-size: 0.6rem;
     width: 60px;
+  }
+  
+  .products-sub-header {
+    grid-template-columns: 1fr 30px 50px;
+    gap: 5px;
+    font-size: 0.65rem;
+  }
+  
+  .product-detail-row {
+    grid-template-columns: 1fr 30px 50px;
+    gap: 5px;
+    font-size: 0.7rem;
+  }
+  
+  .product-detail-name,
+  .product-detail-qty,
+  .product-detail-price {
+    font-size: 0.7rem;
   }
 }
