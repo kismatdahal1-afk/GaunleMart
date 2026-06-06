@@ -1,4 +1,4 @@
-/* ProductDetail.css - Styling with !important flags for guaranteed styling */
+/* ProductDetail.css - Complete with proper responsive font scaling */
 .product-detail {
   padding: 40px 20px;
   min-height: calc(100vh - 70px);
@@ -74,7 +74,7 @@
   object-position: center;
 }
 
-/* Info Section - FIXED ALIGNMENT */
+/* Info Section */
 .product-detail-info {
   display: flex;
   flex-direction: column;
@@ -82,34 +82,34 @@
   align-items: flex-start !important;
 }
 
-/* ========== PRODUCT NAME - LARGE & BOLD ========== */
+/* ========== PRODUCT NAME - 40px DESKTOP ========== */
 .product-detail-name {
   font-family: 'Montserrat', sans-serif !important;
   font-size: 40px !important;
   font-weight: 800 !important;
-  color: #111 !important;
+  color: #1a1a1a !important;
   margin: 0 0 5px 0 !important;
-  letter-spacing: -0.6px !important;
+  letter-spacing: -0.5px !important;
   line-height: 1.2 !important;
   float: none !important;
 }
 
-/* ========== CATEGORY - SMALL & SUBTLE ========== */
+/* ========== CATEGORY ========== */
 .product-detail-category {
   font-family: 'Poppins', sans-serif !important;
   color: #777 !important;
-  font-size: 15px !important;
+  font-size: 16px !important;
   text-transform: uppercase !important;
   letter-spacing: 1px !important;
   margin: 0 0 5px 0 !important;
   float: none !important;
 }
 
-/* ========== PRICE - BELOW CATEGORY, RED, BOLD ========== */
+/* ========== PRICE ========== */
 .product-detail-price {
   font-family: 'Montserrat', sans-serif !important;
   font-size: 28px !important;
-  color: red !important;
+  color: #e74c3c !important;
   font-weight: 700 !important;
   margin: 5px 0 10px 0 !important;
   text-align: left !important;
@@ -117,15 +117,14 @@
   float: none !important;
 }
 
-/* ========== RATING - STARS ONLY ========== */
+/* ========== RATING ========== */
 .product-detail-rating {
   color: #f39c12 !important;
-  font-size: 28px !important;
+  font-size: 22px !important;
   margin: 5px 0 !important;
   float: none !important;
 }
 
-/* Remove any rating text span */
 .product-detail-rating .rating-text {
   display: none !important;
 }
@@ -300,21 +299,48 @@
   to { transform: rotate(360deg); }
 }
 
-/* ========== RESPONSIVE DESIGN ========== */
+/* ========== RESPONSIVE DESIGN - SAME RATIO AS DESKTOP ========== */
+
+/* Tablet Landscape (1024px - 1280px) */
+@media screen and (max-width: 1280px) and (min-width: 1025px) {
+  .product-detail-name {
+    font-size: 36px !important;
+  }
+  .product-detail-price {
+    font-size: 26px !important;
+  }
+  .product-detail-category {
+    font-size: 15px !important;
+  }
+  .product-detail-rating {
+    font-size: 20px !important;
+  }
+}
+
+/* Tablet Portrait (768px - 1024px) */
 @media screen and (max-width: 1024px) {
   .product-detail-wrapper {
     max-width: 90%;
   }
   
   .product-detail-name {
-    font-size: 16px !important;
+    font-size: 32px !important;
   }
   
   .product-detail-price {
-    font-size: 18px !important;
+    font-size: 24px !important;
+  }
+  
+  .product-detail-category {
+    font-size: 14px !important;
+  }
+  
+  .product-detail-rating {
+    font-size: 19px !important;
   }
 }
 
+/* Mobile Landscape (600px - 768px) */
 @media screen and (max-width: 768px) {
   .product-detail {
     padding: 20px 15px;
@@ -335,12 +361,17 @@
     height: 320px;
   }
   
+  /* Maintain ratio - scaled down proportionally */
   .product-detail-name {
-    font-size: 16px !important;
+    font-size: 28px !important;
   }
   
   .product-detail-price {
-    font-size: 18px !important;
+    font-size: 22px !important;
+  }
+  
+  .product-detail-category {
+    font-size: 13px !important;
   }
   
   .product-detail-rating {
@@ -352,6 +383,26 @@
   }
 }
 
+/* Mobile Portrait (480px - 600px) */
+@media screen and (max-width: 600px) {
+  .product-detail-name {
+    font-size: 24px !important;
+  }
+  
+  .product-detail-price {
+    font-size: 20px !important;
+  }
+  
+  .product-detail-category {
+    font-size: 12px !important;
+  }
+  
+  .product-detail-rating {
+    font-size: 17px !important;
+  }
+}
+
+/* Small Mobile (320px - 480px) */
 @media screen and (max-width: 480px) {
   .product-detail {
     padding: 15px 10px;
@@ -372,11 +423,15 @@
   }
   
   .product-detail-name {
-    font-size: 14px !important;
+    font-size: 22px !important;
   }
   
   .product-detail-price {
-    font-size: 16px !important;
+    font-size: 18px !important;
+  }
+  
+  .product-detail-category {
+    font-size: 11px !important;
   }
   
   .product-detail-rating {
@@ -400,6 +455,25 @@
   }
 }
 
+/* Very Small Mobile (under 360px) */
+@media screen and (max-width: 360px) {
+  .product-detail-name {
+    font-size: 20px !important;
+  }
+  
+  .product-detail-price {
+    font-size: 17px !important;
+  }
+  
+  .product-detail-category {
+    font-size: 10px !important;
+  }
+  
+  .product-detail-rating {
+    font-size: 15px !important;
+  }
+}
+
 /* For very large screens */
 @media screen and (min-width: 1400px) {
   .product-detail-wrapper {
@@ -411,10 +485,18 @@
   }
   
   .product-detail-name {
-    font-size: 22px !important;
+    font-size: 48px !important;
   }
   
   .product-detail-price {
+    font-size: 32px !important;
+  }
+  
+  .product-detail-category {
+    font-size: 18px !important;
+  }
+  
+  .product-detail-rating {
     font-size: 24px !important;
   }
 }

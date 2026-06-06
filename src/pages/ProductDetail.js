@@ -20,11 +20,9 @@ const ProductDetail = () => {
   const params = new URLSearchParams(location.search);
   const returnCategory = params.get('category') || 'All';
 
-  // Show notification with auto-hide
   const showNotificationMessage = (message) => {
     setNotificationMessage(message);
     setShowNotification(true);
-    
     setTimeout(() => {
       setShowNotification(false);
     }, 3000);
@@ -129,7 +127,6 @@ const ProductDetail = () => {
   const stockText = isInStock ? '✓ In Stock' : '✗ Out of Stock';
   const stockClass = isInStock ? 'in-stock' : 'out-of-stock';
   
-  // Calculate rating stars
   const fullStars = Math.floor(product.rating || 4);
   const emptyStars = 5 - fullStars;
 
@@ -154,16 +151,10 @@ const ProductDetail = () => {
           </div>
           
           <div className="product-detail-info">
-            {/* Product Name - LARGER AND BOLDER */}
             <h1 className="product-detail-name">{product.name}</h1>
-            
-            {/* Category - SMALL TEXT */}
             <p className="product-detail-category">{product.category || 'General'}</p>
-            
-            {/* Price - BELOW CATEGORY, LEFT ALIGNED, RED */}
             <p className="product-detail-price">Rs. {product.price.toLocaleString()}</p>
             
-            {/* Rating - STARS ONLY (NO TEXT) */}
             <div className="product-detail-rating">
               {'★'.repeat(fullStars)}
               {'☆'.repeat(emptyStars)}
