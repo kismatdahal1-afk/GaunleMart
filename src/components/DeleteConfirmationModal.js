@@ -1,8 +1,8 @@
-// DeleteConfirmationModal.js - Custom delete confirmation modal
+// DeleteConfirmationModal.js - Custom delete confirmation modal for orders
 import React, { useEffect } from 'react';
 import './DeleteConfirmationModal.css';
 
-const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, productName, isDeleting }) => {
+const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, itemName, isDeleting }) => {
   // Handle ESC key press
   useEffect(() => {
     const handleEsc = (event) => {
@@ -30,14 +30,14 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, productName, isDe
       <div className="delete-modal-container" onClick={(e) => e.stopPropagation()}>
         <div className="delete-modal-header">
           <div className="delete-modal-icon">🗑️</div>
-          <h3>Delete Product</h3>
+          <h3>Delete Order</h3>
         </div>
         
         <div className="delete-modal-body">
-          <p>Are you sure you want to delete this product?</p>
-          {productName && (
+          <p>Are you sure you want to delete this order?</p>
+          {itemName && (
             <p className="product-name-warning">
-              "<strong>{productName}</strong>" will be permanently removed.
+              "<strong>{itemName}</strong>" will be permanently removed.
             </p>
           )}
           <p className="warning-text">This action cannot be undone.</p>
@@ -56,7 +56,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, productName, isDe
             className="modal-delete-btn"
             disabled={isDeleting}
           >
-            {isDeleting ? 'Deleting...' : 'Delete'}
+            {isDeleting ? 'Deleting...' : 'Delete Order'}
           </button>
         </div>
       </div>

@@ -1,6 +1,7 @@
-// AdminOrders.js - Order management with optimized layout
+// AdminOrders.js - Order management with custom delete confirmation modal
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
 import './AdminOrders.css';
 
 const AdminOrders = () => {
@@ -11,6 +12,11 @@ const AdminOrders = () => {
   const [error, setError] = useState('');
   const [showNotification, setShowNotification] = useState(false);
   const [notificationType, setNotificationType] = useState('');
+  
+  // Delete modal states
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Load orders from localStorage
   const loadOrders = () => {
@@ -69,14 +75,32 @@ const AdminOrders = () => {
     showNotificationMessage('success', 'Order status updated to ' + nextStatus);
   };
 
-  // Delete order
-  const deleteOrder = (orderId) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete order ' + orderId + '?');
-    if (confirmDelete) {
-      const updatedOrders = orders.filter(order => order.orderId !== orderId);
+  // Open delete confirmation modal
+  const openDeleteModal = (order) => {
+    setOrderToDelete(order);
+    setIsDeleteModalOpen(true);
+  };
+
+  // Close delete modal
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setOrderToDelete(null);
+  };
+
+  // Confirm delete order
+  const confirmDeleteOrder = async () => {
+    if (!orderToDelete) return;
+    
+    setIsDeleting(true);
+    
+    // Simulate async operation (for UI feedback)
+    setTimeout(() => {
+      const updatedOrders = orders.filter(order => order.orderId !== orderToDelete.orderId);
       saveOrders(updatedOrders);
-      showNotificationMessage('success', 'Order ' + orderId + ' deleted successfully');
-    }
+      showNotificationMessage('success', 'Order ' + orderToDelete.orderId + ' deleted successfully');
+      setIsDeleting(false);
+      closeDeleteModal();
+    }, 500);
   };
 
   const goBackToAdmin = () => {
@@ -154,6 +178,15 @@ const AdminOrders = () => {
 
   return (
     <div className="admin-orders">
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={confirmDeleteOrder}
+        itemName={orderToDelete?.orderId}
+        isDeleting={isDeleting}
+      />
+
       {showNotification && (
         <div className={'order-notification ' + notificationType}>
           <span>{message || error}</span>
@@ -285,7 +318,7 @@ const AdminOrders = () => {
                           Update
                         </button>
                         <button
-                          onClick={function() { deleteOrder(order.orderId); }}
+                          onClick={function() { openDeleteModal(order); }}
                           className="delete-order-btn"
                           title="Delete Order"
                         >
