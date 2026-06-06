@@ -1,329 +1,397 @@
-// AdminDashboard.js - Fixed version with real order stats from localStorage
+// AdminOrders.js - Complete order management with proper React Hooks
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
-import './AdminDashboard.css';
+import DeleteConfirmationModal from '../components/DeleteConfirmationModal';
+import './AdminOrders.css';
 
-// Register ChartJS components
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title);
-
-const AdminDashboard = () => {
+const AdminOrders = () => {
   const navigate = useNavigate();
-  
-  const [stats, setStats] = useState({
-    totalProducts: 0,
-    totalOrders: 0,
-    totalRevenue: 0,
-    lowStock: 0
-  });
-  const [orderStats, setOrderStats] = useState({
-    totalOrders: 0,
-    totalRevenue: 0
-  });
-  const [allProducts, setAllProducts] = useState([]);
-  const [recentProducts, setRecentProducts] = useState([]);
-  const [showAllProducts, setShowAllProducts] = useState(false);
-  const [categoryData, setCategoryData] = useState({});
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationType, setNotificationType] = useState('');
+  
+  // Delete modal states
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [orderToDelete, setOrderToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Get API URL from environment variable
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-  // Fetch order statistics from localStorage (sync with Manage Orders)
-  const fetchOrderStats = () => {
-    const storedOrders = localStorage.getItem('allOrders');
-    if (storedOrders) {
-      const orders = JSON.parse(storedOrders);
-      const totalOrdersCount = orders.length;
-      const totalRevenueAmount = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
-      setOrderStats({ 
-        totalOrders: totalOrdersCount, 
-        totalRevenue: totalRevenueAmount 
-      });
-    }
-  };
-
-  // Handle Google Analytics button click
-  const handleOpenAnalytics = () => {
-    window.open('https://analytics.google.com/analytics/web/', '_blank');
-  };
-
-  // Fetch products from backend
-  const fetchProducts = useCallback(async () => {
+  // Load orders from both localStorage and API - wrapped with useCallback
+  const loadOrders = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/api/products`);
-      const data = await response.json();
-      setAllProducts(data);
+      // First try to get from localStorage (for offline/backup)
+      const localOrders = localStorage.getItem('allOrders');
+      let allOrders = [];
       
-      // Calculate total revenue: sum of all product prices
-      const totalRevenue = data.reduce((sum, product) => sum + (product.price || 0), 0);
+      if (localOrders) {
+        allOrders = JSON.parse(localOrders);
+      }
       
-      // Calculate category distribution
-      const categories = {};
-      data.forEach(product => {
-        const cat = product.category || 'General';
-        categories[cat] = (categories[cat] || 0) + 1;
-      });
+      // Then fetch from API to sync
+      const response = await fetch(`${API_URL}/api/orders`);
+      const apiOrders = await response.json();
       
-      // Calculate low stock
-      const lowStockCount = data.filter(p => (p.stock !== undefined ? p.stock : 10) < 5).length;
-      
-      setStats({
-        totalProducts: data.length,
-        totalOrders: 0,
-        totalRevenue: totalRevenue,
-        lowStock: lowStockCount
-      });
-      
-      setCategoryData(categories);
-      
-      // Get recent products (last 5 added)
-      const recent = [...data].sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      }).slice(0, 5);
-      setRecentProducts(recent);
+      // Merge: API orders take precedence, but keep local as backup
+      if (apiOrders && apiOrders.length > 0) {
+        setOrders(apiOrders);
+        // Also save to localStorage for backup
+        localStorage.setItem('allOrders', JSON.stringify(apiOrders));
+      } else if (allOrders.length > 0) {
+        setOrders(allOrders);
+      } else {
+        setOrders([]);
+      }
       
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching orders:', error);
+      // Fallback to localStorage if API fails
+      const localOrders = localStorage.getItem('allOrders');
+      if (localOrders) {
+        setOrders(JSON.parse(localOrders));
+        setError('Failed to load orders from server, showing local data');
+      } else {
+        setError('Failed to load orders');
+      }
       setLoading(false);
     }
-  }, [API_URL]);
+  }, [API_URL]); // API_URL is the dependency - FIXED
 
-  // Fetch products on mount
+  // useEffect with proper dependency - FIXED
   useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
+    loadOrders();
+  }, [loadOrders]);
 
-  // Fetch order stats on mount and listen for storage changes
-  useEffect(() => {
-    fetchOrderStats();
-    window.addEventListener('storage', fetchOrderStats);
-    return () => {
-      window.removeEventListener('storage', fetchOrderStats);
+  const showNotificationMessage = (type, text) => {
+    setMessage(text);
+    setNotificationType(type);
+    setShowNotification(true);
+    setTimeout(() => {
+      setShowNotification(false);
+      setMessage('');
+      setError('');
+    }, 3000);
+  };
+
+  // Update order status - NO confirmation popup
+  const updateOrderStatus = async (orderId, currentStatus) => {
+    const statuses = ['Processing', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
+    const currentIndex = statuses.indexOf(currentStatus);
+    let nextStatus = '';
+    
+    if (currentStatus === 'Delivered') {
+      nextStatus = 'Cancelled';
+    } else if (currentStatus === 'Cancelled') {
+      nextStatus = 'Processing';
+    } else if (currentIndex >= 0 && currentIndex < statuses.length - 1) {
+      nextStatus = statuses[currentIndex + 1];
+    } else {
+      nextStatus = currentStatus;
+    }
+    
+    try {
+      const response = await fetch(`${API_URL}/api/orders/${orderId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: nextStatus })
+      });
+      
+      if (response.ok) {
+        showNotificationMessage('success', `Order status updated to ${nextStatus}`);
+        loadOrders();
+      } else {
+        showNotificationMessage('error', 'Failed to update order status');
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+      showNotificationMessage('error', 'Network error');
+    }
+  };
+
+  // Delete order - WITH confirmation popup
+  const openDeleteModal = (order) => {
+    setOrderToDelete(order);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setOrderToDelete(null);
+  };
+
+  const confirmDeleteOrder = async () => {
+    if (!orderToDelete) return;
+    
+    setIsDeleting(true);
+    
+    try {
+      const response = await fetch(`${API_URL}/api/orders/${orderToDelete._id}`, {
+        method: 'DELETE'
+      });
+      
+      if (response.ok) {
+        showNotificationMessage('success', `Order ${orderToDelete.orderId} deleted successfully`);
+        loadOrders();
+      } else {
+        showNotificationMessage('error', 'Failed to delete order');
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      showNotificationMessage('error', 'Network error');
+    } finally {
+      setIsDeleting(false);
+      closeDeleteModal();
+    }
+  };
+
+  const goBackToAdmin = () => {
+    navigate('/admin/dashboard');
+  };
+
+  // Calculate statistics - 6 cards
+  const totalOrders = orders.length;
+  const pendingOrders = orders.filter(o => o.status === 'Processing').length;
+  const confirmedOrders = orders.filter(o => o.status === 'Confirmed').length;
+  const shippedOrders = orders.filter(o => o.status === 'Shipped').length;
+  const deliveredOrders = orders.filter(o => o.status === 'Delivered').length;
+  const totalRevenue = orders.reduce((sum, o) => sum + (o.grandTotal || 0), 0);
+
+  // Format date - 2 lines
+  const formatDate = (dateString) => {
+    if (!dateString) return { line1: 'N/A', line2: '' };
+    const date = new Date(dateString);
+    return {
+      line1: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      line2: date.getFullYear().toString()
     };
-  }, []);
-
-  const handleLogout = () => {
-    sessionStorage.removeItem('adminAuthenticated');
-    navigate('/');
   };
 
-  // Toggle between showing 5 recent products and all products
-  const toggleShowAllProducts = () => {
-    setShowAllProducts(!showAllProducts);
+  // Format Order ID - 2 lines
+  const formatOrderId = (orderId) => {
+    if (!orderId) return { line1: 'N/A', line2: '' };
+    const parts = orderId.split('-');
+    if (parts.length >= 2) {
+      return {
+        line1: parts.slice(0, -1).join('-'),
+        line2: parts[parts.length - 1]
+      };
+    }
+    return { line1: orderId, line2: '' };
   };
 
-  // Pie chart data for category distribution
-  const pieChartData = {
-    labels: Object.keys(categoryData),
-    datasets: [
-      {
-        data: Object.values(categoryData),
-        backgroundColor: ['#FF8C42', '#E67E22', '#F39C12', '#F1C40F', '#E74C3C', '#2ECC71', '#3498DB', '#9B59B6'],
-        borderWidth: 0,
-      },
-    ],
+  // Get status badge class
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'Processing': return 'status-processing';
+      case 'Confirmed': return 'status-confirmed';
+      case 'Shipped': return 'status-shipped';
+      case 'Delivered': return 'status-delivered';
+      case 'Cancelled': return 'status-cancelled';
+      default: return '';
+    }
   };
 
-  // Bar chart data for monthly sales (dummy data)
-  const barChartData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        label: 'Sales (Rs.)',
-        data: [12500, 18900, 15200, 22100, 19800, 26700],
-        backgroundColor: '#FF8C42',
-        borderRadius: 8,
-      },
-    ],
+  // Render product details with 3 sub-columns
+  const renderProductDetails = (items) => {
+    if (!items || items.length === 0) {
+      return <div className="product-detail-row">—</div>;
+    }
+    
+    return items.map((item, idx) => (
+      <div key={idx} className="product-detail-row">
+        <span className="product-detail-name">{item.name}</span>
+        <span className="product-detail-qty">{item.quantity}</span>
+        <span className="product-detail-price">Rs. {item.price.toLocaleString()}</span>
+      </div>
+    ));
   };
 
-  const barChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Monthly Sales Trend',
-      },
-    },
+  // Helper to get full address
+  const getFullAddress = (order) => {
+    const address = order.address || order.deliveryDetails?.address || '';
+    const city = order.city || order.deliveryDetails?.city || '';
+    if (address && city) {
+      return `${address}, ${city}`;
+    }
+    return address || city || '—';
   };
-
-  // Determine which products to display
-  const displayProducts = showAllProducts ? allProducts : recentProducts;
 
   if (loading) {
     return (
       <div className="admin-loading">
         <div className="loader"></div>
-        <p>Loading dashboard...</p>
+        <p>Loading orders...</p>
       </div>
     );
   }
 
   return (
-    <div className="admin-dashboard">
-      <div className="dashboard-header">
-        <div>
-          <h1>Admin Dashboard</h1>
-          <p>Welcome back! Here's your store performance overview.</p>
-        </div>
-        <button onClick={handleLogout} className="logout-btn">
-          🚪 Logout
-        </button>
-      </div>
+    <div className="manage-orders-page">
+      <div className="admin-orders">
+        {/* Delete Confirmation Modal */}
+        <DeleteConfirmationModal
+          isOpen={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          onConfirm={confirmDeleteOrder}
+          itemName={orderToDelete?.orderId}
+          isDeleting={isDeleting}
+          title="Delete Order"
+          confirmText="Delete Order"
+          itemType="order"
+        />
 
-      {/* Stats Cards with Real Order Data */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <div className="stat-icon">📦</div>
-          <div className="stat-info">
-            <h3>{stats.totalProducts}</h3>
-            <p>Total Products</p>
-            <span className="stat-trend up">From database</span>
+        {showNotification && (
+          <div className={`order-notification ${notificationType}`}>
+            <span>{message || error}</span>
           </div>
-        </div>
+        )}
 
-        <div className="stat-card">
-          <div className="stat-icon">🛒</div>
-          <div className="stat-info">
-            <h3>{orderStats.totalOrders}</h3>
-            <p>Total Orders</p>
-            <span className="stat-trend">From orders</span>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">💰</div>
-          <div className="stat-info">
-            <h3>Rs. {orderStats.totalRevenue.toLocaleString()}</h3>
-            <p>Total Revenue</p>
-            <span className="stat-trend">From orders</span>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-icon">⚠️</div>
-          <div className="stat-info">
-            <h3>{stats.lowStock}</h3>
-            <p>Low Stock Items</p>
-            <span className="stat-trend down">Needs attention</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Section */}
-      <div className="charts-section">
-        <div className="chart-card">
-          <h3>Category Distribution</h3>
-          {Object.keys(categoryData).length > 0 ? (
-            <div className="pie-chart-container">
-              <Pie data={pieChartData} />
-            </div>
-          ) : (
-            <p className="no-data">No category data available</p>
-          )}
-        </div>
-        
-        <div className="chart-card">
-          <h3>Sales Overview</h3>
-          <div className="bar-chart-container">
-            <Bar data={barChartData} options={barChartOptions} />
-          </div>
-        </div>
-      </div>
-
-      {/* Recently Added Products Section */}
-      <div className="recent-products-section">
-        <div className="recent-products-header">
-          <h2>{showAllProducts ? 'All Products' : 'Recently Added Products'}</h2>
-          <span className="product-count-badge">{displayProducts.length} products</span>
-        </div>
-        
-        <div className="recent-products-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Image</th>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Category</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayProducts.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="no-data">No products available</td>
-                </tr>
-              ) : (
-                displayProducts.map(product => (
-                  <tr key={product._id || product.id}>
-                    <td className="product-image-cell">
-                      <img 
-                        src={product.imageUrl} 
-                        alt={product.name} 
-                        className="recent-product-img"
-                        onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/50';
-                        }}
-                      />
-                    </td>
-                    <td className="product-name-cell">{product.name}</td>
-                    <td className="product-price-cell">Rs. {product.price?.toLocaleString() || 0}</td>
-                    <td>
-                      <span className="category-badge">{product.category || 'General'}</span>
-                    </td>
-                    <td>
-                      <span className={`status-badge ${product.inStock ? 'in-stock' : 'out-of-stock'}`}>
-                        {product.inStock ? 'In Stock' : 'Out of Stock'}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-        
-        {/* Show More / Show Less Button */}
-        <div className="show-more-container">
-          <button 
-            onClick={toggleShowAllProducts} 
-            className="show-more-btn"
-          >
-            {showAllProducts ? '← Show Less' : 'Show More Products →'}
+        <div className="orders-header-top">
+          <button onClick={goBackToAdmin} className="back-to-admin-btn">
+            ← Back to Admin Dashboard
           </button>
         </div>
-      </div>
 
-      {/* Quick Actions */}
-      <div className="dashboard-actions">
-        <h2>Quick Actions</h2>
-        <div className="actions-grid">
-          <div onClick={() => navigate('/admin/add-product')} className="action-card">
-            <span className="action-icon">➕</span>
-            <h3>Add Product</h3>
-            <p>Add new products to your store</p>
+        <div className="orders-container">
+          <div className="orders-header">
+            <h1>Manage Orders</h1>
+            <p>View and manage all customer orders</p>
           </div>
-          <div onClick={() => navigate('/admin/manage-products')} className="action-card">
-            <span className="action-icon">✏️</span>
-            <h3>Manage Products</h3>
-            <p>Edit or delete existing products</p>
+
+          {/* 6 Stats Cards in One Row */}
+          <div className="order-stats-grid">
+            <div className="order-stat-card">
+              <div className="order-stat-icon">📦</div>
+              <div className="order-stat-info">
+                <h3>{totalOrders}</h3>
+                <p>Total Orders</p>
+              </div>
+            </div>
+            <div className="order-stat-card">
+              <div className="order-stat-icon">⏳</div>
+              <div className="order-stat-info">
+                <h3>{pendingOrders}</h3>
+                <p>Pending Orders</p>
+              </div>
+            </div>
+            <div className="order-stat-card">
+              <div className="order-stat-icon">✅</div>
+              <div className="order-stat-info">
+                <h3>{confirmedOrders}</h3>
+                <p>Confirmed Orders</p>
+              </div>
+            </div>
+            <div className="order-stat-card">
+              <div className="order-stat-icon">🚚</div>
+              <div className="order-stat-info">
+                <h3>{shippedOrders}</h3>
+                <p>Shipped Orders</p>
+              </div>
+            </div>
+            <div className="order-stat-card">
+              <div className="order-stat-icon">🎁</div>
+              <div className="order-stat-info">
+                <h3>{deliveredOrders}</h3>
+                <p>Delivered Orders</p>
+              </div>
+            </div>
+            <div className="order-stat-card">
+              <div className="order-stat-icon">💰</div>
+              <div className="order-stat-info">
+                <h3>Rs. {totalRevenue.toLocaleString()}</h3>
+                <p>Total Revenue</p>
+              </div>
+            </div>
           </div>
-          <div onClick={() => navigate('/admin/orders')} className="action-card">
-            <span className="action-icon">📋</span>
-            <h3>Manage Orders</h3>
-            <p>View and manage customer orders</p>
-          </div>
-          <div onClick={handleOpenAnalytics} className="action-card">
-            <span className="action-icon">📊</span>
-            <h3>Analytics Dashboard</h3>
-            <p>View Google Analytics insights</p>
+
+          {/* Orders Table */}
+          <div className="orders-table-container">
+            <table className="orders-table">
+              <thead>
+                <tr>
+                  <th className="col-sn">SN</th>
+                  <th className="col-order-id">Order ID</th>
+                  <th className="col-date">Date</th>
+                  <th className="col-customer">Customer</th>
+                  <th className="col-email">Email</th>
+                  <th className="col-phone">Phone</th>
+                  <th className="col-address">Address</th>
+                  <th className="col-products">
+                    Products
+                    <div className="products-sub-header">
+                      <span>Name</span>
+                      <span>Qty</span>
+                      <span>Price</span>
+                    </div>
+                  </th>
+                  <th className="col-amount">Amount</th>
+                  <th className="col-status">Status</th>
+                  <th className="col-actions">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.length === 0 ? (
+                  <tr>
+                    <td colSpan="11" className="no-data">No orders found</td>
+                  </tr>
+                ) : (
+                  orders.map((order, index) => {
+                    const formattedOrderId = formatOrderId(order.orderId);
+                    const formattedDate = formatDate(order.createdAt);
+                    const fullAddress = getFullAddress(order);
+                    
+                    return (
+                      <tr key={order._id}>
+                        <td className="col-sn">{index + 1}</td>
+                        <td className="col-order-id">
+                          <div className="order-id-line1">{formattedOrderId.line1}</div>
+                          <div className="order-id-line2">{formattedOrderId.line2}</div>
+                        </td>
+                        <td className="col-date">
+                          <div className="date-line1">{formattedDate.line1}</div>
+                          <div className="date-line2">{formattedDate.line2}</div>
+                        </td>
+                        <td className="col-customer">{order.customerName}</td>
+                        <td className="col-email">{order.email || order.deliveryDetails?.email || '—'}</td>
+                        <td className="col-phone">{order.phone || order.deliveryDetails?.phone || '—'}</td>
+                        <td className="col-address">{fullAddress}</td>
+                        <td className="col-products">
+                          <div className="products-list-container">
+                            {renderProductDetails(order.items)}
+                          </div>
+                        </td>
+                        <td className="col-amount amount-cell">Rs. {(order.grandTotal || 0).toLocaleString()}</td>
+                        <td className="col-status">
+                          <span className={`order-status ${getStatusClass(order.status)}`}>
+                            {order.status || 'Processing'}
+                          </span>
+                        </td>
+                        <td className="col-actions">
+                          <button
+                            onClick={() => updateOrderStatus(order._id, order.status || 'Processing')}
+                            className="update-status-btn"
+                          >
+                            Update
+                          </button>
+                          <button
+                            onClick={() => openDeleteModal(order)}
+                            className="delete-order-btn"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -331,4 +399,4 @@ const AdminDashboard = () => {
   );
 };
 
-export default AdminDashboard;
+export default AdminOrders;
