@@ -69,30 +69,30 @@ const Checkout = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Generate sequential Order ID
-  const generateSequentialOrderId = () => {
-    const existingOrders = localStorage.getItem('allOrders');
-    let orders = existingOrders ? JSON.parse(existingOrders) : [];
-    
-    let maxNumber = 0;
-    const prefix = 'GAUNLE-166008-';
-    
-    for (let i = 0; i < orders.length; i++) {
-      const order = orders[i];
-      if (order.orderId && order.orderId.startsWith(prefix)) {
-        const numPart = order.orderId.replace(prefix, '');
-        const num = parseInt(numPart, 10);
-        if (!isNaN(num) && num > maxNumber) {
-          maxNumber = num;
-        }
+// Generate sequential Order ID in new format: G-1660-0001
+const generateSequentialOrderId = () => {
+  const existingOrders = localStorage.getItem('allOrders');
+  let orders = existingOrders ? JSON.parse(existingOrders) : [];
+  
+  let maxNumber = 0;
+  const prefix = 'G-1660-';
+  
+  for (let i = 0; i < orders.length; i++) {
+    const order = orders[i];
+    if (order.orderId && order.orderId.startsWith(prefix)) {
+      const numPart = order.orderId.replace(prefix, '');
+      const num = parseInt(numPart, 10);
+      if (!isNaN(num) && num > maxNumber) {
+        maxNumber = num;
       }
     }
-    
-    const nextNumber = maxNumber + 1;
-    const paddedNumber = nextNumber.toString().padStart(4, '0');
-    
-    return prefix + paddedNumber;
-  };
+  }
+  
+  const nextNumber = maxNumber + 1;
+  const paddedNumber = nextNumber.toString().padStart(4, '0');
+  
+  return prefix + paddedNumber;
+};
 
   // Save order to localStorage
   const saveOrderToLocalStorage = (orderData) => {

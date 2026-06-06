@@ -1,4 +1,4 @@
-// AdminOrders.js - Order management with Email column
+// AdminOrders.js - Order management with Address column and styled buttons
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminOrders.css';
@@ -81,6 +81,16 @@ const AdminOrders = () => {
 
   const goBackToAdmin = () => {
     navigate('/admin/dashboard');
+  };
+
+  // Format address as "address, city"
+  const getFullAddress = (order) => {
+    const address = order.address || order.deliveryDetails?.address || '';
+    const city = order.city || order.deliveryDetails?.city || '';
+    if (address && city) {
+      return address + ', ' + city;
+    }
+    return address || city || '—';
   };
 
   // Calculate statistics
@@ -219,6 +229,7 @@ const AdminOrders = () => {
                 <th className="col-customer">Customer</th>
                 <th className="col-email">Email</th>
                 <th className="col-phone">Phone</th>
+                <th className="col-address">Address</th>
                 <th className="col-products">
                   Products
                   <div className="products-sub-header">
@@ -236,7 +247,7 @@ const AdminOrders = () => {
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan="11" className="no-data">No orders found</td>
+                  <td colSpan="12" className="no-data">No orders found</td>
                 </tr>
               ) : (
                 orders.map(function(order, index) {
@@ -248,6 +259,7 @@ const AdminOrders = () => {
                       <td className="col-customer">{order.customerName}</td>
                       <td className="col-email email-cell">{order.email || order.deliveryDetails?.email || '—'}</td>
                       <td className="col-phone">{order.phone || order.deliveryDetails?.phone || '—'}</td>
+                      <td className="col-address address-cell">{getFullAddress(order)}</td>
                       <td className="col-products products-cell">
                         <div className="products-list-container">
                           {renderProductDetails(order.items)}
@@ -270,17 +282,17 @@ const AdminOrders = () => {
                           className="update-status-btn"
                           title="Update Status"
                         >
-                          🔄
+                          Update Status
                         </button>
                         <button
                           onClick={function() { deleteOrder(order.orderId); }}
                           className="delete-order-btn"
                           title="Delete Order"
                         >
-                          🗑️
+                          Delete Order
                         </button>
                       </td>
-                    </tr>
+                     </tr>
                   );
                 })
               )}
