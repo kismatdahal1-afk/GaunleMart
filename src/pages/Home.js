@@ -1,104 +1,139 @@
-// Home.js - Complete with Category-Based Featured Products UI
-import React, { useState, useEffect } from 'react';
+// Home.js - Shows only In Stock products (max 6) with Featured Categories section
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import CategorySection from '../components/CategorySection';
+import ProductCard from '../components/ProductCard';
 import './Home.css';
 
-// Import local images
-import img1 from '../images/img1.jpg';
-import img2 from '../images/img2.jpg';
-import img3 from '../images/img3.jpg';
-import img4 from '../images/img4.jpg';
-import img5 from '../images/img5.jpg';
+// Import local category images
+import img1 from '../images/img1';
+import img2 from '../images/img2';
+import img3 from '../images/img3';
+import img4 from '../images/img4';
+import img5 from '../images/img5';
 
 const Home = () => {
   const navigate = useNavigate();
+  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  // Refs for scroll animation
+  const categoryRefs = useRef([]);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleShopNow = () => {
-    navigate('/products');
-  };
-
-  // Categories with EXACT text descriptions
+  // Category data
   const categories = [
     {
-      title: "Vegetables",
+      id: 1,
+      name: "Vegetables",
+      image: img1,
+      imageAlt: "Fresh Vegetables",
+      side: "image-left",
       description: [
         "Fresh and locally sourced vegetables for your daily needs",
         "Naturally grown with care and full of nutrition",
         "Handpicked to ensure quality and freshness every day",
-        "Perfect for healthy and delicious home-cooked meals"
-      ],
-      image: img1,
-      imageAlt: "Fresh Vegetables",
-      imagePosition: "left",
-      categoryName: "Vegetables",
-      bgColor: "#FFF9F0"
+        
+      ]
     },
     {
-      title: "Grocery",
+      id: 2,
+      name: "Grocery",
+      image: img2,
+      imageAlt: "Grocery Items",
+      side: "image-right",
       description: [
         "All essential daily items in one convenient place",
         "High-quality products you can trust every day",
         "From grains to oils, everything for your kitchen",
         "Making your daily shopping simple and reliable"
-      ],
-      image: img2,
-      imageAlt: "Grocery Items",
-      imagePosition: "right",
-      categoryName: "Groceries",
-      bgColor: "#FFF9F0"
+      ]
     },
     {
-      title: "Snacks",
+      id: 3,
+      name: "Snacks",
+      image: img3,
+      imageAlt: "Snacks",
+      side: "image-left",
       description: [
         "Tasty and crunchy snacks for every mood",
         "Perfect for tea time, travel, or quick bites",
         "A variety of flavors loved by everyone",
         "Enjoy freshness and taste in every bite"
-      ],
-      image: img3,
-      imageAlt: "Snacks",
-      imagePosition: "left",
-      categoryName: "Snacks",
-      bgColor: "#FFF9F0"
+      ]
     },
     {
-      title: "Spices & Masala",
+      id: 4,
+      name: "Spices & Masala",
+      image: img4,
+      imageAlt: "Spices and Masala",
+      side: "image-right",
       description: [
         "Authentic spices to enhance your cooking",
         "Rich aroma and traditional flavors",
         "Carefully selected for best quality",
         "Bring real taste to your kitchen"
-      ],
-      image: img4,
-      imageAlt: "Spices and Masala",
-      imagePosition: "right",
-      categoryName: "Spices",
-      bgColor: "#FFF9F0"
+      ]
     },
     {
-      title: "Beverages",
+      id: 5,
+      name: "Beverages",
+      image: img5,
+      imageAlt: "Beverages",
+      side: "image-left",
       description: [
         "Refreshing drinks for every moment",
         "From juices to soft drinks and more",
         "Perfect to stay cool and energized",
         "Enjoy your favorite beverages anytime"
-      ],
-      image: img5,
-      imageAlt: "Beverages",
-      imagePosition: "left",
-      categoryName: "Beverages",
-      bgColor: "#FFF9F0"
+      ]
     }
   ];
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products`);
+      const data = await response.json();
+      setAllProducts(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setLoading(false);
+    }
+  };
+
+  // Scroll animation observer
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.15,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-in');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    categoryRefs.current.forEach(ref => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Filter ONLY "In Stock" products and limit to 6
+  const inStockProducts = allProducts.filter(product => product.inStock === true);
+  const featuredProducts = inStockProducts.slice(0, 6);
+
+  const handleShopNow = () => {
+    navigate('/products');
+  };
 
   if (loading) {
     return (
@@ -164,25 +199,119 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Category-Based Featured Products Section */}
+      {/* ========== FEATURED CATEGORIES SECTION ========== */}
       <div className="featured-categories-section">
-        <div className="section-header">
-          <h2 className="section-title">FEATURED PRODUCTS</h2>
-          <p className="section-subtitle">Discover our finest in-stock products from Gaunle Mart</p>
+        <div className="categories-header">
+          <h2 className="categories-title">Shop by Category</h2>
+          <p className="categories-subtitle">Explore our diverse range of quality products</p>
         </div>
-        
+
         {categories.map((category, index) => (
-          <CategorySection
-            key={index}
-            title={category.title}
-            description={category.description}
-            image={category.image}
-            imageAlt={category.imageAlt}
-            imagePosition={category.imagePosition}
-            categoryName={category.categoryName}
-            backgroundColor={category.bgColor}
-          />
+          <div 
+            key={category.id}
+            ref={el => categoryRefs.current[index] = el}
+            className={`category-row ${category.side} animate-on-scroll-category`}
+          >
+            {category.side === 'image-left' ? (
+              <>
+                <div className="category-image-wrapper">
+                  <div className="category-image-container">
+                    <img 
+                      src={category.image} 
+                      alt={category.imageAlt} 
+                      className="category-image"
+                    />
+                    <div className="image-edge-blur image-edge-left"></div>
+                    <div className="image-edge-blur image-edge-right"></div>
+                  </div>
+                </div>
+                <div className="category-text-wrapper">
+                  <h3 className="category-name">{category.name}</h3>
+                  <div className="category-description">
+                    {category.description.map((line, i) => (
+                      <p key={i}>{line}</p>
+                    ))}
+                  </div>
+                  <button 
+                    className="category-shop-btn"
+                    onClick={() => navigate('/products')}
+                  >
+                    Shop Now →
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="category-text-wrapper">
+                  <h3 className="category-name">{category.name}</h3>
+                  <div className="category-description">
+                    {category.description.map((line, i) => (
+                      <p key={i}>{line}</p>
+                    ))}
+                  </div>
+                  <button 
+                    className="category-shop-btn"
+                    onClick={() => navigate('/products')}
+                  >
+                    Shop Now →
+                  </button>
+                </div>
+                <div className="category-image-wrapper">
+                  <div className="category-image-container">
+                    <img 
+                      src={category.image} 
+                      alt={category.imageAlt} 
+                      className="category-image"
+                    />
+                    <div className="image-edge-blur image-edge-left"></div>
+                    <div className="image-edge-blur image-edge-right"></div>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         ))}
+      </div>
+
+      {/* Featured Products Section */}
+      <div id="products-section" className="products-section">
+        <h2 className="section-title">FEATURED PRODUCTS</h2>
+        <p className="section-subtitle">Discover our finest in-stock products from Gaunle Mart</p>
+        
+        {featuredProducts.length === 0 ? (
+          <div className="no-products-message">
+            <p>No in-stock products available at the moment.</p>
+            <button 
+              className="add-product-redirect"
+              onClick={() => window.location.href = '/admin/dashboard'}
+            >
+              Go to Admin Panel
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="products-grid">
+              {featuredProducts.map((product, index) => (
+                <div 
+                  key={product._id} 
+                  className="product-card-wrapper"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+            
+            <div className="view-all-container">
+              <button 
+                className="view-all-btn"
+                onClick={() => window.location.href = '/products'}
+              >
+                View All Products →
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
