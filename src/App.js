@@ -1,4 +1,4 @@
-// App.js - Main app with scroll to top on route change
+// App.js - Main app with all routes including order confirmation
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
@@ -21,7 +21,7 @@ import AdminRoute from './components/AdminRoute';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminAddProduct from './pages/AdminAddProduct';
 import AdminManageProducts from './pages/AdminManageProducts';
-import AdminOrders from './pages/AdminOrders';  // 👈 ADD THIS LINE
+import AdminOrders from './pages/AdminOrders';
 import './App.css';
 
 function App() {
@@ -47,7 +47,7 @@ function App() {
             <Route path="/terms" element={<TermsConditions />} />
             <Route path="/shipping" element={<ShippingInfo />} />
             
-            {/* Checkout Routes */}
+            {/* Order Routes */}
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/order-confirmation" element={<OrderConfirmation />} />
             
@@ -67,7 +67,6 @@ function App() {
                 <AdminManageProducts />
               </AdminRoute>
             } />
-            {/* 👇 ADD THIS NEW ROUTE */}
             <Route path="/admin/orders" element={
               <AdminRoute>
                 <AdminOrders />
