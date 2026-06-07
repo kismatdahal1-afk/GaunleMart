@@ -4,33 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import CategorySection from '../components/CategorySection';
 import './Home.css';
 
-// HARDCODED CATEGORIES - ONLY THESE 5 WILL SHOW (Admin added categories ignored)
+// HARDCODED CATEGORIES - ONLY THESE 5 WILL SHOW
 const HARDCODED_CATEGORIES = [
-  {
-    name: 'Vegetables',
-    description: 'Fresh organic vegetables directly from local farms. Naturally grown with care, delivered to your doorstep.',
-    imagePosition: 'left'
-  },
-  {
-    name: 'Groceries',
-    description: 'Premium quality daily essentials. From rice to spices, we have everything you need for your kitchen.',
-    imagePosition: 'right'
-  },
-  {
-    name: 'Snacks',
-    description: 'Delicious and healthy snacks made with authentic Nepali ingredients. Perfect for your cravings.',
-    imagePosition: 'left'
-  },
-  {
-    name: 'Spices & Masala',
-    description: 'Authentic Nepali spices that add flavor to every dish. Pure, aromatic, and freshly sourced.',
-    imagePosition: 'right'
-  },
-  {
-    name: 'Beverage',
-    description: 'Refreshing beverages and drinks. From traditional to modern, find your perfect sip here.',
-    imagePosition: 'left'
-  }
+  { name: 'Vegetables', imagePosition: 'left' },
+  { name: 'Groceries', imagePosition: 'right' },
+  { name: 'Snacks', imagePosition: 'left' },
+  { name: 'Spices & Masala', imagePosition: 'right' },
+  { name: 'Beverage', imagePosition: 'left' }
 ];
 
 const Home = () => {
@@ -137,7 +117,6 @@ const Home = () => {
           <CategorySection
             key={index}
             category={category.name}
-            description={category.description}
             products={allProducts}
             imagePosition={category.imagePosition}
           />
