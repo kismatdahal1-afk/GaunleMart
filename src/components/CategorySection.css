@@ -1,4 +1,4 @@
-/* CategorySection.css - Fixed 16:9 images with soft blur edges */
+/* CategorySection.css - Half-screen image layout with smooth gradient edges */
 .category-section {
   padding: 80px 0;
   background-color: #FFF9F0;
@@ -26,26 +26,27 @@
   margin-bottom: 40px;
 }
 
-/* Image Column - EXACTLY 50% width with fixed aspect ratio */
+/* Image Column - EXACTLY 50% width */
 .category-image-col {
   flex: 0 0 50%;
   width: 50%;
   position: relative;
+  overflow: hidden;
 }
 
 .category-image-wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9; /* FIXED 16:9 ASPECT RATIO - ALL IMAGES SAME SIZE */
+  height: 100%;
+  min-height: 380px;
   overflow: hidden;
-  border-radius: 20px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
 .category-main-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* Ensures all images fill container without stretching */
+  min-height: 380px;
+  object-fit: cover;
   display: block;
   transition: transform 0.5s ease;
 }
@@ -54,35 +55,30 @@
   transform: scale(1.02);
 }
 
-/* SOFT BLUR GRADIENT OVERLAY - For smooth edge blending */
-.image-blur-gradient {
+/* Gradient Overlay for Smooth Edge Blending - COMPLETELY INVISIBLE EDGE */
+.image-gradient-overlay {
   position: absolute;
   top: 0;
   right: 0;
-  width: 40%;
+  width: 100%;
   height: 100%;
   pointer-events: none;
   background: linear-gradient(
     90deg,
     transparent 0%,
-    transparent 50%,
-    rgba(255, 249, 240, 0.8) 75%,
-    rgba(255, 249, 240, 0.95) 90%,
+    transparent 70%,
+    rgba(255, 249, 240, 0.95) 85%,
     rgba(255, 249, 240, 1) 100%
   );
-  border-radius: 20px;
 }
 
 /* When image is on RIGHT side, gradient on LEFT */
-.category-section.image-right .image-blur-gradient {
-  left: 0;
-  right: auto;
+.category-section.image-right .image-gradient-overlay {
   background: linear-gradient(
     270deg,
     transparent 0%,
-    transparent 50%,
-    rgba(255, 249, 240, 0.8) 75%,
-    rgba(255, 249, 240, 0.95) 90%,
+    transparent 70%,
+    rgba(255, 249, 240, 0.95) 85%,
     rgba(255, 249, 240, 1) 100%
   );
 }
@@ -101,15 +97,14 @@
 .category-text-content {
   max-width: 500px;
   margin: 0 auto;
-  width: 100%;
 }
 
 .category-title {
   font-family: 'Oswald', 'Montserrat', sans-serif;
-  font-size: 2.5rem;
+  font-size: 2.8rem;
   font-weight: 700;
   color: #2c1810;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   letter-spacing: 1px;
   position: relative;
   display: inline-block;
@@ -126,17 +121,12 @@
   border-radius: 2px;
 }
 
-.category-description-list {
-  margin-top: 10px;
-}
-
-.category-desc-item {
+.category-description {
   font-family: 'Poppins', sans-serif;
-  font-size: 0.95rem;
+  font-size: 1rem;
   color: #555;
-  line-height: 1.6;
-  margin-bottom: 12px;
-  padding-left: 5px;
+  line-height: 1.7;
+  margin-top: 20px;
 }
 
 /* Row 2: Product Cards */
@@ -185,14 +175,10 @@
   flex-direction: row-reverse;
 }
 
-/* ========== RESPONSIVE DESIGN ========== */
+/* Responsive - Mobile (Keep horizontal layout, add scroll) */
 @media screen and (max-width: 1024px) {
   .category-title {
-    font-size: 2rem;
-  }
-  
-  .category-desc-item {
-    font-size: 0.85rem;
+    font-size: 2.2rem;
   }
   
   .category-text-col {
@@ -212,7 +198,11 @@
   }
   
   .category-image-wrapper {
-    aspect-ratio: 16 / 9;
+    min-height: 300px;
+  }
+  
+  .category-main-image {
+    min-height: 300px;
   }
   
   .category-text-col {
@@ -225,28 +215,22 @@
     transform: translateX(-50%);
   }
   
-  .category-description-list {
-    text-align: left;
-  }
-  
   .category-section.image-right .category-row {
     flex-direction: column !important;
   }
   
-  .image-blur-gradient {
+  .image-gradient-overlay {
     background: linear-gradient(
       180deg,
       transparent 0%,
       transparent 60%,
-      rgba(255, 249, 240, 0.9) 85%,
+      rgba(255, 249, 240, 0.95) 85%,
       rgba(255, 249, 240, 1) 100%
     ) !important;
-    width: 100%;
-    height: 30%;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: auto;
+  }
+  
+  .scroll-indicator {
+    display: block;
   }
 }
 
@@ -256,16 +240,19 @@
   }
   
   .category-title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
   }
   
-  .category-desc-item {
-    font-size: 0.8rem;
-    margin-bottom: 8px;
+  .category-description {
+    font-size: 0.9rem;
   }
   
-  .category-text-col {
-    padding: 25px 15px;
+  .category-image-wrapper {
+    min-height: 250px;
+  }
+  
+  .category-main-image {
+    min-height: 250px;
   }
   
   .scroll-hint {
@@ -279,15 +266,18 @@
   }
   
   .category-title {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
   }
   
-  .category-desc-item {
-    font-size: 0.75rem;
-    margin-bottom: 6px;
+  .category-description {
+    font-size: 0.85rem;
   }
   
-  .category-text-col {
-    padding: 20px 12px;
+  .category-image-wrapper {
+    min-height: 200px;
+  }
+  
+  .category-main-image {
+    min-height: 200px;
   }
 }

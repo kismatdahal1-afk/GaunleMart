@@ -1,20 +1,12 @@
-// Home.js - Category-based featured products with hardcoded categories
+// Home.js - Shows only In Stock products (max 6)
+// UPDATED: Shop Now button now redirects to Products page instead of scrolling
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CategorySection from '../components/CategorySection';
+import { useNavigate } from 'react-router-dom';  // ADDED for navigation
+import ProductCard from '../components/ProductCard';
 import './Home.css';
 
-// HARDCODED CATEGORIES - ONLY THESE 5 WILL SHOW
-const HARDCODED_CATEGORIES = [
-  { name: 'Vegetables', imagePosition: 'left' },
-  { name: 'Groceries', imagePosition: 'right' },
-  { name: 'Snacks', imagePosition: 'left' },
-  { name: 'Spices & Masala', imagePosition: 'right' },
-  { name: 'Beverage', imagePosition: 'left' }
-];
-
 const Home = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate();  // ADDED for programmatic navigation
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -34,11 +26,12 @@ const Home = () => {
     }
   };
 
-  const handleShopNow = () => {
-    navigate('/products');
-  };
+  // Filter ONLY "In Stock" products and limit to 6
+  const inStockProducts = allProducts.filter(product => product.inStock === true);
+  const featuredProducts = inStockProducts.slice(0, 6);
 
-  const handleVisitProductsPage = () => {
+  // Handle Shop Now button click - redirect to Products page
+  const handleShopNow = () => {
     navigate('/products');
   };
 
@@ -97,6 +90,7 @@ const Home = () => {
             </div>
           </div>
           
+          {/* Shop Now Button - UPDATED: Now redirects to Products page */}
           <button 
             className="hero-cta-btn"
             onClick={handleShopNow}
@@ -106,31 +100,46 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Category-Based Featured Products Section */}
-      <div id="products-section" className="featured-products-section">
-        <div className="section-header">
-          <h2 className="section-title">FEATURED PRODUCTS</h2>
-          <p className="section-subtitle">Discover our finest in-stock products from Gaunle Mart</p>
-        </div>
+      {/* Featured Products Section - Only In Stock Products */}
+      <div id="products-section" className="products-section">
+        <h2 className="section-title">FEATURED PRODUCTS</h2>
+        <p className="section-subtitle">Discover our finest in-stock products from Gaunle Mart</p>
         
-        {HARDCODED_CATEGORIES.map((category, index) => (
-          <CategorySection
-            key={index}
-            category={category.name}
-            products={allProducts}
-            imagePosition={category.imagePosition}
-          />
-        ))}
-        
-        {/* Final CTA Button */}
-        <div className="final-cta-container">
-          <button 
-            className="final-cta-btn"
-            onClick={handleVisitProductsPage}
-          >
-            Visit Products Page →
-          </button>
-        </div>
+        {featuredProducts.length === 0 ? (
+          <div className="no-products-message">
+            <p>No in-stock products available at the moment.</p>
+            <button 
+              className="add-product-redirect"
+              onClick={() => window.location.href = '/admin/dashboard'}
+            >
+              Go to Admin Panel
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="products-grid">
+              {featuredProducts.map((product, index) => (
+                <div 
+                  key={product._id} 
+                  className="product-card-wrapper"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+            
+            {/* View All Products Button */}
+            <div className="view-all-container">
+              <button 
+                className="view-all-btn"
+                onClick={() => window.location.href = '/products'}
+              >
+                View All Products →
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
