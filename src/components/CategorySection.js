@@ -1,4 +1,4 @@
-// CategorySection.js - Reusable category section with image and product scroll
+// CategorySection.js - Reusable category section with 16:9 images and blur edges
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './CategorySection.css';
@@ -64,8 +64,9 @@ const CategorySection = ({
     <div className="category-image-wrapper">
       <div className="category-image-container">
         <img src={image} alt={imageAlt} className="category-main-image" />
-        <div className="image-edge-blur left"></div>
-        <div className="image-edge-blur right"></div>
+        {/* Edge Blur Effects - Both sides blend with background */}
+        <div className="image-edge-blur left-edge"></div>
+        <div className="image-edge-blur right-edge"></div>
       </div>
     </div>
   );
