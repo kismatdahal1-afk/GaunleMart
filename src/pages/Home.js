@@ -1,34 +1,35 @@
-// Home.js - Shows category-based featured products section
+// Home.js - Category-based featured products with hardcoded categories
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CategorySection from '../components/CategorySection';
 import './Home.css';
 
-// Category configuration - Add/remove categories here
-const CATEGORY_CONFIG = [
+// HARDCODED CATEGORIES - ONLY THESE 5 WILL SHOW (Admin added categories ignored)
+const HARDCODED_CATEGORIES = [
   {
     name: 'Vegetables',
-    imageUrl: 'https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=500',
     description: 'Fresh organic vegetables directly from local farms. Naturally grown with care, delivered to your doorstep.',
     imagePosition: 'left'
   },
   {
     name: 'Groceries',
-    imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491d?w=500',
     description: 'Premium quality daily essentials. From rice to spices, we have everything you need for your kitchen.',
     imagePosition: 'right'
   },
   {
     name: 'Snacks',
-    imageUrl: 'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=500',
     description: 'Delicious and healthy snacks made with authentic Nepali ingredients. Perfect for your cravings.',
     imagePosition: 'left'
   },
   {
-    name: 'Spices',
-    imageUrl: 'https://images.unsplash.com/photo-1532336414038-cf19250c5757?w=500',
+    name: 'Spices & Masala',
     description: 'Authentic Nepali spices that add flavor to every dish. Pure, aromatic, and freshly sourced.',
     imagePosition: 'right'
+  },
+  {
+    name: 'Beverage',
+    description: 'Refreshing beverages and drinks. From traditional to modern, find your perfect sip here.',
+    imagePosition: 'left'
   }
 ];
 
@@ -54,6 +55,10 @@ const Home = () => {
   };
 
   const handleShopNow = () => {
+    navigate('/products');
+  };
+
+  const handleVisitProductsPage = () => {
     navigate('/products');
   };
 
@@ -128,16 +133,25 @@ const Home = () => {
           <p className="section-subtitle">Discover our finest in-stock products from Gaunle Mart</p>
         </div>
         
-        {CATEGORY_CONFIG.map((category, index) => (
+        {HARDCODED_CATEGORIES.map((category, index) => (
           <CategorySection
             key={index}
             category={category.name}
-            imageUrl={category.imageUrl}
             description={category.description}
             products={allProducts}
             imagePosition={category.imagePosition}
           />
         ))}
+        
+        {/* Final CTA Button */}
+        <div className="final-cta-container">
+          <button 
+            className="final-cta-btn"
+            onClick={handleVisitProductsPage}
+          >
+            Visit Products Page →
+          </button>
+        </div>
       </div>
     </div>
   );
