@@ -1,95 +1,146 @@
-// CategorySection.js - Reusable category block with half-screen image and product scroll
+// CategorySection.js - Reusable category section with image and product scroll
 import React, { useState, useEffect, useRef } from 'react';
-import HorizontalProductScroll from './HorizontalProductScroll';
+import { useNavigate } from 'react-router-dom';
 import './CategorySection.css';
 
 const CategorySection = ({ 
-  category, 
-  imageUrl, 
+  title, 
   description, 
-  products,
-  imagePosition = 'left'
+  image, 
+  imageAlt, 
+  imagePosition = 'left',
+  categoryName,
+  backgroundColor = '#FFF9F0'
 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const scrollContainerRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Intersection Observer for one-time scroll animation
+  // Fetch products from API
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && !isVisible) {
-          setIsVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
+    const fetchProducts = async () => {
+      try {
+        const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+        const response = await fetch(`${API_URL}/api/products`);
+        const data = await response.json();
+        
+        // Filter products by category
+        const filteredProducts = data.filter(
+          product => product.category?.toLowerCase() === categoryName.toLowerCase()
+        );
+        
+        setProducts(filteredProducts);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setLoading(false);
+      }
+    };
+    
+    fetchProducts();
+  }, [categoryName]);
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+  // Scroll left
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -280, behavior: 'smooth' });
     }
-
-    return () => observer.disconnect();
-  }, [isVisible]);
-
-  // Filter products by category (case-insensitive)
-  const categoryProducts = products.filter(
-    (product) => product.category && product.category.toLowerCase() === category.toLowerCase()
-  );
-
-  // Fallback images for categories
-  const categoryImages = {
-    'Vegetables': 'https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=800',
-    'Groceries': 'https://images.unsplash.com/photo-1542838132-92c53300491d?w=800',
-    'Snacks': 'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=800',
-    'Spices & Masala': 'https://images.unsplash.com/photo-1532336414038-cf19250c5757?w=800',
-    'Beverage': 'https://images.unsplash.com/photo-1543364195-bfe6e4932397?w=800'
   };
 
-  const finalImageUrl = imageUrl || categoryImages[category] || 'https://picsum.photos/id/1/800/500';
+  // Scroll right
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 280, behavior: 'smooth' });
+    }
+  };
+
+  // Handle product click
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const imageSection = (
+    <div className="category-image-wrapper">
+      <div className="category-image-container">
+        <img src={image} alt={imageAlt} className="category-main-image" />
+        <div className="image-edge-blur left"></div>
+        <div className="image-edge-blur right"></div>
+      </div>
+    </div>
+  );
+
+  const textSection = (
+    <div className="category-text-wrapper">
+      <h2 className="category-title">{title}</h2>
+      <div className="category-description">
+        {description.map((text, idx) => (
+          <p key={idx}>{text}</p>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
-    <div 
-      className={`category-section ${imagePosition === 'right' ? 'image-right' : 'image-left'} ${isVisible ? 'visible' : ''}`}
-      ref={sectionRef}
-    >
+    <div className="category-section" style={{ backgroundColor }}>
       <div className="category-container">
-        {/* Row 1: Half-screen Image + Text */}
-        <div className="category-row">
-          {/* Image Column - 50% width */}
-          <div className="category-image-col">
-            <div className="category-image-wrapper">
-              <img 
-                src={finalImageUrl} 
-                alt={category} 
-                className="category-main-image"
-                loading="lazy"
-              />
-              {/* Gradient overlay for smooth edge blending */}
-              <div className="image-gradient-overlay"></div>
-            </div>
-          </div>
-
-          {/* Text Column - 50% width */}
-          <div className="category-text-col">
-            <div className="category-text-content">
-              <h2 className="category-title">{category}</h2>
-              <p className="category-description">{description}</p>
-            </div>
-          </div>
+        {/* Image and Text Row */}
+        <div className={`category-row ${imagePosition === 'left' ? 'image-left' : 'image-right'}`}>
+          {imagePosition === 'left' ? (
+            <>
+              {imageSection}
+              {textSection}
+            </>
+          ) : (
+            <>
+              {textSection}
+              {imageSection}
+            </>
+          )}
         </div>
 
-        {/* Row 2: Scrollable Product Cards */}
-        <div className="category-products-row">
-          <HorizontalProductScroll 
-            products={categoryProducts} 
-            categoryName={category}
-          />
-          {/* Underline scroll indicator */}
-          <div className="scroll-indicator">
-            <div className="scroll-line"></div>
-            <p className="scroll-hint">← Scroll to see more →</p>
+        {/* Products Scroll Row */}
+        <div className="products-scroll-section">
+          <div className="products-scroll-header">
+            <h3 className="scroll-title">Popular {title}</h3>
+            <div className="scroll-buttons">
+              <button onClick={scrollLeft} className="scroll-btn" aria-label="Scroll left">
+                ←
+              </button>
+              <button onClick={scrollRight} className="scroll-btn" aria-label="Scroll right">
+                →
+              </button>
+            </div>
           </div>
+
+          {loading ? (
+            <div className="products-scroll-loading">
+              <div className="loading-spinner"></div>
+              <p>Loading products...</p>
+            </div>
+          ) : products.length === 0 ? (
+            <div className="products-scroll-empty">
+              <p>No products available in this category yet.</p>
+            </div>
+          ) : (
+            <div className="products-scroll-container" ref={scrollContainerRef}>
+              {products.map((product) => (
+                <div 
+                  key={product._id} 
+                  className="scroll-product-card"
+                  onClick={() => handleProductClick(product._id)}
+                >
+                  <div className="scroll-product-image">
+                    <img src={product.imageUrl} alt={product.name} />
+                  </div>
+                  <div className="scroll-product-info">
+                    <h4 className="scroll-product-name">{product.name}</h4>
+                    <p className="scroll-product-price">Rs. {product.price.toLocaleString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
