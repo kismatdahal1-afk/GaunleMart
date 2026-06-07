@@ -161,6 +161,10 @@ const AdminAddProduct = () => {
         body: JSON.stringify(productData)
       });
 
+      if (!response.ok) {
+        throw new Error(`Failed to add product: ${response.status}`);
+      }
+
       if (response.ok) {
         const newProduct = await response.json();
         showNotificationMessage(`✅ Product "${newProduct.name}" added successfully!`, 'success');

@@ -7,7 +7,9 @@ const AdminRoute = ({ children }) => {
   const [error, setError] = useState('');
   const [checking, setChecking] = useState(true);
 
-  const ADMIN_PASSWORD = 'admin123';
+  // NOTE: Hardcoded password is for demonstration only
+  // In production, use backend authentication with JWT tokens
+  const ADMIN_PASSWORD = process.env.REACT_APP_ADMIN_PASSWORD || 'admin123';
 
   useEffect(() => {
     const storedAuth = sessionStorage.getItem('adminAuthenticated');
