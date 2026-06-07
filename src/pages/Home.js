@@ -1,12 +1,39 @@
-// Home.js - Shows only In Stock products (max 6)
-// UPDATED: Shop Now button now redirects to Products page instead of scrolling
+// Home.js - Shows category-based featured products section
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';  // ADDED for navigation
-import ProductCard from '../components/ProductCard';
+import { useNavigate } from 'react-router-dom';
+import CategorySection from '../components/CategorySection';
 import './Home.css';
 
+// Category configuration - Add/remove categories here
+const CATEGORY_CONFIG = [
+  {
+    name: 'Vegetables',
+    imageUrl: 'https://images.unsplash.com/photo-1566385101042-1a0aa0c1268c?w=500',
+    description: 'Fresh organic vegetables directly from local farms. Naturally grown with care, delivered to your doorstep.',
+    imagePosition: 'left'
+  },
+  {
+    name: 'Groceries',
+    imageUrl: 'https://images.unsplash.com/photo-1542838132-92c53300491d?w=500',
+    description: 'Premium quality daily essentials. From rice to spices, we have everything you need for your kitchen.',
+    imagePosition: 'right'
+  },
+  {
+    name: 'Snacks',
+    imageUrl: 'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=500',
+    description: 'Delicious and healthy snacks made with authentic Nepali ingredients. Perfect for your cravings.',
+    imagePosition: 'left'
+  },
+  {
+    name: 'Spices',
+    imageUrl: 'https://images.unsplash.com/photo-1532336414038-cf19250c5757?w=500',
+    description: 'Authentic Nepali spices that add flavor to every dish. Pure, aromatic, and freshly sourced.',
+    imagePosition: 'right'
+  }
+];
+
 const Home = () => {
-  const navigate = useNavigate();  // ADDED for programmatic navigation
+  const navigate = useNavigate();
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,11 +53,6 @@ const Home = () => {
     }
   };
 
-  // Filter ONLY "In Stock" products and limit to 6
-  const inStockProducts = allProducts.filter(product => product.inStock === true);
-  const featuredProducts = inStockProducts.slice(0, 6);
-
-  // Handle Shop Now button click - redirect to Products page
   const handleShopNow = () => {
     navigate('/products');
   };
@@ -90,7 +112,6 @@ const Home = () => {
             </div>
           </div>
           
-          {/* Shop Now Button - UPDATED: Now redirects to Products page */}
           <button 
             className="hero-cta-btn"
             onClick={handleShopNow}
@@ -100,46 +121,23 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Featured Products Section - Only In Stock Products */}
-      <div id="products-section" className="products-section">
-        <h2 className="section-title">FEATURED PRODUCTS</h2>
-        <p className="section-subtitle">Discover our finest in-stock products from Gaunle Mart</p>
+      {/* Category-Based Featured Products Section */}
+      <div id="products-section" className="featured-products-section">
+        <div className="section-header">
+          <h2 className="section-title">FEATURED PRODUCTS</h2>
+          <p className="section-subtitle">Discover our finest in-stock products from Gaunle Mart</p>
+        </div>
         
-        {featuredProducts.length === 0 ? (
-          <div className="no-products-message">
-            <p>No in-stock products available at the moment.</p>
-            <button 
-              className="add-product-redirect"
-              onClick={() => window.location.href = '/admin/dashboard'}
-            >
-              Go to Admin Panel
-            </button>
-          </div>
-        ) : (
-          <>
-            <div className="products-grid">
-              {featuredProducts.map((product, index) => (
-                <div 
-                  key={product._id} 
-                  className="product-card-wrapper"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
-            
-            {/* View All Products Button */}
-            <div className="view-all-container">
-              <button 
-                className="view-all-btn"
-                onClick={() => window.location.href = '/products'}
-              >
-                View All Products →
-              </button>
-            </div>
-          </>
-        )}
+        {CATEGORY_CONFIG.map((category, index) => (
+          <CategorySection
+            key={index}
+            category={category.name}
+            imageUrl={category.imageUrl}
+            description={category.description}
+            products={allProducts}
+            imagePosition={category.imagePosition}
+          />
+        ))}
       </div>
     </div>
   );
